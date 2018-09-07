@@ -4,3 +4,6 @@
 [submodule "nyMobility"]
 	path = nyMobility
 	url = https://github.com/doorleyr/nyMobility
+[submodule "Scanner"]
+	path = Scanner
+	url = https://github.com/RELNO/CHNDM
