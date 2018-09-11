@@ -6,4 +6,4 @@
 	url = https://github.com/doorleyr/nyMobility
 [submodule "Scanner"]
 	path = Scanner
-	url = https://github.com/RELNO/CHNDM
+	url = https://github.com/RELNO/CityScope_Scanner_Python
