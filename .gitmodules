@@ -10,3 +10,6 @@
 [submodule "graphic_studies"]
 	path = graphic_studies
 	url = https://github.com/yasushisakai/graphic_studies
+[submodule "3d_projection_mapping_unity"]
+	path = 3d_projection_mapping_unity
+	url = https://github.com/popabczhang/3d_projection_mapping_unity
