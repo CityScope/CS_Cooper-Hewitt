@@ -13,3 +13,6 @@
 [submodule "3d_projection_mapping_unity"]
 	path = 3d_projection_mapping_unity
 	url = https://github.com/popabczhang/3d_projection_mapping_unity
+[submodule "gama_simulation"]
+	path = gama_simulation
+	url = https://github.com/agrignard/URBAM/
