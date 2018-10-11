@@ -7,6 +7,7 @@ public int displayHeight = int(1920*scale);
 public int playGroundWidth = displayWidth;
 public int playGroundHeight = displayHeight;
 PImage bg;
+RoadNetwork roads;
 
 void setup(){
   //fullScreen(P3D, SPAN);
@@ -14,6 +15,7 @@ void setup(){
   drawer = new Drawer(this);
   bg = loadImage("data/Skeleton.png");
   drawer.initSurface();
+  roads = new RoadNetwork("Roads.geojson");
 } 
 
 void draw(){
