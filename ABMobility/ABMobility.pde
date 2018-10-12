@@ -1,6 +1,6 @@
 Drawer drawer;
 
-float scale = 1;
+float scale = 0.5;
 public int displayWidth = int(1080*2*scale);
 public int displayHeight = int(1920*scale);
 
@@ -8,6 +8,7 @@ public int playGroundWidth = displayWidth;
 public int playGroundHeight = displayHeight;
 PImage bg;
 RoadNetwork roads;
+ABM model;
 
 void setup(){
   //fullScreen(P3D, SPAN);
@@ -15,11 +16,14 @@ void setup(){
   drawer = new Drawer(this);
   bg = loadImage("data/Skeleton.png");
   drawer.initSurface();
-  roads = new RoadNetwork("bike.geojson");
+  roads = new RoadNetwork("car.geojson");
+  model = new ABM(roads);
+  model.initModel();
 } 
 
 void draw(){
   drawScene();
+  println(frameRate);
 }
 
 /* Draw ------------------------------------------------------ */
