@@ -29,8 +29,7 @@ public class Drawer{
       offscreenSurface.stroke(#FF0000);
       offscreenSurface.noFill();
       offscreenSurface.rect(playGroundWidth/2,playGroundHeight/2,2128*scale, 1330*scale);
-      roads.draw(offscreenSurface);
-      model.run(offscreenSurface);
+      world.run(offscreenSurface);
       offscreenSurface.endDraw();
       for (int i=0; i<nbProjector;i++){
         subSurface.beginDraw();

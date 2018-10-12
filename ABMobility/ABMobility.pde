@@ -7,8 +7,7 @@ public int displayHeight = int(1330*scale);
 public int playGroundWidth = displayWidth;
 public int playGroundHeight = displayHeight;
 PImage bg;
-RoadNetwork roads;
-ABM model;
+World world;
 
 void setup(){
   //fullScreen(P3D, SPAN);
@@ -16,9 +15,8 @@ void setup(){
   drawer = new Drawer(this);
   bg = loadImage("data/background_0.png");
   drawer.initSurface();
-  roads = new RoadNetwork("car.geojson");
-  model = new ABM(roads);
-  model.initModel();
+  world = new World();
+  world.InitWorld();
 } 
 
 void draw(){

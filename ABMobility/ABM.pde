@@ -1,19 +1,55 @@
 /* ABM CLASS ------------------------------------------------------------*/
+public class World{
+  private ArrayList<ABM> models;
+  private ArrayList<RoadNetwork> networks;
+  HashMap<String,Integer> colorMap;
+  
+  
+  World(){
+    
+    colorMap = new HashMap<String,Integer>();
+    colorMap.put("car",#FF0000);colorMap.put("bike",#00FF00);colorMap.put("ped",#0000FF);
+    
+    networks = new ArrayList<RoadNetwork>();
+    models = new ArrayList<ABM>();
+    
+    networks.add(new RoadNetwork("car.geojson"));
+    networks.add(new RoadNetwork("bike.geojson"));
+    networks.add(new RoadNetwork("ped.geojson"));
+    
+    models.add(new ABM(networks.get(0),"car"));
+    models.add(new ABM(networks.get(1),"bike"));
+    models.add(new ABM(networks.get(2),"ped"));
+  }
+  
+  public void InitWorld(){
+    models.get(0).initModel();
+    models.get(1).initModel();
+    models.get(2).initModel();
+  }
+  
+  public void run(PGraphics p){
+    for (ABM m: models){
+      m.run(p);
+    }
+  }
+}
+
+
 public class ABM {
   private RoadNetwork map;
   private ArrayList<Agent> agents;
-  public ArrayList<Integer> colorPalette;
+  private String type;
+  public color modelColor;
   
-  ABM(RoadNetwork _map){
+  ABM(RoadNetwork _map, String _type){
     map=_map;
     agents = new ArrayList<Agent>();
-    colorPalette = new ArrayList<Integer>();
-    colorPalette.add(#FFFFB2);colorPalette.add(#FECC5C);colorPalette.add(#FD8D3C);colorPalette.add(#F03B20);
-    colorPalette.add(#BD0026);colorPalette.add(#0B5038);colorPalette.add(#0B5038);  
+    type= _type;    
   }
   
   public void initModel(){
-    createAgents(5000);
+    createAgents(500);
   }
   
   public void run(PGraphics p){
@@ -25,21 +61,23 @@ public class ABM {
   
   public void createAgents(int num) {
     for (int i = 0; i < num; i++){
-      agents.add( new Agent(map));
+      agents.add( new Agent(map,type));
     }
   } 
 }
 
 public class Agent{
   private RoadNetwork map;
+  private String type;
   private color myColor;
   private PVector pos;
   private Node srcNode, destNode, toNode;
   private ArrayList<Node> path;
   private PVector dir;
   
-  Agent(RoadNetwork _map){
+  Agent(RoadNetwork _map, String _type){
     map=_map;
+    type=_type;
     initAgent();
   }
   
@@ -50,7 +88,7 @@ public class Agent{
     pos= new PVector(srcNode.x,srcNode.y);
     path=null;
     dir = new PVector(0.0, 0.0);
-    myColor= color(int(model.colorPalette.get(int(random(7)))));
+    myColor= world.colorMap.get(type);
   }
     
   public void draw(PGraphics p){
