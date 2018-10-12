@@ -77,9 +77,7 @@ public class RoadNetwork {
           maxLng = -Float.MAX_VALUE;
     for(int i=0; i<JSONlines.size(); i++) {
       JSONArray points = JSONlines.getJSONObject(i).getJSONObject("geometry").getJSONArray("coordinates");
-      println(i, points.size());
       for(int j=0; j<points.size(); j++) {
-        println(j);
         float Lat = points.getJSONArray(j).getFloat(1);
         float Lng = points.getJSONArray(j).getFloat(0);
         if( Lat < minLat ) minLat = Lat;

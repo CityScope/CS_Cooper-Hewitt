@@ -24,7 +24,7 @@ public class Drawer{
       offscreenSurface.beginDraw();
       offscreenSurface.clear();
       offscreenSurface.background(0);
-      //drawTableBackGround(offscreenSurface);
+      drawTableBackGround(offscreenSurface);
       offscreenSurface.rectMode(CENTER);
       offscreenSurface.stroke(#FF0000);
       offscreenSurface.noFill();
@@ -44,7 +44,7 @@ public class Drawer{
   
   void drawTableBackGround(PGraphics p) {
     p.fill(125);  
-    p.rect(0, 0, displayWidth, displayHeight);
+    //p.rect(0, 0, displayWidth, displayHeight);
     p.image(bg,0,0,displayWidth,displayHeight);
   }
 }
