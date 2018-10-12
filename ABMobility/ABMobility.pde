@@ -15,7 +15,7 @@ void setup(){
   drawer = new Drawer(this);
   bg = loadImage("data/Skeleton.png");
   drawer.initSurface();
-  roads = new RoadNetwork("Roads.geojson");
+  roads = new RoadNetwork("bike.geojson");
 } 
 
 void draw(){
