@@ -1,8 +1,11 @@
 Drawer drawer;
 
 float scale = 0.5;
-public int displayWidth = int(2128*scale);
-public int displayHeight = int(1330*scale);
+public final int SIMULATION_WIDTH = 2128;
+public final int SIMULATION_HEIGHT = 1330;
+
+public int displayWidth = int(SIMULATION_WIDTH * scale);
+public int displayHeight = int(SIMULATION_HEIGHT * scale);
 
 public int playGroundWidth = displayWidth;
 public int playGroundHeight = displayHeight;
@@ -21,7 +24,6 @@ void setup(){
 
 void draw(){
   drawScene();
-  println(frameRate);
 }
 
 /* Draw ------------------------------------------------------ */

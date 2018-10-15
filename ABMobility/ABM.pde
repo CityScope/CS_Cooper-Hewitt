@@ -6,7 +6,6 @@ public class World{
   
   
   World(){
-    
     colorMap = new HashMap<String,Integer>();
     colorMap.put("car",#FF0000);colorMap.put("bike",#00FF00);colorMap.put("ped",#0000FF);
     
@@ -36,6 +35,8 @@ public class World{
 }
 
 
+// ABM stands for Agent Based Model.
+// Holds a pair of a single specific type of agent and a Road Network
 public class ABM {
   private RoadNetwork map;
   private ArrayList<Agent> agents;
@@ -71,7 +72,7 @@ public class Agent{
   private String type;
   private color myColor;
   private PVector pos;
-  private Node srcNode, destNode, toNode;
+  private Node srcNode, destNode, toNode; // toNode is like next node
   private ArrayList<Node> path;
   private PVector dir;
   
@@ -81,12 +82,18 @@ public class Agent{
     initAgent();
   }
   
-  
   public void initAgent(){
-    srcNode =  (Node) map.graph.nodes.get(int(random(map.graph.nodes.size())));
-    destNode =  (Node) map.graph.nodes.get(int(random(map.graph.nodes.size())));
-    pos= new PVector(srcNode.x,srcNode.y);
-    path=null;
+
+    boolean isAdjecent = true;
+
+    while(srcNode == destNode || isAdjecent) {
+      srcNode =  (Node) map.graph.nodes.get(int(random(map.graph.nodes.size())));
+      destNode =  (Node) map.graph.nodes.get(int(random(map.graph.nodes.size())));
+      isAdjecent = srcNode.connectedTo(destNode);
+    }    
+    
+    pos = new PVector(srcNode.x,srcNode.y);
+    path = null;
     dir = new PVector(0.0, 0.0);
     myColor= world.colorMap.get(type);
   }
@@ -98,17 +105,17 @@ public class Agent{
   }
     
   // CALCULATE ROUTE --->
-  private boolean calcRoute(Node origin, Node dest) {
+  private boolean calcRoute() {
     // Agent already in destination --->
-    if (origin == dest) {
-      toNode=dest;
+    if (srcNode == destNode) {
+      toNode = destNode;
       return true;
       // Next node is available --->
     }  else {
-        ArrayList<Node> newPath = map.graph.aStar( origin, dest);
+        ArrayList<Node> newPath = map.graph.aStar(srcNode, destNode);
         if ( newPath != null ) {
           path = newPath;
-          toNode = path.get( path.size()-2 );
+          toNode = path.get(path.size() - 2); // what happens if there are only two nodes?
           return true;
         }
     }
@@ -117,22 +124,18 @@ public class Agent{
   
     public void move(float speed) {
         if (path == null){
-          calcRoute( srcNode, destNode );
+          calcRoute();
         }
         PVector toNodePos= new PVector(toNode.x,toNode.y);
         PVector destNodePos= new PVector(destNode.x,destNode.y);
-        dir = PVector.sub(toNodePos, pos);  // Direction to go
+        dir = PVector.sub(toNodePos, pos);  // unnormalized direction to go
           // Arrived to node -->
-          if ( dir.mag() < dir.normalize().mult(speed).mag() ) {
+          if (dir.mag() < dir.normalize().mult(speed).mag() ) {
             // Arrived to destination  --->
-            if ( path.indexOf(toNode) == 0 ) {  
-              pos = destNodePos;
-              srcNode =  (Node) map.graph.nodes.get(int(random(map.graph.nodes.size())));
-              destNode =  (Node) map.graph.nodes.get(int(random(map.graph.nodes.size())));
-              pos= new PVector(srcNode.x, srcNode.y);
-              path=null;
-              dir = new PVector(0.0, 0.0);
-              // Not destination. Look for next node --->
+            if (path.indexOf(toNode) == 0 ) {  
+              pos = destNodePos; // ?
+              this.initAgent();
+            // Not destination. Look for next node --->
             } else {  
               srcNode = toNode;
               toNode = path.get( path.indexOf(toNode)-1 );
