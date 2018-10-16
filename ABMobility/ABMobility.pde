@@ -18,7 +18,7 @@ void setup(){
   //fullScreen(P3D, SPAN);
   size(displayWidth, displayHeight, P3D);
   drawer = new Drawer(this);
-  bg = loadImage("data/background_0.png");
+  bg = loadImage("data/image/background_0.png");
   drawer.initSurface();
   universe = new Universe();
   universe.InitUniverse();
