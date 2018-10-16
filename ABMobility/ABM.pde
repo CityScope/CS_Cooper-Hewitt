@@ -49,9 +49,19 @@ public class World{
   }
   
   public void InitWorld(){
-    models.get(0).initModel();
-    models.get(1).initModel();
-    models.get(2).initModel();
+    //Bad 
+    if(id==1){
+      models.get(0).initModel(700);
+      models.get(1).initModel(200);
+      models.get(2).initModel(100);
+    }
+    //Good
+    if(id == 2){
+      models.get(0).initModel(100);
+      models.get(1).initModel(600);
+      models.get(2).initModel(300);
+    }
+   
   }
   
   public void run(PGraphics p){
@@ -78,8 +88,8 @@ public class ABM {
     worldId= _worldId;
   }
   
-  public void initModel(){
-    createAgents(500);
+  public void initModel(int nbAgent){
+    createAgents(nbAgent);
   }
   
   public void run(PGraphics p){
