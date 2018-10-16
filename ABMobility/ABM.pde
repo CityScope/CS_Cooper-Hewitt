@@ -19,9 +19,6 @@ public class Universe{
    }
    
    void run(PGraphics p){
-     /*for (World w:worlds){
-       w.run(p);
-     }*/
      if(goodWorld == true){
        worlds.get(0).run(p);
      }else{
@@ -42,13 +39,13 @@ public class World{
     networks = new ArrayList<RoadNetwork>();
     models = new ArrayList<ABM>();
     
-    networks.add(new RoadNetwork("car.geojson"));
-    networks.add(new RoadNetwork("bike.geojson"));
-    networks.add(new RoadNetwork("ped.geojson"));
+    networks.add(new RoadNetwork("car_"+id+".geojson"));
+    networks.add(new RoadNetwork("bike_"+id+".geojson"));
+    networks.add(new RoadNetwork("ped_"+id+".geojson"));
     
-    models.add(new ABM(networks.get(0),"car"));
-    models.add(new ABM(networks.get(1),"bike"));
-    models.add(new ABM(networks.get(2),"ped"));
+    models.add(new ABM(networks.get(0),"car",id));
+    models.add(new ABM(networks.get(1),"bike",id));
+    models.add(new ABM(networks.get(2),"ped",id));
   }
   
   public void InitWorld(){
@@ -71,12 +68,14 @@ public class ABM {
   private RoadNetwork map;
   private ArrayList<Agent> agents;
   private String type;
+  private int worldId;
   public color modelColor;
   
-  ABM(RoadNetwork _map, String _type){
+  ABM(RoadNetwork _map, String _type, int _worldId){
     map=_map;
     agents = new ArrayList<Agent>();
-    type= _type;    
+    type= _type;
+    worldId= _worldId;
   }
   
   public void initModel(){
@@ -92,7 +91,7 @@ public class ABM {
   
   public void createAgents(int num) {
     for (int i = 0; i < num; i++){
-      agents.add( new Agent(map,type));
+      agents.add( new Agent(map,type,worldId));
     }
   } 
 }
@@ -100,15 +99,17 @@ public class ABM {
 public class Agent{
   private RoadNetwork map;
   private String type;
+  private int worldId;
   private color myColor;
   private PVector pos;
   private Node srcNode, destNode, toNode; // toNode is like next node
   private ArrayList<Node> path;
   private PVector dir;
   
-  Agent(RoadNetwork _map, String _type){
+  Agent(RoadNetwork _map, String _type, int _worldId){
     map=_map;
     type=_type;
+    worldId=_worldId;
     initAgent();
   }
   
@@ -130,7 +131,18 @@ public class Agent{
     
   public void draw(PGraphics p){
     p.noStroke();
-    p.fill(myColor);
+    if(showWorldType == true){
+      if(worldId == 1){
+       p.fill(#FF0000);
+      }
+      if(worldId == 2){
+       p.fill(#00FF00);
+      }
+    }
+    else{
+      p.fill(myColor);
+    }
+    
     p.ellipse(pos.x, pos.y, 5, 5);
   }
     

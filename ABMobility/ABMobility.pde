@@ -12,6 +12,7 @@ public int playGroundHeight = displayHeight;
 PImage bg;
 Universe universe;
 boolean goodWorld=true;
+boolean showWorldType= false;
 
 void setup(){
   //fullScreen(P3D, SPAN);
@@ -49,6 +50,8 @@ void keyPressed() {
   case 'c':
     goodWorld=!goodWorld;
   break;
-    
+  case 'w':
+    showWorldType=!showWorldType;
+  break;
   }
 }
