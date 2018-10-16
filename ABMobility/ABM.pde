@@ -39,9 +39,9 @@ public class World{
     networks = new ArrayList<RoadNetwork>();
     models = new ArrayList<ABM>();
     
-    networks.add(new RoadNetwork("car_"+id+".geojson"));
-    networks.add(new RoadNetwork("bike_"+id+".geojson"));
-    networks.add(new RoadNetwork("ped_"+id+".geojson"));
+    networks.add(new RoadNetwork("network/car_"+id+".geojson"));
+    networks.add(new RoadNetwork("network/bike_"+id+".geojson"));
+    networks.add(new RoadNetwork("network/ped_"+id+".geojson"));
     
     models.add(new ABM(networks.get(0),"car",id));
     models.add(new ABM(networks.get(1),"bike",id));
@@ -114,9 +114,7 @@ public class Agent{
   }
   
   public void initAgent(){
-
     boolean isAdjecent = true;
-
     while(srcNode == destNode || isAdjecent) {
       srcNode =  (Node) map.graph.nodes.get(int(random(map.graph.nodes.size())));
       destNode =  (Node) map.graph.nodes.get(int(random(map.graph.nodes.size())));
