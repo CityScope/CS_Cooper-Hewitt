@@ -1,13 +1,43 @@
 /* ABM CLASS ------------------------------------------------------------*/
+
+public class Universe{
+   private ArrayList<World> worlds;
+   HashMap<String,Integer> colorMap;
+   
+   Universe(){
+     colorMap = new HashMap<String,Integer>();
+     colorMap.put("car",#FF0000);colorMap.put("bike",#00FF00);colorMap.put("ped",#0000FF);
+     worlds = new ArrayList<World>();
+     worlds.add(new World(1));
+     worlds.add(new World(2));
+   }
+   
+   void InitUniverse(){
+     for (World w:worlds){
+       w.InitWorld();
+     }
+   }
+   
+   void run(PGraphics p){
+     /*for (World w:worlds){
+       w.run(p);
+     }*/
+     if(goodWorld == true){
+       worlds.get(0).run(p);
+     }else{
+       worlds.get(1).run(p);
+     }
+   }
+}
+
 public class World{
   private ArrayList<ABM> models;
   private ArrayList<RoadNetwork> networks;
-  HashMap<String,Integer> colorMap;
   
+  int id;
   
-  World(){
-    colorMap = new HashMap<String,Integer>();
-    colorMap.put("car",#FF0000);colorMap.put("bike",#00FF00);colorMap.put("ped",#0000FF);
+  World(int _id){
+    id = _id;
     
     networks = new ArrayList<RoadNetwork>();
     models = new ArrayList<ABM>();
@@ -95,7 +125,7 @@ public class Agent{
     pos = new PVector(srcNode.x,srcNode.y);
     path = null;
     dir = new PVector(0.0, 0.0);
-    myColor= world.colorMap.get(type);
+    myColor= universe.colorMap.get(type);
   }
     
   public void draw(PGraphics p){

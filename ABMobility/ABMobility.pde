@@ -10,7 +10,8 @@ public int displayHeight = int(SIMULATION_HEIGHT * scale);
 public int playGroundWidth = displayWidth;
 public int playGroundHeight = displayHeight;
 PImage bg;
-World world;
+Universe universe;
+boolean goodWorld=true;
 
 void setup(){
   //fullScreen(P3D, SPAN);
@@ -18,8 +19,8 @@ void setup(){
   drawer = new Drawer(this);
   bg = loadImage("data/background_0.png");
   drawer.initSurface();
-  world = new World();
-  world.InitWorld();
+  universe = new Universe();
+  universe.InitUniverse();
 } 
 
 void draw(){
@@ -45,5 +46,9 @@ void keyPressed() {
   case 's':
     drawer.ks.save();
     break;
+  case 'c':
+    goodWorld=!goodWorld;
+  break;
+    
   }
 }
