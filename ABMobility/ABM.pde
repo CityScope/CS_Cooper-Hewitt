@@ -107,7 +107,7 @@ public class ABM {
 }
 
 public class Agent{
-  private RoadNetwork map;
+  private RoadNetwork map; // NOTE(Yasushi Sakai): this is a reference to the map right?
   private String type;
   private int worldId;
   private color myColor;

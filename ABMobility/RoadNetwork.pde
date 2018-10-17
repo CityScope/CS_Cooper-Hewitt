@@ -2,7 +2,6 @@ import ai.pathfinder.*;
 
 public class RoadNetwork {
   private PVector size;
-  private float scale;
   private PVector[] bounds;  // [0] Left-Top  [1] Right-Bottom
   private Pathfinder graph;
   /* <--- CONSTRUCTOR ---> */
@@ -54,11 +53,10 @@ public class RoadNetwork {
           prevNode = newNode;
         }
       }
-    }
     graph = new Pathfinder(nodes); 
   }
-    
-    
+  }
+
    // RETURN EXISTING NODE (SAME COORDINATES) IF EXISTS -->
   private Node nodeExists(float x, float y, ArrayList<Node> nodes) {
     for(Node node : nodes) {
@@ -71,51 +69,18 @@ public class RoadNetwork {
   
   // FIND NODES BOUNDS -->
   public void setBoundingBox(JSONArray JSONlines) {
-    // float minLat = Float.MAX_VALUE,
-    //       minLng = Float.MAX_VALUE,
-    //       maxLat = -Float.MAX_VALUE,
-    //       maxLng = -Float.MAX_VALUE;
-    // for(int i=0; i<JSONlines.size(); i++) {
-    //   JSONArray points = JSONlines.getJSONObject(i).getJSONObject("geometry").getJSONArray("coordinates");
-    //   for(int j=0; j<points.size(); j++) {
-    //     float Lat = points.getJSONArray(j).getFloat(1);
-    //     float Lng = points.getJSONArray(j).getFloat(0);
-    //     if( Lat < minLat ) minLat = Lat;
-    //     if( Lat > maxLat ) maxLat = Lat;
-    //     if( Lng < minLng ) minLng = Lng;
-    //     if( Lng > maxLng ) maxLng = Lng;
-    //   }
-    // }
-
+  
     float minLng = 0;
     float minLat = 0;
     float maxLng = 1;
     float maxLat = 1;
     
-    // Conversion to Mercator projection -->
-    // PVector coordsTL = toWebMercator(minLat, minLng);
-    // PVector coordsBR = toWebMercator(maxLat, maxLng);
-    // this.bounds = new PVector[] { coordsTL, coordsBR };
     this.bounds = new PVector[] {new PVector(minLng, minLat), new PVector(maxLng, maxLat)};
     
     // Resize map keeping ratio -->
-    // float mapRatio = (coordsBR.x - coordsTL.x) / (coordsBR.y - coordsTL.y);
     float mapRatio = 1.6 / 1.0;
-    // this.size = mapRatio < 1 ? new PVector( height * mapRatio, height ) : new PVector( width , width / mapRatio ) ;
-    this.size = new PVector(SIMULATION_WIDTH * 0.5, SIMULATION_HEIGHT * 0.5);
-    
-    println("Bounding Box" + "size" + this.size + "scale" + this.scale);
+    this.size = new PVector(SIMULATION_WIDTH * scale, SIMULATION_HEIGHT * scale);
   }
-
-  
-  // LAT, LNG COORDINATES TO XY SCREEN POINTS -->
-  // private PVector toXY(float lat, float lng) {
-  //   PVector projectedPoint = toWebMercator(lat, lng);
-  //   return new PVector(
-  //     map(projectedPoint.x, bounds[0].x, bounds[1].x, 0, size.x),
-  //     map(projectedPoint.y, bounds[0].y, bounds[1].y, size.y, 0)
-  //   );
-  // }
 
   private PVector toXY(float x, float y) {
     return new PVector(
@@ -134,3 +99,40 @@ public class RoadNetwork {
     }  
   }
 } 
+
+
+class NetworkEdge {
+
+  private Pathfinder graph;
+  private Node start; // Node start
+  private int cid; // Connector index of that Start Node
+
+  private float distance;
+  private int agentCount;
+  private float cost;
+
+  NetworkEdge(Pathfinder graph, Node start, int cid, float distance){
+    this.graph = graph;
+    this.start = start;
+    this.cid = cid;
+    this.distance = distance;
+    this.agentCount = 0;
+    this.cost = distance;
+  }
+
+  Connector getConnector() {
+    Connector c = (Connector)this.start.links.get(this.cid);
+    return c;
+  }
+
+  void incrAgentCount(){
+    this.agentCount++;
+  }
+
+  void decrAgentCount(){
+    this.agentCount--;
+  }
+
+  void updateCost(){}
+
+}
