@@ -3,6 +3,7 @@
 public class Universe{
    private ArrayList<World> worlds;
    HashMap<String,Integer> colorMap;
+   Grid grid;
    
    Universe(){
      colorMap = new HashMap<String,Integer>();
@@ -10,6 +11,7 @@ public class Universe{
      worlds = new ArrayList<World>();
      worlds.add(new World(1));
      worlds.add(new World(2));
+     grid = new Grid();
    }
    
    void InitUniverse(){
