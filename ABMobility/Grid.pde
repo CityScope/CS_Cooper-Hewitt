@@ -23,12 +23,21 @@ public class Grid {
      buildings.add(new Building(new PVector(8,7),16));
      buildings.add(new Building(new PVector(11,7),17));
      buildings.add(new Building(new PVector(13,7),18));
-     
+   
    }
    
    public void draw(PGraphics p){
      for (Building b: buildings){
        b.draw(p);
+     }
+   }
+   
+   
+   public void updateGridFromUDP(String message){
+     println("ok I receive a new grid let's update it");
+     String[] list = split(message, ',');
+     for (int i=0;i<=buildings.size()-1;i++){
+       buildings.get(i).id = int(list[i]);
      }
    }
 }

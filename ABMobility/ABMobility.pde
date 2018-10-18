@@ -13,6 +13,7 @@ PImage bg;
 Universe universe;
 boolean goodWorld=true;
 boolean showWorldType= false;
+UDPReceiver udpR;
 
 void setup(){
   //fullScreen(P3D, SPAN);
@@ -22,6 +23,7 @@ void setup(){
   drawer.initSurface();
   universe = new Universe();
   universe.InitUniverse();
+  udpR = new UDPReceiver();
 } 
 
 void draw(){
