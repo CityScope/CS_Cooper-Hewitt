@@ -1,6 +1,6 @@
 Drawer drawer;
 
-float scale = 0.5;
+float scale = 0.75;
 public final int SIMULATION_WIDTH = 2128;
 public final int SIMULATION_HEIGHT = 1330;
 
@@ -13,6 +13,7 @@ PImage bg;
 Universe universe;
 boolean goodWorld=true;
 boolean showWorldType= false;
+boolean showBuilding = true;
 UDPReceiver udpR;
 
 void setup(){
@@ -54,6 +55,9 @@ void keyPressed() {
   break;
   case 'w':
     showWorldType=!showWorldType;
+  break;
+  case 'b':
+    showBuilding= !showBuilding;
   break;
   }
 }
