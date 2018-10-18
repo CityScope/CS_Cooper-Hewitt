@@ -43,7 +43,7 @@ public class Grid {
 }
 
 public class Building{
-  int size = SIMULATION_WIDTH/16;
+  int size = int((SIMULATION_WIDTH/16)*scale);
   PVector loc;
   int id;
   Building(PVector _loc, int _id){
@@ -55,10 +55,10 @@ public class Building{
     p.rectMode(CORNER);
     p.fill(#FFFFFF);
     p.stroke(#000000);
-    p.rect (loc.x*size/2, loc.y*size/2, size, size);
+    p.rect (loc.x*size, loc.y*size, size*2, size*2);
     p.fill(#AAAAAA);
     p.textAlign(CENTER); 
     p.textSize(30); 
-    p.text(id, loc.x*size/2+ size/2, loc.y*size/2+size/2);
+    p.text(id, loc.x*size+size, loc.y*size+size);
   }
 }
