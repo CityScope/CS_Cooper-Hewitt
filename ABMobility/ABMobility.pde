@@ -18,9 +18,6 @@ UDPReceiver udpR;
 
 void setup(){
 
-  // global state holder (an exuse for trivial dynamic global variables)
-  State state = new State();
-
   //fullScreen(P3D, SPAN);
   size(displayWidth, displayHeight, P3D);
   drawer = new Drawer(this);
@@ -33,6 +30,7 @@ void setup(){
 
 void draw(){
   drawScene();
+  println(frameRate);
 }
 
 /* Draw ------------------------------------------------------ */

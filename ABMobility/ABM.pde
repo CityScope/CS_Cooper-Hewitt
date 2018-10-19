@@ -24,11 +24,13 @@ public class Universe{
      }
    }
 
-
-   //TODO(Yasushi Sakai): we should probably do this using shaders
+   // turns out that it's faster to stitch and make a PGraphic first and then, run it but
+   // TODO(Yasushi Sakai): we should probably do this using shaders
    void stitchWorlds (float ratio) {
       int stitchEdge = Math.round(displayWidth * ratio);
 
+      // this is slow, adding / decreasing agents will not change much
+      // not rendering one of them will add 10fps;
       PImage badPart = worlds.get(0).getGraphics().get(0, 0, stitchEdge, displayHeight); // 0 bad
       PImage goodPart = worlds.get(1).getGraphics().get(stitchEdge, 0, displayWidth, displayHeight); // 1 good
 
@@ -36,16 +38,9 @@ public class Universe{
         pg.image(badPart, 0, 0);
         pg.image(goodPart, stitchEdge, 0);
       pg.endDraw();
-
    }
    
    void run(PGraphics p, float slider){
-
-    int worldInt = goodWorld ? 1 : 0;
-
-     // pg.beginDraw();
-     //   pg.image(worlds.get(worldInt).getGraphics(), 0, 0);
-     // pg.endDraw();
 
     stitchWorlds(slider);
     int stitchEdge = Math.round(displayWidth * slider);
@@ -89,14 +84,14 @@ public class World{
   public void InitWorld(){
     //Bad 
     if(id==1){
-      models.get(0).initModel(700);
+      models.get(0).initModel(600);
       models.get(1).initModel(200);
       models.get(2).initModel(100);
     }
     //Good
     if(id == 2){
       models.get(0).initModel(100);
-      models.get(1).initModel(600);
+      models.get(1).initModel(500);
       models.get(2).initModel(300);
     }
    
@@ -158,7 +153,7 @@ public class ABM {
   
   public void createAgents(int num) {
     for (int i = 0; i < num; i++){
-      agents.add( new Agent(map,type,worldId));
+      agents.add(new Agent(map,type,worldId));
     }
   } 
 }
@@ -166,6 +161,7 @@ public class ABM {
 public class Agent{
   private RoadNetwork map; // NOTE(Yasushi Sakai): this is a reference to the map right?
   private String type;
+  private PImage[] glyph;
   private int worldId;
   private color myColor;
   private PVector pos;
@@ -174,8 +170,31 @@ public class Agent{
   private PVector dir;
   
   Agent(RoadNetwork _map, String _type, int _worldId){
-    map=_map;
-    type=_type;
+    map = _map;
+    type = _type;
+
+    // glyph = loadImage("image/" + type + ".gif");
+
+    switch(type){
+      case "car" :
+        glyph = new PImage[1];
+        glyph[0] = loadImage("image/" + type + ".gif");
+      break;
+      case "bike" :
+        glyph = new PImage[2];
+        glyph[0] = loadImage("image/" + type + "-0.gif");
+        glyph[1] = loadImage("image/" + type + "-1.gif");
+      break;
+      case "ped" :
+        glyph = new PImage[3];
+        glyph[0] = loadImage("image/" + "human" + "-0.gif");
+        glyph[1] = loadImage("image/" + "human" + "-1.gif");
+        glyph[2] = loadImage("image/" + "human" + "-2.gif");
+      break;
+      default:
+      break;
+    }
+
     worldId=_worldId;
     initAgent();
   }
@@ -195,20 +214,14 @@ public class Agent{
   }
     
   public void draw(PGraphics p){
-    p.noStroke();
-    if(showWorldType == true){
-      if(worldId == 1){
-       p.fill(#FF0000);
-      }
-      if(worldId == 2){
-       p.fill(#00FF00);
-      }
-    }
-    else{
-      p.fill(myColor);
-    }
+    PImage img = glyph[frameCount % glyph.length];
     
-    p.ellipse(pos.x, pos.y, 5, 5);
+    p.pushMatrix();
+      p.translate(pos.x, pos.y);
+      p.rotate(dir.heading() + PI * 0.5);
+      p.translate(-1, 0);
+      p.image(img, 0, 0, img.width * scale, img.height * scale);
+    p.popMatrix();
   }
     
   // CALCULATE ROUTE --->
