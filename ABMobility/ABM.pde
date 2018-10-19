@@ -4,14 +4,18 @@ public class Universe{
    private ArrayList<World> worlds;
    HashMap<String,Integer> colorMap;
    Grid grid;
+   PGraphics pg;
    
    Universe(){
      colorMap = new HashMap<String,Integer>();
      colorMap.put("car",#FF0000);colorMap.put("bike",#00FF00);colorMap.put("ped",#0000FF);
      worlds = new ArrayList<World>();
-     worlds.add(new World(1));
-     worlds.add(new World(2));
      grid = new Grid();
+
+     worlds.add(new World(1, "image/background_01.png"));
+     worlds.add(new World(2, "image/background_02.png"));
+
+     pg = createGraphics(displayWidth, displayHeight);
    }
    
    void InitUniverse(){
@@ -19,14 +23,36 @@ public class Universe{
        w.InitWorld();
      }
    }
-   
-   void run(PGraphics p){
-     if(goodWorld == true){
-       worlds.get(0).run(p);
-     }else{
-       worlds.get(1).run(p);
-     }
+
+   // turns out that it's faster to stitch and make a PGraphic first and then, run it but
+   // TODO(Yasushi Sakai): we should probably do this using shaders
+   void stitchWorlds (float ratio) {
+      int stitchEdge = Math.round(displayWidth * ratio);
+
+      PGraphics badPart = worlds.get(0).getGraphics(); // 0 bad, I can render, just overlay 
+
+      // this is slow, adding / decreasing agents will not change much
+      // not rendering one of them will add 10fps;
+      PImage goodPart = worlds.get(1).getGraphics().get(stitchEdge, 0, displayWidth, displayHeight); // 1 good
+
+      pg.beginDraw();
+        pg.image(badPart, 0, 0);
+        pg.image(goodPart, stitchEdge, 0);
+      pg.endDraw();
    }
+   
+   void run(PGraphics p, float slider){
+
+    stitchWorlds(slider);
+    int stitchEdge = Math.round(displayWidth * slider);
+    
+    p.image(pg, 0, 0);
+    p.pushStyle();
+      p.stroke(255);
+      p.line(stitchEdge, 0, stitchEdge, displayHeight);
+    p.popStyle();
+   }
+   
 }
 
 public class World{
@@ -34,9 +60,13 @@ public class World{
   private ArrayList<RoadNetwork> networks;
   
   int id;
+
+  PImage background;
+  PGraphics pg;
   
-  World(int _id){
+  World(int _id, String _background){
     id = _id;
+    background = loadImage(_background);
     
     networks = new ArrayList<RoadNetwork>();
     models = new ArrayList<ABM>();
@@ -48,28 +78,49 @@ public class World{
     models.add(new ABM(networks.get(0),"car",id));
     models.add(new ABM(networks.get(1),"bike",id));
     models.add(new ABM(networks.get(2),"ped",id));
+
+    pg = createGraphics(displayWidth, displayHeight);
   }
   
   public void InitWorld(){
     //Bad 
     if(id==1){
-      models.get(0).initModel(700);
+      models.get(0).initModel(600);
       models.get(1).initModel(200);
       models.get(2).initModel(100);
     }
     //Good
     if(id == 2){
       models.get(0).initModel(100);
-      models.get(1).initModel(600);
+      models.get(1).initModel(500);
       models.get(2).initModel(300);
     }
    
   }
   
   public void run(PGraphics p){
+
+    p.background(0);
+    p.image(background, 0, 0, p.width, p.height);
     for (ABM m: models){
       m.run(p);
     }
+
+  }
+
+  public PGraphics getGraphics() {
+
+    pg.beginDraw();
+
+      pg.background(0);
+      pg.image(background, 0, 0, pg.width, pg.height);
+      
+      for(ABM m: models){
+        m.run(pg);
+      }
+    pg.endDraw();
+
+    return pg;
   }
 }
 
@@ -103,7 +154,7 @@ public class ABM {
   
   public void createAgents(int num) {
     for (int i = 0; i < num; i++){
-      agents.add( new Agent(map,type,worldId));
+      agents.add(new Agent(map,type,worldId));
     }
   } 
 }
@@ -111,6 +162,7 @@ public class ABM {
 public class Agent{
   private RoadNetwork map; // NOTE(Yasushi Sakai): this is a reference to the map right?
   private String type;
+  private PImage[] glyph;
   private int worldId;
   private color myColor;
   private PVector pos;
@@ -119,8 +171,31 @@ public class Agent{
   private PVector dir;
   
   Agent(RoadNetwork _map, String _type, int _worldId){
-    map=_map;
-    type=_type;
+    map = _map;
+    type = _type;
+
+    // glyph = loadImage("image/" + type + ".gif");
+    // TODO(Yasushi Sakai): Previous Glyphs are faster??
+    switch(type){
+      case "car" :
+        glyph = new PImage[1];
+        glyph[0] = loadImage("image/" + type + ".gif");
+      break;
+      case "bike" :
+        glyph = new PImage[2];
+        glyph[0] = loadImage("image/" + type + "-0.gif");
+        glyph[1] = loadImage("image/" + type + "-1.gif");
+      break;
+      case "ped" :
+        glyph = new PImage[3];
+        glyph[0] = loadImage("image/" + "human" + "-0.gif");
+        glyph[1] = loadImage("image/" + "human" + "-1.gif");
+        glyph[2] = loadImage("image/" + "human" + "-2.gif");
+      break;
+      default:
+      break;
+    }
+
     worldId=_worldId;
     initAgent();
   }
@@ -140,20 +215,14 @@ public class Agent{
   }
     
   public void draw(PGraphics p){
-    p.noStroke();
-    if(showWorldType == true){
-      if(worldId == 1){
-       p.fill(#FF0000);
-      }
-      if(worldId == 2){
-       p.fill(#00FF00);
-      }
-    }
-    else{
-      p.fill(myColor);
-    }
+    PImage img = glyph[frameCount % glyph.length];
     
-    p.ellipse(pos.x, pos.y, 5, 5);
+    p.pushMatrix();
+      p.translate(pos.x, pos.y);
+      p.rotate(dir.heading() + PI * 0.5);
+      p.translate(-1, 0);
+      p.image(img, 0, 0, img.width * scale, img.height * scale);
+    p.popMatrix();
   }
     
   // CALCULATE ROUTE --->
