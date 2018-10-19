@@ -9,13 +9,19 @@ public int displayHeight = int(SIMULATION_HEIGHT * scale);
 
 public int playGroundWidth = displayWidth;
 public int playGroundHeight = displayHeight;
+
 PImage bg;
+State state;
 Universe universe;
 boolean goodWorld=true;
 boolean showWorldType= false;
 UDPReceiver udpR;
 
 void setup(){
+
+  // global state holder (an exuse for trivial dynamic global variables)
+  State state = new State();
+
   //fullScreen(P3D, SPAN);
   size(displayWidth, displayHeight, P3D);
   drawer = new Drawer(this);
