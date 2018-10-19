@@ -31,6 +31,7 @@ void setup(){
 
 void draw(){
   drawScene();
+  println(frameRate);
 }
 
 /* Draw ------------------------------------------------------ */

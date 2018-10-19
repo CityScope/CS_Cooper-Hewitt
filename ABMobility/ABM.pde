@@ -44,14 +44,20 @@ public class Universe{
       }
       goodPart.updatePixels();
 
-
       pg.beginDraw();
         pg.image(badPart, 0, 0);
         pg.image(goodPart, 0, 0);
       pg.endDraw();
    }
+
+
+   void update(){
+    for(World w: worlds){
+      w.update();
+    }
+   }
    
-   void run(PGraphics p, float slider){
+   void draw(PGraphics p, float slider){
 
     stitchWorlds(slider);
     int stitchEdge = Math.round(displayWidth * slider);
@@ -61,6 +67,7 @@ public class Universe{
       p.stroke(255);
       p.line(stitchEdge, 0, stitchEdge, displayHeight);
     p.popStyle();
+
    }
    
 }
@@ -107,15 +114,20 @@ public class World{
     }
    
   }
-  
-  public void run(PGraphics p){
 
+  public void update(){
+    for(ABM m: models){
+      m.update();
+    } 
+  }
+  
+  public void draw(PGraphics p){
     p.background(0);
     p.image(background, 0, 0, p.width, p.height);
-    for (ABM m: models){
-      m.run(p);
-    }
 
+    for (ABM m: models){
+      m.draw(p);
+    }
   }
 
   public PGraphics getGraphics() {
@@ -126,7 +138,7 @@ public class World{
       pg.image(background, 0, 0, pg.width, pg.height);
       
       for(ABM m: models){
-        m.run(pg);
+        m.draw(pg);
       }
     pg.endDraw();
 
@@ -154,10 +166,17 @@ public class ABM {
   public void initModel(int nbAgent){
     createAgents(nbAgent);
   }
+
+
+  // Y.S: separating update and draw, to see performance
+  public void update(){
+    for(Agent a : agents){
+      a.update(1);
+    }
+  }
   
-  public void run(PGraphics p){
+  public void draw(PGraphics p){
     for (Agent agent : agents) {
-      agent.move(1);
       agent.draw(p);
     }
   }
@@ -223,7 +242,8 @@ public class Agent{
     dir = new PVector(0.0, 0.0);
     myColor= universe.colorMap.get(type);
   }
-    
+
+
   public void draw(PGraphics p){
     PImage img = glyph[frameCount % glyph.length];
     
@@ -253,7 +273,7 @@ public class Agent{
     return false;
   }
   
-    public void move(float speed) {
+  public void update(float speed) {
         if (path == null){
           calcRoute();
         }
