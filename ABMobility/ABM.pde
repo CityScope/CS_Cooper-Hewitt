@@ -33,11 +33,21 @@ public class Universe{
 
       // this is slow, adding / decreasing agents will not change much
       // not rendering one of them will add 10fps;
-      PImage goodPart = worlds.get(1).getGraphics().get(stitchEdge, 0, displayWidth, displayHeight); // 1 good
+      PGraphics goodPart = worlds.get(1).getGraphics(); // 1 good
+
+      goodPart.loadPixels();
+      for(int i = 0; i < stitchEdge; i++){
+        for(int j = 0; j < displayHeight; j++){
+          int index = j * displayWidth + i;
+          goodPart.pixels[index] = color(0, 0, 0, 0);
+        }
+      }
+      goodPart.updatePixels();
+
 
       pg.beginDraw();
         pg.image(badPart, 0, 0);
-        pg.image(goodPart, stitchEdge, 0);
+        pg.image(goodPart, 0, 0);
       pg.endDraw();
    }
    

@@ -1,7 +1,7 @@
 State state = new State();
 Drawer drawer;
 
-float scale = 0.5;
+float scale = 1;
 public final int SIMULATION_WIDTH = 2128;
 public final int SIMULATION_HEIGHT = 1330;
 
