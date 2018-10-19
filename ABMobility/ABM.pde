@@ -29,9 +29,10 @@ public class Universe{
    void stitchWorlds (float ratio) {
       int stitchEdge = Math.round(displayWidth * ratio);
 
+      PGraphics badPart = worlds.get(0).getGraphics(); // 0 bad, I can render, just overlay 
+
       // this is slow, adding / decreasing agents will not change much
       // not rendering one of them will add 10fps;
-      PImage badPart = worlds.get(0).getGraphics().get(0, 0, stitchEdge, displayHeight); // 0 bad
       PImage goodPart = worlds.get(1).getGraphics().get(stitchEdge, 0, displayWidth, displayHeight); // 1 good
 
       pg.beginDraw();
@@ -47,8 +48,8 @@ public class Universe{
     
     p.image(pg, 0, 0);
     p.pushStyle();
-    p.stroke(255);
-    p.line(stitchEdge, 0, stitchEdge, displayHeight);
+      p.stroke(255);
+      p.line(stitchEdge, 0, stitchEdge, displayHeight);
     p.popStyle();
    }
    
@@ -174,7 +175,7 @@ public class Agent{
     type = _type;
 
     // glyph = loadImage("image/" + type + ".gif");
-
+    // TODO(Yasushi Sakai): Previous Glyphs are faster??
     switch(type){
       case "car" :
         glyph = new PImage[1];
