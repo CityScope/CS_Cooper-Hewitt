@@ -1,9 +1,6 @@
 [submodule "wiki"]
 	path = wiki
 	url = https://github.com/CityScope/CS_Cooper-Hewitt.wiki.git
-[submodule "nyMobility"]
-	path = nyMobility
-	url = https://github.com/doorleyr/nyMobility
 [submodule "Scanner"]
 	path = Scanner
 	url = https://github.com/RELNO/CityScope_Scanner_Python
@@ -16,3 +13,6 @@
 [submodule "gama_simulation"]
 	path = gama_simulation
 	url = https://github.com/agrignard/URBAM/
+[submodule "CS_activityBased"]
+	path = CS_activityBased
+	url = https://github.com/CityScope/CS_activityBased
