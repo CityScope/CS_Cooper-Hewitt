@@ -29,7 +29,7 @@ public class Drawer{
       offscreenSurface.stroke(#FF0000);
       offscreenSurface.noFill();
       offscreenSurface.rect(playGroundWidth/2,playGroundHeight/2,2128*scale, 1330*scale);
-      universe.run(offscreenSurface);
+      universe.run(offscreenSurface, state.slider);
       universe.grid.draw(offscreenSurface);
       offscreenSurface.endDraw();
       for (int i=0; i<nbProjector;i++){

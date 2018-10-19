@@ -4,14 +4,18 @@ public class Universe{
    private ArrayList<World> worlds;
    HashMap<String,Integer> colorMap;
    Grid grid;
+   PGraphics pg;
    
    Universe(){
      colorMap = new HashMap<String,Integer>();
      colorMap.put("car",#FF0000);colorMap.put("bike",#00FF00);colorMap.put("ped",#0000FF);
      worlds = new ArrayList<World>();
-     worlds.add(new World(1));
-     worlds.add(new World(2));
      grid = new Grid();
+
+     worlds.add(new World(1, "image/background_01.png"));
+     worlds.add(new World(2, "image/background_02.png"));
+
+     pg = createGraphics(displayWidth, displayHeight);
    }
    
    void InitUniverse(){
@@ -19,14 +23,40 @@ public class Universe{
        w.InitWorld();
      }
    }
-   
-   void run(PGraphics p){
-     if(goodWorld == true){
-       worlds.get(0).run(p);
-     }else{
-       worlds.get(1).run(p);
-     }
+
+
+   //TODO(Yasushi Sakai): we should probably do this using shaders
+   void stitchWorlds (float ratio) {
+      int stitchEdge = Math.round(displayWidth * ratio);
+
+      PImage badPart = worlds.get(0).getGraphics().get(0, 0, stitchEdge, displayHeight); // 0 bad
+      PImage goodPart = worlds.get(1).getGraphics().get(stitchEdge, 0, displayWidth, displayHeight); // 1 good
+
+      pg.beginDraw();
+        pg.image(badPart, 0, 0);
+        pg.image(goodPart, stitchEdge, 0);
+      pg.endDraw();
+
    }
+   
+   void run(PGraphics p, float slider){
+
+    int worldInt = goodWorld ? 1 : 0;
+
+     // pg.beginDraw();
+     //   pg.image(worlds.get(worldInt).getGraphics(), 0, 0);
+     // pg.endDraw();
+
+    stitchWorlds(slider);
+    int stitchEdge = Math.round(displayWidth * slider);
+    
+    p.image(pg, 0, 0);
+    p.pushStyle();
+    p.stroke(255);
+    p.line(stitchEdge, 0, stitchEdge, displayHeight);
+    p.popStyle();
+   }
+   
 }
 
 public class World{
@@ -34,9 +64,13 @@ public class World{
   private ArrayList<RoadNetwork> networks;
   
   int id;
+
+  PImage background;
+  PGraphics pg;
   
-  World(int _id){
+  World(int _id, String _background){
     id = _id;
+    background = loadImage(_background);
     
     networks = new ArrayList<RoadNetwork>();
     models = new ArrayList<ABM>();
@@ -48,6 +82,8 @@ public class World{
     models.add(new ABM(networks.get(0),"car",id));
     models.add(new ABM(networks.get(1),"bike",id));
     models.add(new ABM(networks.get(2),"ped",id));
+
+    pg = createGraphics(displayWidth, displayHeight);
   }
   
   public void InitWorld(){
@@ -67,9 +103,28 @@ public class World{
   }
   
   public void run(PGraphics p){
+
+    p.background(0);
+    p.image(background, 0, 0, p.width, p.height);
     for (ABM m: models){
       m.run(p);
     }
+
+  }
+
+  public PGraphics getGraphics() {
+
+    pg.beginDraw();
+
+      pg.background(0);
+      pg.image(background, 0, 0, pg.width, pg.height);
+      
+      for(ABM m: models){
+        m.run(pg);
+      }
+    pg.endDraw();
+
+    return pg;
   }
 }
 

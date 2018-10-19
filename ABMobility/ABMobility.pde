@@ -1,3 +1,4 @@
+State state = new State();
 Drawer drawer;
 
 float scale = 0.5;
@@ -11,9 +12,7 @@ public int playGroundWidth = displayWidth;
 public int playGroundHeight = displayHeight;
 
 PImage bg;
-State state;
 Universe universe;
-boolean goodWorld=true;
 boolean showWorldType= false;
 UDPReceiver udpR;
 
@@ -42,7 +41,6 @@ void drawScene() {
   drawer.drawSurface();
 }
 
-
 void keyPressed() {
   switch(key) {
     //Keystone trigger  
@@ -55,8 +53,20 @@ void keyPressed() {
   case 's':
     drawer.ks.save();
     break;
+  case 'z':
+    state.slider = 0; 
+  break;
+  case 'x':
+    state.slider = max(state.slider - 0.05, 0); 
+  break;
   case 'c':
-    goodWorld=!goodWorld;
+    state.slider = 0.5;
+  break;
+  case 'v':
+    state.slider = min(state.slider + 0.05, 1);
+  break;
+  case 'b':
+    state.slider = 1;
   break;
   case 'w':
     showWorldType=!showWorldType;
