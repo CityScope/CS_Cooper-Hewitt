@@ -32,18 +32,19 @@ public class Universe{
       worlds.get(0).draw(p);
 
       // this is slow...
-      PGraphics goodPart = worlds.get(1).getGraphics(); // 1 good
+      World rightWorld = worlds.get(1);
+      rightWorld.updateGraphics();
 
-      goodPart.loadPixels();
+      rightWorld.pg.loadPixels();
       for(int i = 0; i < stitchEdge; i++){
         for(int j = 0; j < displayHeight; j++){
           int index = j * displayWidth + i;
-          goodPart.pixels[index] = color(0, 0, 0, 0);
+          rightWorld.pg.pixels[index] = color(0, 0, 0, 0);
         }
       }
-      goodPart.updatePixels();
+      rightWorld.pg.updatePixels();
 
-      p.image(goodPart, 0, 0);
+      p.image(rightWorld.pg, 0, 0);
    }
 
 
@@ -64,7 +65,6 @@ public class Universe{
       p.stroke(255);
       p.line(stitchEdge, 0, stitchEdge, displayHeight);
     p.popStyle();
-
    }
    
 }
@@ -77,7 +77,7 @@ public class World{
 
   PImage background;
   PGraphics pg;
-  
+
   World(int _id, String _background){
     id = _id;
     background = loadImage(_background);
@@ -113,11 +113,17 @@ public class World{
   }
 
   public void update(){
-    for(ABM m: models){
-      m.update();
-    } 
+    // NOTE(Yasushi Sakai): using a threadpool is better?
+    Thread t = new Thread(new Runnable() {
+      public void run(){
+        for(ABM m: models){
+          m.update();
+        }
+      }
+    });
+    t.start();
   }
-  
+
   public void draw(PGraphics p){
     p.background(0);
     p.image(background, 0, 0, p.width, p.height);
@@ -125,23 +131,21 @@ public class World{
     for (ABM m: models){
       m.draw(p);
     }
-
   }
 
-  public PGraphics getGraphics() {
-
+  public void updateGraphics() {
     pg.beginDraw();
 
-      pg.background(0);
-      pg.image(background, 0, 0, pg.width, pg.height);
-      
-      for(ABM m: models){
-        m.draw(pg);
-      }
+    pg.background(0);
+    pg.image(background, 0, 0, pg.width, pg.height);
+    
+    for(ABM m: models){
+      m.draw(pg);
+    }
 
     pg.endDraw();
-    return pg;
   }
+
 }
 
 
@@ -166,7 +170,10 @@ public class ABM {
   }
 
 
-  // Y.S: separating update and draw, to see performance
+  // NOTE(Yasushi Sakai): maybe better to multithread this too.
+  // but the ABM might be flattened and hold
+  // mutliple models and agents.
+  // Same to this version's World
   public void update(){
     for(Agent a : agents){
       a.update(1);
@@ -201,7 +208,6 @@ public class Agent{
     map = _map;
     type = _type;
 
-    // glyph = loadImage("image/" + type + ".gif");
     // TODO(Yasushi Sakai): Previous Glyphs are faster??
     switch(type){
       case "car" :
