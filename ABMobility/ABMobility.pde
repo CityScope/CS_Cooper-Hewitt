@@ -1,7 +1,8 @@
 State state = new State();
 Drawer drawer;
 
-float scale = 1;
+float scale = 0.5;
+
 public final int SIMULATION_WIDTH = 2128;
 public final int SIMULATION_HEIGHT = 1330;
 
@@ -11,7 +12,6 @@ public int displayHeight = int(SIMULATION_HEIGHT * scale);
 public int playGroundWidth = displayWidth;
 public int playGroundHeight = displayHeight;
 
-PImage bg;
 Universe universe;
 boolean showWorldType= false;
 boolean showBuilding = true;
@@ -22,7 +22,6 @@ void setup(){
   //fullScreen(P3D, SPAN);
   size(displayWidth, displayHeight, P3D);
   drawer = new Drawer(this);
-  bg = loadImage("data/image/background_0.png");
   drawer.initSurface();
   universe = new Universe();
   universe.InitUniverse();

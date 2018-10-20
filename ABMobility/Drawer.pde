@@ -53,7 +53,5 @@ public class Drawer{
   
   void drawTableBackGround(PGraphics p) {
     p.fill(125);  
-    //p.rect(0, 0, displayWidth, displayHeight);
-    p.image(bg,0,0,displayWidth,displayHeight);
   }
 }

@@ -15,7 +15,7 @@ public class Universe{
      worlds.add(new World(1, "image/background_01.png"));
      worlds.add(new World(2, "image/background_02.png"));
 
-     pg = createGraphics(displayWidth, displayHeight);
+     pg = createGraphics(displayWidth, displayHeight, P2D);
    }
    
    void InitUniverse(){
@@ -24,15 +24,14 @@ public class Universe{
      }
    }
 
-   // turns out that it's faster to stitch and make a PGraphic first and then, run it but
    // TODO(Yasushi Sakai): we should probably do this using shaders
-   void stitchWorlds (float ratio) {
+   void stitchWorlds (PGraphics p, float ratio) {
       int stitchEdge = Math.round(displayWidth * ratio);
 
-      PGraphics badPart = worlds.get(0).getGraphics(); // 0 bad, I can render, just overlay 
+      // we draw the bad world by default; 
+      worlds.get(0).draw(p);
 
-      // this is slow, adding / decreasing agents will not change much
-      // not rendering one of them will add 10fps;
+      // this is slow...
       PGraphics goodPart = worlds.get(1).getGraphics(); // 1 good
 
       goodPart.loadPixels();
@@ -44,10 +43,7 @@ public class Universe{
       }
       goodPart.updatePixels();
 
-      pg.beginDraw();
-        pg.image(badPart, 0, 0);
-        pg.image(goodPart, 0, 0);
-      pg.endDraw();
+      p.image(goodPart, 0, 0);
    }
 
 
@@ -59,10 +55,11 @@ public class Universe{
    
    void draw(PGraphics p, float slider){
 
-    stitchWorlds(slider);
+    // stitchWorlds(slider);
     int stitchEdge = Math.round(displayWidth * slider);
     
-    p.image(pg, 0, 0);
+    // p.image(pg, 0, 0);
+    stitchWorlds(p, slider);
     p.pushStyle();
       p.stroke(255);
       p.line(stitchEdge, 0, stitchEdge, displayHeight);
@@ -96,7 +93,7 @@ public class World{
     models.add(new ABM(networks.get(1),"bike",id));
     models.add(new ABM(networks.get(2),"ped",id));
 
-    pg = createGraphics(displayWidth, displayHeight);
+    pg = createGraphics(displayWidth, displayHeight, P2D);
   }
   
   public void InitWorld(){
@@ -128,6 +125,7 @@ public class World{
     for (ABM m: models){
       m.draw(p);
     }
+
   }
 
   public PGraphics getGraphics() {
@@ -140,8 +138,8 @@ public class World{
       for(ABM m: models){
         m.draw(pg);
       }
-    pg.endDraw();
 
+    pg.endDraw();
     return pg;
   }
 }
