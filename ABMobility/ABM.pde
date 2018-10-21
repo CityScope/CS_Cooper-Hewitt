@@ -131,7 +131,9 @@ public class World{
     pg.beginDraw();
 
     pg.background(0);
-    pg.image(background, 0, 0, pg.width, pg.height);
+    if(showBackground){
+      pg.image(background, 0, 0, pg.width, pg.height);
+    }
     
     for(ABM m: models){
       m.draw(pg);

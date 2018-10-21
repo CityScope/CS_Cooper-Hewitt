@@ -2,7 +2,6 @@ State state = new State();
 Drawer drawer;
 
 float scale = 0.5;
-
 public final int SIMULATION_WIDTH = 2128;
 public final int SIMULATION_HEIGHT = 1330;
 
@@ -13,8 +12,8 @@ public int playGroundWidth = displayWidth;
 public int playGroundHeight = displayHeight;
 
 Universe universe;
-boolean showWorldType= false;
 boolean showBuilding = true;
+boolean showBackground = true;
 UDPReceiver udpR;
 
 void setup(){
@@ -30,7 +29,7 @@ void setup(){
 
 void draw(){
   drawScene();
-  println(frameRate);
+  //println(frameRate);
 }
 
 /* Draw ------------------------------------------------------ */
@@ -66,11 +65,12 @@ void keyPressed() {
   case 'b':
     state.slider = 1;
   break;
-  case 'w':
-    showWorldType=!showWorldType;
-  break;
   case 'a':
     showBuilding= !showBuilding;
   break;
+  case ' ':
+  showBackground=!showBackground;
+  break;
+  
   }
 }
