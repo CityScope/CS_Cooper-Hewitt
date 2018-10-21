@@ -4,6 +4,8 @@ public class Universe{
    private ArrayList<World> worlds;
    HashMap<String,Integer> colorMap;
    Grid grid;
+
+   PShader s;
    PGraphics pg;
    
    Universe(){
@@ -15,6 +17,12 @@ public class Universe{
      worlds.add(new World(1, "image/background_01.png"));
      worlds.add(new World(2, "image/background_02.png"));
 
+      s = loadShader("mask.glsl");
+      s.set("width", float(displayWidth));
+      s.set("height", float(displayHeight));
+      s.set("left", worlds.get(0).pg);
+      s.set("right", worlds.get(1).pg);
+      s.set("divPoint", state.slider);
      pg = createGraphics(displayWidth, displayHeight, P2D);
    }
    
@@ -24,30 +32,6 @@ public class Universe{
      }
    }
 
-   // TODO(Yasushi Sakai): we should probably do this using shaders
-   void stitchWorlds (PGraphics p, float ratio) {
-      int stitchEdge = Math.round(displayWidth * ratio);
-
-      // we draw the bad world by default; 
-      worlds.get(0).draw(p);
-
-      // this is slow...
-      World rightWorld = worlds.get(1);
-      rightWorld.updateGraphics();
-
-      rightWorld.pg.loadPixels();
-      for(int i = 0; i < stitchEdge; i++){
-        for(int j = 0; j < displayHeight; j++){
-          int index = j * displayWidth + i;
-          rightWorld.pg.pixels[index] = color(0, 0, 0, 0);
-        }
-      }
-      rightWorld.pg.updatePixels();
-
-      p.image(rightWorld.pg, 0, 0);
-   }
-
-
    void update(){
     for(World w: worlds){
       w.update();
@@ -56,11 +40,21 @@ public class Universe{
    
    void draw(PGraphics p, float slider){
 
-    // stitchWorlds(slider);
     int stitchEdge = Math.round(displayWidth * slider);
     
-    // p.image(pg, 0, 0);
-    stitchWorlds(p, slider);
+    for(World w: worlds){
+      w.updateGraphics();
+    }
+
+    s.set("divPoint", slider);
+    pg.beginDraw();
+    pg.shader(s);
+    pg.rect(0, 0, pg.width, pg.height);
+    pg.endDraw();
+
+    p.image(pg, 0, 0);
+
+    // draw the center line
     p.pushStyle();
       p.stroke(255);
       p.line(stitchEdge, 0, stitchEdge, displayHeight);
