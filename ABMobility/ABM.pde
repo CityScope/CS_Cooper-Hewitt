@@ -178,7 +178,7 @@ public class ABM {
   
   public void draw(PGraphics p){
     for (Agent agent : agents) {
-      agent.draw(p);
+      agent.draw(p,showGlyphs);
     }
   }
   
@@ -244,15 +244,20 @@ public class Agent{
   }
 
 
-  public void draw(PGraphics p){
-    PImage img = glyph[frameCount % glyph.length];
-    
-    p.pushMatrix();
+  public void draw(PGraphics p, boolean glyphs){
+    if(glyphs){
+      PImage img = glyph[frameCount % glyph.length];
+      p.pushMatrix();
       p.translate(pos.x, pos.y);
       p.rotate(dir.heading() + PI * 0.5);
       p.translate(-1, 0);
       p.image(img, 0, 0, img.width * scale, img.height * scale);
-    p.popMatrix();
+      p.popMatrix();
+    }else{
+      p.fill(universe.colorMap.get(type));
+      p.ellipse(pos.x,pos.y,10,10);
+    }
+    
   }
     
   // CALCULATE ROUTE --->

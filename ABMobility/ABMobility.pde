@@ -14,6 +14,7 @@ public int playGroundHeight = displayHeight;
 Universe universe;
 boolean showBuilding = true;
 boolean showBackground = true;
+boolean showGlyphs = true;
 UDPReceiver udpR;
 
 void setup(){
@@ -69,8 +70,11 @@ void keyPressed() {
     showBuilding= !showBuilding;
   break;
   case ' ':
-  showBackground=!showBackground;
+   showBackground=!showBackground;
   break;
+  case 'g':
+    showGlyphs = !showGlyphs;
+    break;
   
   }
 }
