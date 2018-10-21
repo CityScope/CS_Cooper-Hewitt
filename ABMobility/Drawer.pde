@@ -2,7 +2,7 @@ import deadpixel.keystone.*;
 
 public class Drawer{
   Keystone ks;
-  int nbProjector = 1;
+  int nbProjector = 2;
   CornerPinSurface[] surface = new CornerPinSurface[nbProjector];
   PGraphics offscreenSurface;
   PGraphics subSurface;

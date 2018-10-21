@@ -3,7 +3,7 @@ import hypermedia.net.*;
 
 public class UDPReceiver{
   UDP udp;  // define the UDP object
-  int PORT = 9877; 
+  int PORT = 5005; 
   String HOST_IP = "localhost";
   int index;
   
