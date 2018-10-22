@@ -255,7 +255,7 @@ public class Agent{
       p.popMatrix();
     }else{
       p.fill(universe.colorMap.get(type));
-      p.ellipse(pos.x,pos.y,10,10);
+      p.ellipse(pos.x,pos.y,10*scale,10*scale);
     }
     
   }
