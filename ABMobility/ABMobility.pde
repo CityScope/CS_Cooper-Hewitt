@@ -34,6 +34,9 @@ void setup(){
 
 void draw(){
   drawScene();
+  if (frameCount % 10000 == 0){
+    universe.InitUniverse();
+  }
 }
 
 /* Draw ------------------------------------------------------ */

@@ -161,6 +161,7 @@ public class ABM {
   }
   
   public void initModel(int nbAgent){
+    agents.clear();
     createAgents(nbAgent);
   }
 
