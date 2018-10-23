@@ -37,11 +37,9 @@ public class Universe{
       w.update();
     }
    }
-   
-   void draw(PGraphics p, float slider){
 
-    int stitchEdge = Math.round(displayWidth * slider);
-    
+   void updateGraphics(float slider){
+
     for(World w: worlds){
       w.updateGraphics();
     }
@@ -51,16 +49,17 @@ public class Universe{
     pg.shader(s);
     pg.rect(0, 0, pg.width, pg.height);
     pg.endDraw();
-
+   }
+   
+   void draw(PGraphics p, float slider){
+    int stitchEdge = Math.round(displayWidth * slider);
     p.image(pg, 0, 0);
-
     // draw the center line
     p.pushStyle();
       p.stroke(255);
       p.line(stitchEdge, 0, stitchEdge, displayHeight);
     p.popStyle();
    }
-   
 }
 
 public class World{
@@ -230,12 +229,10 @@ public class Agent{
   }
   
   public void initAgent(){
-    boolean isAdjecent = true;
-    while(srcNode == destNode || isAdjecent) {
+    do {
       srcNode =  (Node) map.graph.nodes.get(int(random(map.graph.nodes.size())));
       destNode =  (Node) map.graph.nodes.get(int(random(map.graph.nodes.size())));
-      isAdjecent = srcNode.connectedTo(destNode);
-    }    
+    } while (srcNode == destNode);    
     
     pos = new PVector(srcNode.x,srcNode.y);
     path = null;

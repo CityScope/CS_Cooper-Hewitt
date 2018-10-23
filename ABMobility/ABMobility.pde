@@ -17,10 +17,14 @@ boolean showBackground = true;
 boolean showGlyphs = true;
 UDPReceiver udpR;
 
-void setup(){
 
-  //fullScreen(P3D, SPAN);
-  size(displayWidth, displayHeight, P3D);
+void settings(){
+  fullScreen(P3D, SPAN);
+}
+
+void setup(){
+  // fullScreen(P3D, SPAN);
+  // size(displayWidth, displayHeight, P3D);
   drawer = new Drawer(this);
   drawer.initSurface();
   universe = new Universe();
@@ -30,7 +34,6 @@ void setup(){
 
 void draw(){
   drawScene();
-  //println(frameRate);
 }
 
 /* Draw ------------------------------------------------------ */
