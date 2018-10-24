@@ -78,9 +78,14 @@ public class World{
     networks = new ArrayList<RoadNetwork>();
     models = new ArrayList<ABM>();
     
-    networks.add(new RoadNetwork("network/car_"+id+".geojson"));
+    //FIXME : temporary remove the broken graph
+    /*networks.add(new RoadNetwork("network/car_"+id+".geojson"));
     networks.add(new RoadNetwork("network/bike_"+id+".geojson"));
-    networks.add(new RoadNetwork("network/ped_"+id+".geojson"));
+    networks.add(new RoadNetwork("network/ped_"+id+".geojson"));*/
+    
+    networks.add(new RoadNetwork("network/bike_"+id+".geojson"));
+    networks.add(new RoadNetwork("network/bike_"+id+".geojson"));
+    networks.add(new RoadNetwork("network/bike_"+id+".geojson"));
     
     models.add(new ABM(networks.get(0),"car",id));
     models.add(new ABM(networks.get(1),"bike",id));
@@ -92,15 +97,15 @@ public class World{
   public void InitWorld(){
     //Bad 
     if(id==1){
-      models.get(0).initModel(600);
-      models.get(1).initModel(200);
-      models.get(2).initModel(100);
+      models.get(0).initModel(300);
+      models.get(1).initModel(100);
+      models.get(2).initModel(50);
     }
     //Good
     if(id == 2){
-      models.get(0).initModel(100);
-      models.get(1).initModel(500);
-      models.get(2).initModel(300);
+      models.get(0).initModel(50);
+      models.get(1).initModel(250);
+      models.get(2).initModel(150);
     }
    
   }
