@@ -289,7 +289,7 @@ public class Agent{
         PVector destNodePos= new PVector(destNode.x,destNode.y);
         dir = PVector.sub(toNodePos, pos);  // unnormalized direction to go
           // Arrived to node -->
-          if (dir.mag() < dir.normalize().mult(speed).mag() ) {
+          if (dir.mag() <= dir.normalize().mult(speed).mag() ) {
             // Arrived to destination  --->
             if (path.indexOf(toNode) == 0 ) {  
               pos = destNodePos; // ?
