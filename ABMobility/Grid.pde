@@ -52,7 +52,8 @@ public class Building{
   
   public void draw (PGraphics p){
     p.rectMode(CORNER);
-    p.fill(#AAAAAA);
+    //p.fill(#AAAAAA);
+    p.fill(id*10,id*10,0);
     p.stroke(#000000);
     p.rect (loc.x*size, loc.y*size, size*2.0, size*2.0);
     p.fill(#666666);
