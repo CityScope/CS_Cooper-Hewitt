@@ -52,12 +52,12 @@ public class Building{
   
   public void draw (PGraphics p){
     p.rectMode(CORNER);
-    p.fill(#FFFFFF);
-    p.stroke(#000000);
-    p.rect (loc.x*size, loc.y*size, size*2, size*2);
     p.fill(#AAAAAA);
+    p.stroke(#000000);
+   // p.rect (loc.x*size, loc.y*size, size*1.6, size*1.6);
+    p.fill(#FFFFFF);
     p.textAlign(CENTER); 
-    p.textSize(30); 
-    p.text(id, loc.x*size+size, loc.y*size+size);
+    p.textSize(10); 
+    p.text(id, loc.x*size+size, loc.y*size+size*2.25);
   }
 }

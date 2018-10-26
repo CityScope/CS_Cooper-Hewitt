@@ -12,7 +12,7 @@ public int playGroundWidth = displayWidth;
 public int playGroundHeight = displayHeight;
 
 Universe universe;
-boolean showBuilding = false;
+boolean showBuilding = true;
 boolean showBackground = false;
 boolean showGlyphs = true;
 UDPReceiver udpR;
