@@ -54,8 +54,8 @@ public class Building{
     p.rectMode(CORNER);
     p.fill(#AAAAAA);
     p.stroke(#000000);
-   // p.rect (loc.x*size, loc.y*size, size*1.6, size*1.6);
-    p.fill(#FFFFFF);
+    p.rect (loc.x*size, loc.y*size, size*2.0, size*2.0);
+    p.fill(#666666);
     p.textAlign(CENTER); 
     p.textSize(10); 
     p.text(id, loc.x*size+size, loc.y*size+size*2.25);

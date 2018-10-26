@@ -30,6 +30,7 @@ void setup(){
   universe = new Universe();
   universe.InitUniverse();
   udpR = new UDPReceiver();
+  drawer.ks.load();
 } 
 
 void draw(){
