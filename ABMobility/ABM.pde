@@ -83,7 +83,7 @@ public class World{
     networks.add(new RoadNetwork("network/bike_"+id+".geojson"));
     networks.add(new RoadNetwork("network/ped_"+id+".geojson"));*/
     
-    networks.add(new RoadNetwork("network/simpler_network/bike_"+id+".geojson"));
+    networks.add(new RoadNetwork("network/simpler_network/car_"+id+".geojson"));
     networks.add(new RoadNetwork("network/simpler_network/bike_"+id+".geojson"));
     networks.add(new RoadNetwork("network/simpler_network/ped_"+id+".geojson"));
     
