@@ -177,7 +177,7 @@ public class ABM {
   // Same to this version's World
   public void update(){
     for(Agent a : agents){
-      a.update(1);
+      a.update();
     }
   }
   
@@ -189,7 +189,7 @@ public class ABM {
   
   public void createAgents(int num) {
     for (int i = 0; i < num; i++){
-      agents.add(new Agent(map,type,worldId));
+      agents.add(new Agent(map,type));
     }
   } 
 }
@@ -198,14 +198,13 @@ public class Agent{
   private RoadNetwork map; // NOTE(Yasushi Sakai): this is a reference to the map right?
   private String type;
   private PImage[] glyph;
-  private int worldId;
-  private color myColor;
   private PVector pos;
   private Node srcNode, destNode, toNode; // toNode is like next node
   private ArrayList<Node> path;
   private PVector dir;
+  private float speed;
   
-  Agent(RoadNetwork _map, String _type, int _worldId){
+  Agent(RoadNetwork _map, String _type){
     map = _map;
     type = _type;
 
@@ -214,23 +213,24 @@ public class Agent{
       case "car" :
         glyph = new PImage[1];
         glyph[0] = loadImage("image/" + type + ".gif");
+        speed=0.5 + random(-0.3,0.3);
       break;
       case "bike" :
         glyph = new PImage[2];
         glyph[0] = loadImage("image/" + type + "-0.gif");
         glyph[1] = loadImage("image/" + type + "-1.gif");
+        speed=0.2 + random(-0.15,0.15);
       break;
       case "ped" :
         glyph = new PImage[3];
         glyph[0] = loadImage("image/" + "human" + "-0.gif");
         glyph[1] = loadImage("image/" + "human" + "-1.gif");
         glyph[2] = loadImage("image/" + "human" + "-2.gif");
+        speed=0.1 + random(-0.05,0.05);
       break;
       default:
       break;
     }
-
-    worldId=_worldId;
     initAgent();
   }
   
@@ -243,7 +243,6 @@ public class Agent{
     pos = new PVector(srcNode.x,srcNode.y);
     path = null;
     dir = new PVector(0.0, 0.0);
-    myColor= universe.colorMap.get(type);
   }
 
 
@@ -281,7 +280,7 @@ public class Agent{
     return false;
   }
   
-  public void update(float speed) {
+  public void update() {
         if (path == null){
           calcRoute();
         }
