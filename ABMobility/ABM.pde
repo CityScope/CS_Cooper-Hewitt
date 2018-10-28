@@ -97,15 +97,15 @@ public class World{
   public void InitWorld(){
     //Bad 
     if(id==1){
-      models.get(0).initModel(300);
-      models.get(1).initModel(100);
-      models.get(2).initModel(50);
+      models.get(0).initModel(500);
+      models.get(1).initModel(350);
+      models.get(2).initModel(150);
     }
     //Good
     if(id == 2){
       models.get(0).initModel(50);
-      models.get(1).initModel(250);
-      models.get(2).initModel(150);
+      models.get(1).initModel(350);
+      models.get(2).initModel(600);
     }
    
   }
