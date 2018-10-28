@@ -35,11 +35,19 @@
     println("message" + message);
     JSONObject json = parseJSONObject(message); 
     JSONArray grids = json.getJSONArray("grid");
-    for(int i=0; i < grids.size(); i++) { 
-      buildingsOnGrid.get(i).id = grids.getJSONArray(i).getInt(0);
-      buildingsOnGrid.get(i).nbR = buildings.get(grids.getJSONArray(i).getInt(0)).nbR;
-      buildingsOnGrid.get(i).nbO = buildings.get(grids.getJSONArray(i).getInt(0)).nbO;
-      buildingsOnGrid.get(i).nbA = buildings.get(grids.getJSONArray(i).getInt(0)).nbA;
+    for(int i=0; i < grids.size(); i++) {
+      if(grids.getJSONArray(i).getInt(0) !=-1){
+        buildingsOnGrid.get(i).id = grids.getJSONArray(i).getInt(0);
+        buildingsOnGrid.get(i).nbR = buildings.get(grids.getJSONArray(i).getInt(0)).nbR;
+        buildingsOnGrid.get(i).nbO = buildings.get(grids.getJSONArray(i).getInt(0)).nbO;
+        buildingsOnGrid.get(i).nbA = buildings.get(grids.getJSONArray(i).getInt(0)).nbA;
+      }
+      else{
+        buildingsOnGrid.get(i).id = -1;
+        buildingsOnGrid.get(i).nbR = -1;
+        buildingsOnGrid.get(i).nbO = -1;
+        buildingsOnGrid.get(i).nbA = -1;
+      }
     }
    }
 
@@ -66,9 +74,14 @@ public class Building{
     p.fill(#666666);
     p.stroke(#000000);
     p.rect (loc.x*size, loc.y*size, size*2.0, size*2.0);
-    p.fill(#666666);
     p.textAlign(CENTER); 
-    p.textSize(10); 
-    p.text("id:" + id + " R:" + nbR + " 0:" + nbO + " A:" + nbA, loc.x*size+size, loc.y*size+size*2.25);
+    p.textSize(10);
+    if(id!=-1){ 
+      p.fill(#666666);
+      p.text("id:" + int(id +1) + " R:" + nbR + " 0:" + nbO + " A:" + nbA, loc.x*size+size, loc.y*size+size*2.25);} 
+    else {
+      p.fill(#660000);
+      p.text("id:" + -1 , loc.x*size+size, loc.y*size+size*2.25);
+    }
   }
 }
