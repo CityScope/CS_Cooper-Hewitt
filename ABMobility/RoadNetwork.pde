@@ -4,8 +4,9 @@ public class RoadNetwork {
   private PVector size;
   private PVector[] bounds;  // [0] Left-Top  [1] Right-Bottom
   private Pathfinder graph;
+  private String type;
   /* <--- CONSTRUCTOR ---> */
-  RoadNetwork(String GeoJSONfile) {
+  RoadNetwork(String GeoJSONfile, String _type) {
 
     ArrayList<Node> nodes = new ArrayList<Node>();
     
@@ -15,6 +16,8 @@ public class RoadNetwork {
     
      // Set map bounds -->
     setBoundingBox(JSONlines);
+    
+    type=_type;
     
     // Import all nodes -->
     Node prevNode = null;
@@ -93,7 +96,12 @@ public class RoadNetwork {
     for(int i = 0; i < graph.nodes.size(); i++){
       Node tempN = (Node)graph.nodes.get(i);
       for(int j = 0; j < tempN.links.size(); j++){
-        p.stroke(#AAAAAA); p.strokeWeight(1);
+        if(showGlyphs){
+          p.stroke(#AAAAAA);
+        }else{
+          p.stroke(universe.colorMap.get(type));
+        }
+        p.strokeWeight(1);
         p.line(tempN.x, tempN.y, ((Connector)tempN.links.get(j)).n.x, ((Connector)tempN.links.get(j)).n.y);
       }
     }  

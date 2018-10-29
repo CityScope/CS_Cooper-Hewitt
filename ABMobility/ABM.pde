@@ -83,9 +83,9 @@ public class World{
     networks.add(new RoadNetwork("network/bike_"+id+".geojson"));
     networks.add(new RoadNetwork("network/ped_"+id+".geojson"));*/
     
-    networks.add(new RoadNetwork("network/simple_and_complex_network/car_"+id+".geojson"));
-    networks.add(new RoadNetwork("network/simple_and_complex_network/bike_"+id+".geojson"));
-    networks.add(new RoadNetwork("network/simple_and_complex_network/ped_"+id+".geojson"));
+    networks.add(new RoadNetwork("network/simple_and_complex_network/car_"+id+".geojson","car"));
+    networks.add(new RoadNetwork("network/simple_and_complex_network/bike_"+id+".geojson","bike"));
+    networks.add(new RoadNetwork("network/simple_and_complex_network/ped_"+id+".geojson","ped"));
     
     models.add(new ABM(networks.get(0),"car",id));
     models.add(new ABM(networks.get(1),"bike",id));
@@ -259,6 +259,7 @@ public class Agent{
       p.image(img, 0, 0, img.width * scale, img.height * scale);
       p.popMatrix();
     }else{
+      p.noStroke();
       p.fill(universe.colorMap.get(type));
       p.ellipse(pos.x,pos.y,10*scale,10*scale);
     }
