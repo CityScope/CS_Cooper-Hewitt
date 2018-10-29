@@ -83,9 +83,9 @@ public class World{
     networks.add(new RoadNetwork("network/bike_"+id+".geojson"));
     networks.add(new RoadNetwork("network/ped_"+id+".geojson"));*/
     
-    networks.add(new RoadNetwork("network/simpler_network/car_"+id+".geojson"));
-    networks.add(new RoadNetwork("network/simpler_network/bike_"+id+".geojson"));
-    networks.add(new RoadNetwork("network/simpler_network/ped_"+id+".geojson"));
+    networks.add(new RoadNetwork("network/simple_and_complex_network/car_"+id+".geojson"));
+    networks.add(new RoadNetwork("network/simple_and_complex_network/bike_"+id+".geojson"));
+    networks.add(new RoadNetwork("network/simple_and_complex_network/ped_"+id+".geojson"));
     
     models.add(new ABM(networks.get(0),"car",id));
     models.add(new ABM(networks.get(1),"bike",id));
@@ -182,6 +182,9 @@ public class ABM {
   }
   
   public void draw(PGraphics p){
+    if(showNetwork){
+      map.draw(p); 
+    }
     for (Agent agent : agents) {
       agent.draw(p,showGlyphs);
     }

@@ -15,6 +15,7 @@ Universe universe;
 boolean showBuilding = true;
 boolean showBackground = false;
 boolean showGlyphs = true;
+boolean showNetwork = false;
 UDPReceiver udpR;
 
 
@@ -81,6 +82,9 @@ void keyPressed() {
   break;
   case 'g':
     showGlyphs = !showGlyphs;
+    break;
+  case 'n':
+    showNetwork = !showNetwork;
     break;
   
   }
