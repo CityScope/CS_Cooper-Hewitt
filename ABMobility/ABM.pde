@@ -213,20 +213,20 @@ public class Agent{
       case "car" :
         glyph = new PImage[1];
         glyph[0] = loadImage("image/" + type + ".gif");
-        speed=0.5 + random(-0.3,0.3);
+        speed=1.0;// + random(-0.3,0.3);
       break;
       case "bike" :
         glyph = new PImage[2];
         glyph[0] = loadImage("image/" + type + "-0.gif");
         glyph[1] = loadImage("image/" + type + "-1.gif");
-        speed=0.2 + random(-0.15,0.15);
+        speed=1.0;// + random(-0.15,0.15);
       break;
       case "ped" :
         glyph = new PImage[3];
         glyph[0] = loadImage("image/" + "human" + "-0.gif");
         glyph[1] = loadImage("image/" + "human" + "-1.gif");
         glyph[2] = loadImage("image/" + "human" + "-2.gif");
-        speed=0.1 + random(-0.05,0.05);
+        speed=1.0;// + random(-0.05,0.05);
       break;
       default:
       break;

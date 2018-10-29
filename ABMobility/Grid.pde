@@ -78,7 +78,7 @@ public class Building{
     p.textSize(10);
     if(id!=-1){ 
       p.fill(#666666);
-      p.text("id:" + int(id +1) + " R:" + nbR + " 0:" + nbO + " A:" + nbA, loc.x*size+size, loc.y*size+size*2.25);} 
+      p.text("id:" + int(id ) + " R:" + nbR + " 0:" + nbO + " A:" + nbA, loc.x*size+size, loc.y*size+size*2.25);} 
     else {
       p.fill(#660000);
       p.text("id:" + -1 , loc.x*size+size, loc.y*size+size*2.25);
