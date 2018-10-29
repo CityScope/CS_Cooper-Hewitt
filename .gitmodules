@@ -16,3 +16,4 @@
 [submodule "CS_activityBased"]
 	path = CS_activityBased
 	url = https://github.com/CityScope/CS_activityBased
+	branch = master
