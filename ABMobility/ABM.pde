@@ -83,9 +83,9 @@ public class World{
     networks.add(new RoadNetwork("network/simple_and_complex_network/car_1.geojson","bike"));
     networks.add(new RoadNetwork("network/simple_and_complex_network/car_1.geojson","ped"));*/
     
-    networks.add(new RoadNetwork("network/simple_and_complex_network/car_"+id+".geojson","car"));
-    networks.add(new RoadNetwork("network/simple_and_complex_network/bike_"+id+".geojson","bike"));
-    networks.add(new RoadNetwork("network/simple_and_complex_network/ped_"+id+".geojson","ped"));
+    networks.add(new RoadNetwork("network/Complex_network/car_"+id+".geojson","car"));
+    networks.add(new RoadNetwork("network/Complex_network/bike_"+id+".geojson","bike"));
+    networks.add(new RoadNetwork("network/Complex_network/ped_"+id+".geojson","ped"));
     
     models.add(new ABM(networks.get(0),"car",id));
     models.add(new ABM(networks.get(1),"bike",id));
@@ -97,15 +97,15 @@ public class World{
   public void InitWorld(){
     //Bad 
     if(id==1){
-      models.get(0).initModel(500);
-      models.get(1).initModel(350);
+      models.get(0).initModel(400);
+      models.get(1).initModel(250);
       models.get(2).initModel(150);
     }
     //Good
     if(id == 2){
       models.get(0).initModel(50);
-      models.get(1).initModel(350);
-      models.get(2).initModel(600);
+      models.get(1).initModel(250);
+      models.get(2).initModel(400);
     }
    
   }
@@ -309,8 +309,8 @@ public class Agent{
             // Arrived to destination  --->
             if (path.indexOf(toNode) == 0 ) {  
               pos = destNodePos; // ?
-              this.initAgent();
-              //this.initAgentInsideBuilding();
+              //this.initAgent();
+              this.initAgentInsideBuilding();
             // Not destination. Look for next node --->
             } else {  
               srcNode = toNode;
