@@ -15,11 +15,11 @@
           
      table = loadTable("block/Cooper Hewitt Buildings - Building Blocks.csv", "header");
      for (TableRow row : table.rows()) {
-       buildings.add(new Building(gridMap.get(row.getInt("id")-1),row.getInt("id")-1,row.getInt("R"),row.getInt("O"),row.getInt("A")));
+       buildings.add(new Building(gridMap.get(row.getInt("id")),row.getInt("id"),row.getInt("R"),row.getInt("O"),row.getInt("A")));
      }
      
      for (int i=0;i<=18;i++){
-       buildingsOnGrid.add(new Building(gridMap.get(i),i+1,0,0,0));
+       buildingsOnGrid.add(new Building(gridMap.get(i),i,0,0,0));
      }
    }
    
@@ -49,6 +49,10 @@
         buildingsOnGrid.get(i).nbA = -1;
       }
     }
+   }
+   
+   public PVector getBuildingCenterPosistionPerId(int id){
+     return new PVector(buildings.get(id).loc.x*buildings.get(id).size + buildings.get(id).size ,buildings.get(id).loc.y*buildings.get(id).size +buildings.get(id).size);
    }
 
 }

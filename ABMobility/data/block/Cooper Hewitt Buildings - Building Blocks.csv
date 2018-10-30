@@ -1,25 +1,25 @@
 id,R,O,A,type,
-1,100,0,0,Low,
-2,100,0,0,High,
-3,0,75,25,Low,
-4,0,75,25,High,
-5,50,50,0,Low,
-6,50,50,0,High,
-7,0,25,75,Low,
-8,0,25,75,High,
-9,0,0,100,Low,
-10,0,0,100,High,
-11,0,0,100,Low,
-12,0,0,100,High,
-13,25,25,50,Low,
-14,25,25,50,High,
-15,100,0,0,Low,Not Defined
-16,100,0,0,High,Not Defined
+0,100,0,0,Low,
+1,100,0,0,High,
+2,0,75,25,Low,
+3,0,75,25,High,
+4,50,50,0,Low,
+5,50,50,0,High,
+6,0,25,75,Low,
+7,0,25,75,High,
+8,0,0,100,Low,
+9,0,0,100,High,
+10,0,0,100,Low,
+11,0,0,100,High,
+12,25,25,50,Low,
+13,25,25,50,High,
+14,100,0,0,Low,Not Defined
+15,100,0,0,High,Not Defined
+16,0,100,0,High,Not Defined
 17,0,100,0,High,Not Defined
-18,0,100,0,High,Not Defined
-19,50,25,25,Low,Not Defined
-20,50,25,25,High,Not Defined
-21,0,0,100,Low,Not Defined
-22,0,0,100,High,Not Defined
+18,50,25,25,Low,Not Defined
+19,50,25,25,High,Not Defined
+20,0,0,100,Low,Not Defined
+21,0,0,100,High,Not Defined
+22,0,0,100,Low,Park
 23,0,0,100,Low,Park
-24,0,0,100,Low,Park
