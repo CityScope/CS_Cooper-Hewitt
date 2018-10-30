@@ -79,9 +79,9 @@ public class World{
     models = new ArrayList<ABM>();
     
     //FIXME : temporary remove the broken graph
-    /*networks.add(new RoadNetwork("network/car_"+id+".geojson"));
-    networks.add(new RoadNetwork("network/bike_"+id+".geojson"));
-    networks.add(new RoadNetwork("network/ped_"+id+".geojson"));*/
+    /*networks.add(new RoadNetwork("network/simple_and_complex_network/car_1.geojson","car"));
+    networks.add(new RoadNetwork("network/simple_and_complex_network/car_1.geojson","bike"));
+    networks.add(new RoadNetwork("network/simple_and_complex_network/car_1.geojson","ped"));*/
     
     networks.add(new RoadNetwork("network/simple_and_complex_network/car_"+id+".geojson","car"));
     networks.add(new RoadNetwork("network/simple_and_complex_network/bike_"+id+".geojson","bike"));
@@ -247,6 +247,19 @@ public class Agent{
     path = null;
     dir = new PVector(0.0, 0.0);
   }
+  
+  
+  
+  public void initAgentInsideBuilding(){
+    do {
+      srcNode =  map.getNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(int(random(18))),2*int((SIMULATION_WIDTH/16)*scale)).get(0);
+      destNode =  map.getNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(int(random(18))),2*int((SIMULATION_WIDTH/16)*scale)).get(0);
+    } while (srcNode == destNode);    
+    
+    pos = new PVector(srcNode.x,srcNode.y);
+    path = null;
+    dir = new PVector(0.0, 0.0);
+  }
 
 
   public void draw(PGraphics p, boolean glyphs){
@@ -297,6 +310,7 @@ public class Agent{
             if (path.indexOf(toNode) == 0 ) {  
               pos = destNodePos; // ?
               this.initAgent();
+              //this.initAgentInsideBuilding();
             // Not destination. Look for next node --->
             } else {  
               srcNode = toNode;
