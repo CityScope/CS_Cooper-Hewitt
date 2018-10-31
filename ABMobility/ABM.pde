@@ -100,9 +100,13 @@ public class Universe {
    }
 }
 
-public class World{
+public class World {
   private ArrayList<ABM> models;
-  private ArrayList<RoadNetwork> networks;
+  // Networks is a mapping from network name to RoadNetwork.
+  // e.g. "car" --> RoadNetwork, ... etc
+  private HashMap<String, RoadNetwork> networks;
+  private HashMap<String, PImage[]> glyphsMap;
+  private ArrayList<Agent> agents;
   
   int id;
 
@@ -111,46 +115,42 @@ public class World{
 
   World(int _id, String _background, HashMap<String, PImage[]> _glyphsMap){
     id = _id;
+    glyphsMap = _glyphsMap;
     background = loadImage(_background);
-    
-    networks = new ArrayList<RoadNetwork>();
+    agents = new ArrayList<Agent>();
+
+    // Create the road networks.
+    RoadNetwork carNetwork = new RoadNetwork("network/Complex_network/car_"+id+".geojson", "car");
+    RoadNetwork bikeNetwork = new RoadNetwork("network/Complex_network/bike_"+id+".geojson", "bike");
+    RoadNetwork pedNetwork = new RoadNetwork("network/Complex_network/ped_"+id+".geojson", "ped");
+    networks = new HashMap<String, RoadNetwork>();
+    networks.put("car", carNetwork);
+    networks.put("bike", bikeNetwork);
+    networks.put("ped", pedNetwork);
+
+    // Create the models    
     models = new ArrayList<ABM>();
-    
-    //FIXME : temporary remove the broken graph
-    /*networks.add(new RoadNetwork("network/simple_and_complex_network/car_1.geojson","car"));
-    networks.add(new RoadNetwork("network/simple_and_complex_network/car_1.geojson","bike"));
-    networks.add(new RoadNetwork("network/simple_and_complex_network/car_1.geojson","ped"));*/
-    
-    networks.add(new RoadNetwork("network/Complex_network/car_"+id+".geojson","car"));
-    networks.add(new RoadNetwork("network/Complex_network/bike_"+id+".geojson","bike"));
-    networks.add(new RoadNetwork("network/Complex_network/ped_"+id+".geojson","ped"));
-    
-    models.add(new ABM(networks.get(0),"car",id, _glyphsMap));
-    models.add(new ABM(networks.get(1),"bike",id, _glyphsMap));
-    models.add(new ABM(networks.get(2),"ped",id, _glyphsMap));
+    models.add(new ABM(carNetwork, "car", id));
+    models.add(new ABM(bikeNetwork, "bike", id));
+    models.add(new ABM(pedNetwork, "ped", id));
+
+    createAgents(800);
 
     pg = createGraphics(displayWidth, displayHeight, P2D);
   }
   
-  public void InitWorld(){
-    //Bad 
-    if(id==1){
-      models.get(0).initModel(400);
-      models.get(1).initModel(250);
-      models.get(2).initModel(150);
+  public void InitWorld() {}
+
+  public void createAgents(int num) {
+    // Creates a certain number of agents in each pool
+    for (int i = 0; i < num; i++) {
+        agents.add(new Agent(networks, glyphsMap));
     }
-    //Good
-    if(id == 2){
-      models.get(0).initModel(50);
-      models.get(1).initModel(250);
-      models.get(2).initModel(400);
-    }
-   
   }
 
   public void update(){
-    for(ABM m: models){
-      m.update();
+    for (Agent a : agents) {
+      a.update();
     }
   }
 
@@ -160,6 +160,9 @@ public class World{
 
     for (ABM m: models){
       m.draw(p);
+    }
+    for (Agent agent : agents) {
+      agent.draw(p, showGlyphs);
     }
   }
 
@@ -174,6 +177,9 @@ public class World{
     for(ABM m: models){
       m.draw(pg);
     }
+    for (Agent agent : agents) {
+      agent.draw(pg, showGlyphs);
+    }
 
     pg.endDraw();
   }
@@ -182,51 +188,24 @@ public class World{
 
 
 // ABM stands for Agent Based Model.
-// Holds a pair of a single specific type of agent and a Road Network
+// It is currently used as a wrapper for the road network.
 public class ABM {
   private RoadNetwork map;
-  private HashMap<String, PImage[]> glyphsMap;
-  private ArrayList<Agent> agents;
   private String type;
   private int worldId;
   public color modelColor;
   
-  ABM(RoadNetwork _map, String _type, int _worldId, HashMap<String, PImage[]> _glyphsMap){
+  ABM(RoadNetwork _map, String _type, int _worldId){
     map=_map;
-    glyphsMap = _glyphsMap;
-    agents = new ArrayList<Agent>();
     type= _type;
     worldId= _worldId;
   }
   
-  public void initModel(int nbAgent){
-    agents.clear();
-    createAgents(nbAgent);
-  }
-
-
-  // NOTE(Yasushi Sakai): maybe better to multithread this too.
-  // but the ABM might be flattened and hold
-  // mutliple models and agents.
-  // Same to this version's World
-  public void update(){
-    for(Agent a : agents){
-      a.update();
-    }
-  }
+  public void initModel() {}
   
   public void draw(PGraphics p){
-    if(showNetwork){
+    if (showNetwork) {
       map.draw(p); 
     }
-    for (Agent agent : agents) {
-      agent.draw(p,showGlyphs);
-    }
   }
-  
-  public void createAgents(int num) {
-    for (int i = 0; i < num; i++){
-      agents.add(new Agent(map, type, glyphsMap));
-    }
-  } 
 }

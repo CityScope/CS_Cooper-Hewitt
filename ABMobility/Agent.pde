@@ -1,18 +1,27 @@
 
 public class Agent {
-  private RoadNetwork map;
+
+  // Networks is a mapping from network name to RoadNetwork.
+  // e.g. "car" --> RoadNetwork, ... etc
+  private HashMap<String, RoadNetwork> networks;
+  private HashMap<String, PImage[]> glyphsMap;
+  private RoadNetwork map;  // Curent network used for mobility type.
   private String mobilityType;
   private PImage[] glyph;
   private PVector pos;
-  private Node srcNode, destNode, toNode; // toNode is like next node
+  private Node srcNode, destNode, toNode;  // toNode is like next node
   private ArrayList<Node> path;
   private PVector dir;
   private float speed;
+
+  private int homeBuildingId;
+  private int workBuildingId;
   
-  Agent(RoadNetwork _map){
-    map = _map;
-    // TODO(aberke): move this
-    setupMobilityType();
+  Agent(HashMap<String, RoadNetwork> _networks, HashMap<String, PImage[]> _glyphsMap){
+    networks = _networks;
+    glyphsMap = _glyphsMap;
+    setupMobilityType(); // get mobility type and map
+    // get the src and dst nodes + calculate route
     initAgent();
   }
   
@@ -25,6 +34,8 @@ public class Agent {
     pos = new PVector(srcNode.x, srcNode.y);
     path = null;
     dir = new PVector(0.0, 0.0);
+
+    calcRoute();
   }
   
   
@@ -37,6 +48,8 @@ public class Agent {
     pos = new PVector(srcNode.x,srcNode.y);
     path = null;
     dir = new PVector(0.0, 0.0);
+    
+    calcRoute();
   }
 
 
@@ -73,25 +86,18 @@ public class Agent {
 
   private void setupMobilityType() {
     mobilityType = chooseMobilityType();
-    // TODO(Yasushi Sakai): Previous Glyphs are faster??
+    map = networks.get(mobilityType);
+    glyph = glyphsMap.get(mobilityType);
+
     switch(mobilityType) {
       case "car" :
-        glyph = new PImage[1];
-        glyph[0] = loadImage("image/" + mobilityType + ".gif");
-        speed = 1.0;// + random(-0.3,0.3);
+        speed = 1.0+ random(-0.3,0.3);
       break;
       case "bike" :
-        glyph = new PImage[2];
-        glyph[0] = loadImage("image/" + mobilityType + "-0.gif");
-        glyph[1] = loadImage("image/" + mobilityType + "-1.gif");
-        speed = 1.0;// + random(-0.15,0.15);
+        speed = 1.0+ random(-0.15,0.15);
       break;
       case "ped" :
-        glyph = new PImage[3];
-        glyph[0] = loadImage("image/" + "human" + "-0.gif");
-        glyph[1] = loadImage("image/" + "human" + "-1.gif");
-        glyph[2] = loadImage("image/" + "human" + "-2.gif");
-        speed = 1.0;// + random(-0.05,0.05);
+        speed = 1.0 + random(-0.05,0.05);
       break;
       default:
       break;
@@ -117,11 +123,6 @@ public class Agent {
   }
   
   public void update() {
-    if (path == null){
-      // Agent must get its path and choose a mobility type for its route.
-      calcRoute();
-      setupMobilityType();
-    }
     PVector toNodePos = new PVector(toNode.x, toNode.y);
     PVector destNodePos = new PVector(destNode.x, destNode.y);
     dir = PVector.sub(toNodePos, pos);  // unnormalized direction to go
