@@ -216,20 +216,20 @@ public class Agent{
       case "car" :
         glyph = new PImage[1];
         glyph[0] = loadImage("image/" + type + ".gif");
-        speed=1.0;// + random(-0.3,0.3);
+        speed=0.7 + random(-0.3,0.3);
       break;
       case "bike" :
         glyph = new PImage[2];
         glyph[0] = loadImage("image/" + type + "-0.gif");
         glyph[1] = loadImage("image/" + type + "-1.gif");
-        speed=1.0;// + random(-0.15,0.15);
+        speed=0.3 + random(-0.15,0.15);
       break;
       case "ped" :
         glyph = new PImage[3];
         glyph[0] = loadImage("image/" + "human" + "-0.gif");
         glyph[1] = loadImage("image/" + "human" + "-1.gif");
         glyph[2] = loadImage("image/" + "human" + "-2.gif");
-        speed=1.0;// + random(-0.05,0.05);
+        speed=0.1 + random(-0.05,0.05);
       break;
       default:
       break;
@@ -265,7 +265,9 @@ public class Agent{
 
   public void draw(PGraphics p, boolean glyphs){
     if(glyphs){
-      PImage img = glyph[frameCount % glyph.length];
+      //PImage img = glyph[frameCount % glyph.length];
+      //A.G: Temporally disable the moviong gluphs (see issue #33)
+      PImage img = glyph[0];
       p.pushMatrix();
       p.translate(pos.x, pos.y);
       p.rotate(dir.heading() + PI * 0.5);
