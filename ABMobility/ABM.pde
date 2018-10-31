@@ -3,6 +3,7 @@
 public class Universe{
    private ArrayList<World> worlds;
    HashMap<String,Integer> colorMap;
+   HashMap<String, PImage[]> glyphsMap;
    Grid grid;
 
    PShader s;
@@ -11,11 +12,26 @@ public class Universe{
    Universe(){
      colorMap = new HashMap<String,Integer>();
      colorMap.put("car",#FF0000);colorMap.put("bike",#00FF00);colorMap.put("ped",#0000FF);
+     // Create the glyphs and hold in map
+     PImage[] carGlyph = new PImage[1];
+     carGlyph[0] = loadImage("image/car.gif");
+     PImage[] bikeGlyph = new PImage[2];
+     bikeGlyph[0] = loadImage("image/bike-0.gif");
+     bikeGlyph[1] = loadImage("image/bike-1.gif");
+     PImage[] pedGlyph = new PImage[3];
+     pedGlyph[0] = loadImage("image/human-0.gif");
+     pedGlyph[1] = loadImage("image/human-1.gif");
+     pedGlyph[2] = loadImage("image/human-2.gif");
+     glyphsMap = new HashMap<String, PImage[]>();
+     glyphsMap.put("car", carGlyph);
+     glyphsMap.put("bike", bikeGlyph);
+     glyphsMap.put("ped", pedGlyph);
+
      worlds = new ArrayList<World>();
      grid = new Grid();
 
-     worlds.add(new World(1, "image/background_01.png"));
-     worlds.add(new World(2, "image/background_02.png"));
+     worlds.add(new World(1, "image/background_01.png", glyphsMap));
+     worlds.add(new World(2, "image/background_02.png", glyphsMap));
 
       s = loadShader("mask.glsl");
       s.set("width", float(displayWidth));
@@ -71,7 +87,7 @@ public class World{
   PImage background;
   PGraphics pg;
 
-  World(int _id, String _background){
+  World(int _id, String _background, HashMap<String, PImage[]> _glyphsMap){
     id = _id;
     background = loadImage(_background);
     
@@ -87,9 +103,9 @@ public class World{
     networks.add(new RoadNetwork("network/Complex_network/bike_"+id+".geojson","bike"));
     networks.add(new RoadNetwork("network/Complex_network/ped_"+id+".geojson","ped"));
     
-    models.add(new ABM(networks.get(0),"car",id));
-    models.add(new ABM(networks.get(1),"bike",id));
-    models.add(new ABM(networks.get(2),"ped",id));
+    models.add(new ABM(networks.get(0),"car",id, _glyphsMap));
+    models.add(new ABM(networks.get(1),"bike",id, _glyphsMap));
+    models.add(new ABM(networks.get(2),"ped",id, _glyphsMap));
 
     pg = createGraphics(displayWidth, displayHeight, P2D);
   }
@@ -153,13 +169,15 @@ public class World{
 // Holds a pair of a single specific type of agent and a Road Network
 public class ABM {
   private RoadNetwork map;
+  private HashMap<String, PImage[]> glyphsMap;
   private ArrayList<Agent> agents;
   private String type;
   private int worldId;
   public color modelColor;
   
-  ABM(RoadNetwork _map, String _type, int _worldId){
+  ABM(RoadNetwork _map, String _type, int _worldId, HashMap<String, PImage[]> _glyphsMap){
     map=_map;
+    glyphsMap = _glyphsMap;
     agents = new ArrayList<Agent>();
     type= _type;
     worldId= _worldId;
@@ -192,7 +210,7 @@ public class ABM {
   
   public void createAgents(int num) {
     for (int i = 0; i < num; i++){
-      agents.add(new Agent(map,type));
+      agents.add(new Agent(map, type, glyphsMap));
     }
   } 
 }
@@ -200,6 +218,7 @@ public class ABM {
 public class Agent{
   private RoadNetwork map; // NOTE(Yasushi Sakai): this is a reference to the map right?
   private String type;
+  private HashMap<String, PImage[]> glyphsMap;
   private PImage[] glyph;
   private PVector pos;
   private Node srcNode, destNode, toNode; // toNode is like next node
@@ -207,28 +226,21 @@ public class Agent{
   private PVector dir;
   private float speed;
   
-  Agent(RoadNetwork _map, String _type){
+  Agent(RoadNetwork _map, String _type, HashMap<String, PImage[]> _glyphsMap) {
     map = _map;
     type = _type;
 
     // TODO(Yasushi Sakai): Previous Glyphs are faster??
+    glyphsMap = _glyphsMap;
+    glyph = glyphsMap.get(type);
     switch(type){
       case "car" :
-        glyph = new PImage[1];
-        glyph[0] = loadImage("image/" + type + ".gif");
         speed=0.7 + random(-0.3,0.3);
       break;
       case "bike" :
-        glyph = new PImage[2];
-        glyph[0] = loadImage("image/" + type + "-0.gif");
-        glyph[1] = loadImage("image/" + type + "-1.gif");
         speed=0.3 + random(-0.15,0.15);
       break;
       case "ped" :
-        glyph = new PImage[3];
-        glyph[0] = loadImage("image/" + "human" + "-0.gif");
-        glyph[1] = loadImage("image/" + "human" + "-1.gif");
-        glyph[2] = loadImage("image/" + "human" + "-2.gif");
         speed=0.1 + random(-0.05,0.05);
       break;
       default:
