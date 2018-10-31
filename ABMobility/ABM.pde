@@ -251,9 +251,10 @@ public class Agent{
   
   
   public void initAgentInsideBuilding(){
-    do {
-      srcNode =  map.getNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(int(random(18))),2*int((SIMULATION_WIDTH/16)*scale)).get(0);
-      destNode =  map.getNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(int(random(18))),2*int((SIMULATION_WIDTH/16)*scale)).get(0);
+    do {      
+      srcNode =  map.getRandomNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(int(random(18))),2*int((SIMULATION_WIDTH/16)*scale));
+      destNode =  map.getRandomNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(int(random(18))),2*int((SIMULATION_WIDTH/16)*scale));
+      
     } while (srcNode == destNode);    
     
     pos = new PVector(srcNode.x,srcNode.y);

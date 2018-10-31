@@ -122,6 +122,20 @@ public class RoadNetwork {
     return tmp;
   }
   
+   public Node getRandomNodeInsideROI(PVector pos, int size){
+    ArrayList<Node> tmp = new ArrayList<Node>();
+    Node tmpNode; 
+    for (int i=0;i<graph.nodes.size();i++){
+      
+      tmpNode = (Node) graph.nodes.get(i);
+        if(((tmpNode.x>pos.x-size/2) && (tmpNode.x)<pos.x+size/2) &&
+        ((tmpNode.y>pos.y-size/2) && (tmpNode.y)<pos.y+size/2))
+        {
+          tmp.add(tmpNode);
+        }       
+      } 
+    return tmp.get(int(random(tmp.size())));
+  }
 } 
 
 
