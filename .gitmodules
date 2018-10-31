@@ -1,9 +1,6 @@
 [submodule "wiki"]
 	path = wiki
 	url = https://github.com/CityScope/CS_Cooper-Hewitt.wiki.git
-[submodule "Scanner"]
-	path = Scanner
-	url = https://github.com/RELNO/CityScope_Scanner_Python
 [submodule "graphic_studies"]
 	path = graphic_studies
 	url = https://github.com/yasushisakai/graphic_studies

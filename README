@@ -1,7 +1,8 @@
 meta repo for cooper hewitt project
 
-project members:
-if you have a repo that you want to associate, and need help adding it as a 
-submodule, please ask yasushi.
+* the scanner has removed for simplicity
 
+please clone separately from
+
+https://github.com/https://github.com/RELNO/CityScope_Scanner_Python/tree/master
 
