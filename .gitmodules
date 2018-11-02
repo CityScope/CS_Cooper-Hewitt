@@ -14,3 +14,6 @@
 	path = CS_activityBased
 	url = https://github.com/CityScope/CS_activityBased
 	branch = master
+[submodule "network_checker"]
+	path = network_checker
+	url = https://github.com/yasushisakai/network_checker
