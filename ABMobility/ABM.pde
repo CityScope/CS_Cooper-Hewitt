@@ -1,7 +1,12 @@
 /* ABM CLASS ------------------------------------------------------------*/
 
-public class Universe{
-   private ArrayList<World> worlds;
+public class Universe {
+  // This is a universe with two alternatives for future worlds.
+   private World world1;
+   private World world2;
+   // Booleans manage threading of world updates.
+   private boolean updatingWorld1;
+   private boolean updatingWorld2;
    HashMap<String,Integer> colorMap;
    HashMap<String, PImage[]> glyphsMap;
    Grid grid;
@@ -27,38 +32,55 @@ public class Universe{
      glyphsMap.put("bike", bikeGlyph);
      glyphsMap.put("ped", pedGlyph);
 
-     worlds = new ArrayList<World>();
      grid = new Grid();
-
-     worlds.add(new World(1, "image/background_01.png", glyphsMap));
-     worlds.add(new World(2, "image/background_02.png", glyphsMap));
+     world1 = new World(1, "image/background_01.png", glyphsMap);
+     world2 = new World(2, "image/background_02.png", glyphsMap);
+     updatingWorld1 = false;
+     updatingWorld2 = false;
 
       s = loadShader("mask.glsl");
       s.set("width", float(displayWidth));
       s.set("height", float(displayHeight));
-      s.set("left", worlds.get(0).pg);
-      s.set("right", worlds.get(1).pg);
+      s.set("left", world1.pg);
+      s.set("right", world2.pg);
       s.set("divPoint", state.slider);
      pg = createGraphics(displayWidth, displayHeight, P2D);
    }
    
    void InitUniverse(){
-     for (World w:worlds){
-       w.InitWorld();
-     }
+     world1.InitWorld();
+     world2.InitWorld();
    }
 
-   void update(){
-    for(World w: worlds){
-      w.update();
+   void update() {
+    // Update the worlds and models + agents they contain
+    // in separate threads than the main thread which draws
+    // the graphics.
+    if (!updatingWorld1) {
+      updatingWorld1 = true;
+      Thread t1 = new Thread(new Runnable() {
+        public void run(){
+          world1.update();
+          updatingWorld1 = false;
+        }
+      });
+      t1.start();
+    }
+    if (!updatingWorld2) {
+      updatingWorld2 = true;
+      Thread t2 = new Thread(new Runnable() {
+        public void run(){
+          world2.update();
+          updatingWorld2 = false;
+        }
+      });
+      t2.start();
     }
    }
 
    void updateGraphics(float slider){
-
-    for(World w: worlds){
-      w.updateGraphics();
-    }
+    world1.updateGraphics();
+    world2.updateGraphics();
 
     s.set("divPoint", slider);
     pg.beginDraw();
@@ -127,15 +149,9 @@ public class World{
   }
 
   public void update(){
-    // NOTE(Yasushi Sakai): using a threadpool is better?
-    Thread t = new Thread(new Runnable() {
-      public void run(){
-        for(ABM m: models){
-          m.update();
-        }
-      }
-    });
-    t.start();
+    for(ABM m: models){
+      m.update();
+    }
   }
 
   public void draw(PGraphics p){
