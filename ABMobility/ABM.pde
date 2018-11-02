@@ -100,9 +100,13 @@ public class Universe {
    }
 }
 
-public class World{
+public class World {
   private ArrayList<ABM> models;
-  private ArrayList<RoadNetwork> networks;
+  // Networks is a mapping from network name to RoadNetwork.
+  // e.g. "car" --> RoadNetwork, ... etc
+  private HashMap<String, RoadNetwork> networks;
+  private HashMap<String, PImage[]> glyphsMap;
+  private ArrayList<Agent> agents;
   
   int id;
 
@@ -111,46 +115,42 @@ public class World{
 
   World(int _id, String _background, HashMap<String, PImage[]> _glyphsMap){
     id = _id;
+    glyphsMap = _glyphsMap;
     background = loadImage(_background);
-    
-    networks = new ArrayList<RoadNetwork>();
+    agents = new ArrayList<Agent>();
+
+    // Create the road networks.
+    RoadNetwork carNetwork = new RoadNetwork("network/Complex_network/car_"+id+".geojson", "car");
+    RoadNetwork bikeNetwork = new RoadNetwork("network/Complex_network/bike_"+id+".geojson", "bike");
+    RoadNetwork pedNetwork = new RoadNetwork("network/Complex_network/ped_"+id+".geojson", "ped");
+    networks = new HashMap<String, RoadNetwork>();
+    networks.put("car", carNetwork);
+    networks.put("bike", bikeNetwork);
+    networks.put("ped", pedNetwork);
+
+    // Create the models    
     models = new ArrayList<ABM>();
-    
-    //FIXME : temporary remove the broken graph
-    /*networks.add(new RoadNetwork("network/simple_and_complex_network/car_1.geojson","car"));
-    networks.add(new RoadNetwork("network/simple_and_complex_network/car_1.geojson","bike"));
-    networks.add(new RoadNetwork("network/simple_and_complex_network/car_1.geojson","ped"));*/
-    
-    networks.add(new RoadNetwork("network/Complex_network/car_"+id+".geojson","car"));
-    networks.add(new RoadNetwork("network/Complex_network/bike_"+id+".geojson","bike"));
-    networks.add(new RoadNetwork("network/Complex_network/ped_"+id+".geojson","ped"));
-    
-    models.add(new ABM(networks.get(0),"car",id, _glyphsMap));
-    models.add(new ABM(networks.get(1),"bike",id, _glyphsMap));
-    models.add(new ABM(networks.get(2),"ped",id, _glyphsMap));
+    models.add(new ABM(carNetwork, "car", id));
+    models.add(new ABM(bikeNetwork, "bike", id));
+    models.add(new ABM(pedNetwork, "ped", id));
+
+    createAgents(800);
 
     pg = createGraphics(displayWidth, displayHeight, P2D);
   }
   
-  public void InitWorld(){
-    //Bad 
-    if(id==1){
-      models.get(0).initModel(400);
-      models.get(1).initModel(250);
-      models.get(2).initModel(150);
+  public void InitWorld() {}
+
+  public void createAgents(int num) {
+    // Creates a certain number of agents in each pool
+    for (int i = 0; i < num; i++) {
+        agents.add(new Agent(networks, glyphsMap));
     }
-    //Good
-    if(id == 2){
-      models.get(0).initModel(50);
-      models.get(1).initModel(250);
-      models.get(2).initModel(400);
-    }
-   
   }
 
   public void update(){
-    for(ABM m: models){
-      m.update();
+    for (Agent a : agents) {
+      a.update();
     }
   }
 
@@ -160,6 +160,9 @@ public class World{
 
     for (ABM m: models){
       m.draw(p);
+    }
+    for (Agent agent : agents) {
+      agent.draw(p, showGlyphs);
     }
   }
 
@@ -174,6 +177,9 @@ public class World{
     for(ABM m: models){
       m.draw(pg);
     }
+    for (Agent agent : agents) {
+      agent.draw(pg, showGlyphs);
+    }
 
     pg.endDraw();
   }
@@ -182,176 +188,24 @@ public class World{
 
 
 // ABM stands for Agent Based Model.
-// Holds a pair of a single specific type of agent and a Road Network
+// It is currently used as a wrapper for the road network.
 public class ABM {
   private RoadNetwork map;
-  private HashMap<String, PImage[]> glyphsMap;
-  private ArrayList<Agent> agents;
   private String type;
   private int worldId;
   public color modelColor;
   
-  ABM(RoadNetwork _map, String _type, int _worldId, HashMap<String, PImage[]> _glyphsMap){
+  ABM(RoadNetwork _map, String _type, int _worldId){
     map=_map;
-    glyphsMap = _glyphsMap;
-    agents = new ArrayList<Agent>();
     type= _type;
     worldId= _worldId;
   }
   
-  public void initModel(int nbAgent){
-    agents.clear();
-    createAgents(nbAgent);
-  }
-
-
-  // NOTE(Yasushi Sakai): maybe better to multithread this too.
-  // but the ABM might be flattened and hold
-  // mutliple models and agents.
-  // Same to this version's World
-  public void update(){
-    for(Agent a : agents){
-      a.update();
-    }
-  }
+  public void initModel() {}
   
   public void draw(PGraphics p){
-    if(showNetwork){
+    if (showNetwork) {
       map.draw(p); 
     }
-    for (Agent agent : agents) {
-      agent.draw(p,showGlyphs);
-    }
   }
-  
-  public void createAgents(int num) {
-    for (int i = 0; i < num; i++){
-      agents.add(new Agent(map, type, glyphsMap));
-    }
-  } 
-}
-
-public class Agent{
-  private RoadNetwork map; // NOTE(Yasushi Sakai): this is a reference to the map right?
-  private String type;
-  private HashMap<String, PImage[]> glyphsMap;
-  private PImage[] glyph;
-  private PVector pos;
-  private Node srcNode, destNode, toNode; // toNode is like next node
-  private ArrayList<Node> path;
-  private PVector dir;
-  private float speed;
-  
-  Agent(RoadNetwork _map, String _type, HashMap<String, PImage[]> _glyphsMap) {
-    map = _map;
-    type = _type;
-
-    // TODO(Yasushi Sakai): Previous Glyphs are faster??
-    glyphsMap = _glyphsMap;
-    glyph = glyphsMap.get(type);
-    switch(type){
-      case "car" :
-        speed=0.7 + random(-0.3,0.3);
-      break;
-      case "bike" :
-        speed=0.3 + random(-0.15,0.15);
-      break;
-      case "ped" :
-        speed=0.1 + random(-0.05,0.05);
-      break;
-      default:
-      break;
-    }
-    initAgent();
-  }
-  
-  public void initAgent(){
-    do {
-      srcNode =  (Node) map.graph.nodes.get(int(random(map.graph.nodes.size())));
-      destNode =  (Node) map.graph.nodes.get(int(random(map.graph.nodes.size())));
-    } while (srcNode == destNode);    
-    
-    pos = new PVector(srcNode.x,srcNode.y);
-    path = null;
-    dir = new PVector(0.0, 0.0);
-  }
-  
-  
-  
-  public void initAgentInsideBuilding(){
-    do {      
-      srcNode =  map.getRandomNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(int(random(18))),2*int((SIMULATION_WIDTH/16)*scale));
-      destNode =  map.getRandomNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(int(random(18))),2*int((SIMULATION_WIDTH/16)*scale));
-      
-    } while (srcNode == destNode);    
-    
-    pos = new PVector(srcNode.x,srcNode.y);
-    path = null;
-    dir = new PVector(0.0, 0.0);
-  }
-
-
-  public void draw(PGraphics p, boolean glyphs){
-    if(glyphs){
-      //PImage img = glyph[frameCount % glyph.length];
-      //A.G: Temporally disable the moviong gluphs (see issue #33)
-      PImage img = glyph[0];
-      p.pushMatrix();
-      p.translate(pos.x, pos.y);
-      p.rotate(dir.heading() + PI * 0.5);
-      p.translate(-1, 0);
-      p.image(img, 0, 0, img.width * scale, img.height * scale);
-      p.popMatrix();
-    }else{
-      p.noStroke();
-      p.fill(universe.colorMap.get(type));
-      p.ellipse(pos.x,pos.y,10*scale,10*scale);
-    }
-    
-  }
-    
-  // CALCULATE ROUTE --->
-  private boolean calcRoute() {
-    // Agent already in destination --->
-    if (srcNode == destNode) {
-      toNode = destNode;
-      return true;
-      // Next node is available --->
-    }  else {
-        ArrayList<Node> newPath = map.graph.aStar(srcNode, destNode);
-        if ( newPath != null ) {
-          path = newPath;
-          toNode = path.get(path.size() - 2); // what happens if there are only two nodes?
-          return true;
-        }
-    }
-    return false;
-  }
-  
-  public void update() {
-        if (path == null){
-          calcRoute();
-        }
-        PVector toNodePos= new PVector(toNode.x,toNode.y);
-        PVector destNodePos= new PVector(destNode.x,destNode.y);
-        dir = PVector.sub(toNodePos, pos);  // unnormalized direction to go
-          // Arrived to node -->
-          if (dir.mag() <= dir.normalize().mult(speed).mag() ) {
-            // Arrived to destination  --->
-            if (path.indexOf(toNode) == 0 ) {  
-              pos = destNodePos; // ?
-              //this.initAgent();
-              this.initAgentInsideBuilding();
-            // Not destination. Look for next node --->
-            } else {  
-              srcNode = toNode;
-              toNode = path.get( path.indexOf(toNode)-1 );
-            }
-            // Not arrived to node --->
-          } else {
-            //distTraveled += dir.mag();
-            pos.add( dir );
-            //posDraw = PVector.add(pos, dir.normalize().mult(type.getStreetOffset()).rotate(HALF_PI));
-          } 
-  }  
 }
