@@ -103,6 +103,8 @@ public class RoadNetwork {
         }
         p.strokeWeight(1);
         p.line(tempN.x, tempN.y, ((Connector)tempN.links.get(j)).n.x, ((Connector)tempN.links.get(j)).n.y);
+        //p.textSize(8);
+        //p.text(tempN.x + " " +  tempN.y , tempN.x, tempN.y);
       }
     }  
   }
@@ -111,9 +113,8 @@ public class RoadNetwork {
     ArrayList<Node> tmp = new ArrayList<Node>();
     Node tmpNode; 
     for (int i=0;i<graph.nodes.size();i++){
-      
       tmpNode = (Node) graph.nodes.get(i);
-        if(((tmpNode.x>pos.x-size/2) && (tmpNode.x)<pos.x+size/2) &&
+      if(((tmpNode.x>pos.x-size/2) && (tmpNode.x)<pos.x+size/2) &&
         ((tmpNode.y>pos.y-size/2) && (tmpNode.y)<pos.y+size/2))
         {
           tmp.add(tmpNode);
@@ -122,20 +123,17 @@ public class RoadNetwork {
     return tmp;
   }
   
-   public Node getRandomNodeInsideROI(PVector pos, int size){
+  public ArrayList<Node> getNodeInZombieLand(PVector pos, int size){
     ArrayList<Node> tmp = new ArrayList<Node>();
     Node tmpNode; 
     for (int i=0;i<graph.nodes.size();i++){
-      
       tmpNode = (Node) graph.nodes.get(i);
-        if(((tmpNode.x>pos.x-size/2) && (tmpNode.x)<pos.x+size/2) &&
-        ((tmpNode.y>pos.y-size/2) && (tmpNode.y)<pos.y+size/2))
-        {
-          tmp.add(tmpNode);
-        }       
-      } 
-    return tmp.get(int(random(tmp.size())));
-  }
+      if(tmpNode.x<0 || tmpNode.x>SIMULATION_WIDTH || tmpNode.y <0 || tmpNode.y>SIMULATION_WIDTH){
+        tmp.add(tmpNode);
+      }
+      }
+    return tmp;
+  }   
 } 
 
 
