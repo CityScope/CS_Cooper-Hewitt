@@ -7,6 +7,16 @@ public class Agent {
   private HashMap<String, PImage[]> glyphsMap;
   private RoadNetwork map;  // Curent network used for mobility type.
   private int worldId;  // 1=Bad world; 2=Good world
+  private Grid grid;
+  // TODO(arnaud+aberke): create proper zombie land nodes.
+  // For now, if an agent's residential or office block is not on the table,
+  // agent does nothing.
+  private int residentialBlockId;
+  private int officeBlockId;
+  private String mobilityMotif;
+  private int householdIncome;
+  private int occupationType;
+  private int age;
   private String mobilityType;
   private PImage[] glyph;
   private PVector pos;
@@ -18,35 +28,36 @@ public class Agent {
   private int homeBuildingId;
   private int workBuildingId;
   
-  Agent(HashMap<String, RoadNetwork> _networks, HashMap<String, PImage[]> _glyphsMap, int _worldId){
+
+  Agent(HashMap<String, RoadNetwork> _networks, HashMap<String, PImage[]> _glyphsMap, int _worldId,
+        Grid _grid, int _residentialBlockId, int _officeBlockId, String _mobilityMotif,
+        int _householdIncome, int _occupationType, int _age){
     networks = _networks;
     glyphsMap = _glyphsMap;
     worldId = _worldId;
+    grid = _grid;
+    residentialBlockId = _residentialBlockId;
+    officeBlockId = _officeBlockId;
+    mobilityMotif = _mobilityMotif;
+    householdIncome = _householdIncome;
+    occupationType = _occupationType;
+    age = _age;
     setupMobilityType(); // get mobility type and map
     // get the src and dst nodes + calculate route
-    initAgent();
-  }
-  
-  public void initAgent(){
-    do {
-      srcNode =  (Node) map.graph.nodes.get(int(random(map.graph.nodes.size())));
-      destNode =  (Node) map.graph.nodes.get(int(random(map.graph.nodes.size())));
-    } while (srcNode == destNode);    
-    
-    pos = new PVector(srcNode.x, srcNode.y);
-    path = null;
-    dir = new PVector(0.0, 0.0);
-
-    calcRoute();
+    initAgentInsideBuilding();
   }
   
   
   public void initAgentInsideBuilding(){
-    do {
-      srcNode =  map.getRandomNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(int(random(18))),2*int((SIMULATION_WIDTH/16)*scale));
-      destNode =  map.getRandomNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(int(random(18))),2*int((SIMULATION_WIDTH/16)*scale));
-    } while (srcNode == destNode);    
-    
+    // TODO(aberke|arnaud): Better handle zombie land nodes.
+    // Currently, there are 18 fixed blocks on the table.
+    if (residentialBlockId > 17 || officeBlockId > 17) {
+      return;
+    }
+
+    srcNode =  map.getNodeInsideROI(grid.getBuildingCenterPosistionPerId(residentialBlockId),2*int((SIMULATION_WIDTH/16)*scale)).get(0);
+    destNode =  map.getNodeInsideROI(grid.getBuildingCenterPosistionPerId(officeBlockId),2*int((SIMULATION_WIDTH/16)*scale)).get(0);    
+   
     pos = new PVector(srcNode.x,srcNode.y);
     path = null;
     dir = new PVector(0.0, 0.0);
@@ -55,7 +66,10 @@ public class Agent {
   }
 
 
-  public void draw(PGraphics p, boolean glyphs){
+  public void draw(PGraphics p, boolean glyphs) {
+    if (pos == null || path == null) {  // in zombie land.
+      return;
+    }
     if (glyphs && (glyph.length > 0)) {
       PImage img = glyph[frameCount % glyph.length];
       if (img != null) {
@@ -148,6 +162,9 @@ public class Agent {
   }
   
   public void update() {
+    if (path == null) { // in zombie land
+      return;
+    }
     PVector toNodePos = new PVector(toNode.x, toNode.y);
     PVector destNodePos = new PVector(destNode.x, destNode.y);
     dir = PVector.sub(toNodePos, pos);  // unnormalized direction to go

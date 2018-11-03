@@ -1,4 +1,3 @@
-/* ABM CLASS ------------------------------------------------------------*/
 
 public class Universe {
   // This is a universe with two alternatives for future worlds.
@@ -33,8 +32,8 @@ public class Universe {
      glyphsMap.put("ped", pedGlyph);
 
      grid = new Grid();
-     world1 = new World(1, "image/background_01.png", glyphsMap);
-     world2 = new World(2, "image/background_02.png", glyphsMap);
+     world1 = new World(1, "image/background_01.png", glyphsMap, grid);
+     world2 = new World(2, "image/background_02.png", glyphsMap, grid);
      updatingWorld1 = false;
      updatingWorld2 = false;
 
@@ -106,6 +105,7 @@ public class World {
   // e.g. "car" --> RoadNetwork, ... etc
   private HashMap<String, RoadNetwork> networks;
   private HashMap<String, PImage[]> glyphsMap;
+  private Grid grid;
   private ArrayList<Agent> agents;
   
   int id;
@@ -113,10 +113,11 @@ public class World {
   PImage background;
   PGraphics pg;
 
-  World(int _id, String _background, HashMap<String, PImage[]> _glyphsMap){
+  World(int _id, String _background, HashMap<String, PImage[]> _glyphsMap, Grid _grid){
     id = _id;
     glyphsMap = _glyphsMap;
     background = loadImage(_background);
+    grid = _grid;
     agents = new ArrayList<Agent>();
 
     // Create the road networks.
@@ -142,9 +143,25 @@ public class World {
   public void InitWorld() {}
 
   public void createAgents(int num) {
-    // Creates a certain number of agents in each pool
-    for (int i = 0; i < num; i++) {
-        agents.add(new Agent(networks, glyphsMap, id));
+    /* Creates a certain number of agents from preprocessed data. */
+
+    Table simPopTable = loadTable(SIMULATED_POPULATION_DATA_FILEPATH, "header");
+    int counter = 0;
+    for (TableRow row : simPopTable.rows()) {
+      int residentialBlockId = row.getInt("residential_block");
+      int officeBlockId = row.getInt("office_block");
+      // TODO(aberke): do not use static mobility motif.
+      String mobilityMotif = "HWH";
+      int householdIncome = row.getInt("hh_income");
+      int occupationType = row.getInt("occupation_type");
+      int age = row.getInt("age");
+
+      agents.add(new Agent(networks, glyphsMap, id, grid, residentialBlockId, officeBlockId, mobilityMotif, householdIncome, occupationType, age));
+
+      counter++;
+      if (counter >= num) {
+        break;
+      }
     }
   }
 
