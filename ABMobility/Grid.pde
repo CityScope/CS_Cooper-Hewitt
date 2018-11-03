@@ -53,6 +53,15 @@
     }
    }
    
+   public boolean isBuildingInCurrentGrid(int id){
+     for (Building b: buildingsOnGrid){
+       if (b.id == id){
+         return true;
+       }
+     }
+     return false;
+   }
+   
    public PVector getBuildingCenterPosistionPerId(int id){
      return new PVector(buildings.get(id).loc.x*universe.grid.cellSize + buildings.get(id).size/2 ,buildings.get(id).loc.y*universe.grid.cellSize +buildings.get(id).size/2);
    }
