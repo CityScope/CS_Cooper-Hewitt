@@ -144,7 +144,7 @@ public class World {
   public void createAgents(int num) {
     // Creates a certain number of agents in each pool
     for (int i = 0; i < num; i++) {
-        agents.add(new Agent(networks, glyphsMap));
+        agents.add(new Agent(networks, glyphsMap, id));
     }
   }
 

@@ -6,6 +6,7 @@ public class Agent {
   private HashMap<String, RoadNetwork> networks;
   private HashMap<String, PImage[]> glyphsMap;
   private RoadNetwork map;  // Curent network used for mobility type.
+  private int worldId;  // 1=Bad world; 2=Good world
   private String mobilityType;
   private PImage[] glyph;
   private PVector pos;
@@ -17,9 +18,10 @@ public class Agent {
   private int homeBuildingId;
   private int workBuildingId;
   
-  Agent(HashMap<String, RoadNetwork> _networks, HashMap<String, PImage[]> _glyphsMap){
+  Agent(HashMap<String, RoadNetwork> _networks, HashMap<String, PImage[]> _glyphsMap, int _worldId){
     networks = _networks;
     glyphsMap = _glyphsMap;
+    worldId = _worldId;
     setupMobilityType(); // get mobility type and map
     // get the src and dst nodes + calculate route
     initAgent();
@@ -77,11 +79,34 @@ public class Agent {
      * This is based on activityBased model.
     */
     // TODO(aberke): Use decision tree code from activityBased model.
-    // decision will be based on a agent path + attributes from simPop.csv.
-    // Currently randomly selects between car/bike/ped.
+    // Decision will be based on a agent path + attributes from simPop.csv.
+    // Currently randomly selects between car/bike/ped based on dummy
+    // probability distributions.
+
+    // How likely agent is to choose one mode of mobility over another depends
+    // on whether agent is in 'bad' vs 'good' world.
     String[] mobilityTypes = {"car", "bike", "ped"};
-    int choice = int(random(3));
-    return mobilityTypes[choice];
+    float[] mobilityChoiceProbabilities;
+    if (worldId == 1) {
+      // Bad world dummy probabilities:
+      mobilityChoiceProbabilities = new float[] {0.6, 0.2, 0.2};
+    } else {
+      // Good world dummy probabilities:
+      mobilityChoiceProbabilities = new float[] {0.2, 0.4, 0.4};
+    }
+    
+    // Transform the probability distribution into an array to randomly sample from.
+    String[] mobilityChoiceDistribution = new String[100];
+    int m = 0;
+    for (int i=0; i<mobilityTypes.length; i++) {
+      for (int p=0; p<int(mobilityChoiceProbabilities[i]*100); p++) {
+        mobilityChoiceDistribution[m] = mobilityTypes[i];
+        m++;
+      }
+    }
+    // Take random sample from distribution.
+    int choice = int(random(100));
+    return mobilityChoiceDistribution[choice];
   }
 
   private void setupMobilityType() {
