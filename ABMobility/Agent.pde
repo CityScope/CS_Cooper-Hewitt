@@ -7,7 +7,6 @@ public class Agent {
   private HashMap<String, PImage[]> glyphsMap;
   private RoadNetwork map;  // Curent network used for mobility type.
   private int worldId;  // 1=Bad world; 2=Good world
-  private Grid grid;
   // TODO(arnaud+aberke): create proper zombie land nodes.
   // For now, if an agent's residential or office block is not on the table,
   // agent does nothing.
@@ -30,33 +29,31 @@ public class Agent {
   
 
   Agent(HashMap<String, RoadNetwork> _networks, HashMap<String, PImage[]> _glyphsMap, int _worldId,
-        Grid _grid, int _residentialBlockId, int _officeBlockId, String _mobilityMotif,
+        int _residentialBlockId, int _officeBlockId, String _mobilityMotif,
         int _householdIncome, int _occupationType, int _age){
     networks = _networks;
     glyphsMap = _glyphsMap;
     worldId = _worldId;
-    grid = _grid;
     residentialBlockId = _residentialBlockId;
     officeBlockId = _officeBlockId;
     mobilityMotif = _mobilityMotif;
     householdIncome = _householdIncome;
     occupationType = _occupationType;
     age = _age;
-    setupMobilityType(); // get mobility type and map
-    // get the src and dst nodes + calculate route
-    initAgentInsideBuilding();
   }
   
   
-  public void initAgentInsideBuilding(){
+  public void initAgent() {
+    // get the src and dst nodes + calculate route
+    setupMobilityType(); // get mobility type and map
     // TODO(aberke|arnaud): Better handle zombie land nodes.
     // Currently, there are 18 fixed blocks on the table.
     if (residentialBlockId > 17 || officeBlockId > 17) {
       return;
     }
 
-    srcNode =  map.getNodeInsideROI(grid.getBuildingCenterPosistionPerId(residentialBlockId),2*int((SIMULATION_WIDTH/16)*scale)).get(0);
-    destNode =  map.getNodeInsideROI(grid.getBuildingCenterPosistionPerId(officeBlockId),2*int((SIMULATION_WIDTH/16)*scale)).get(0);    
+    srcNode =  map.getNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(residentialBlockId),2*int((SIMULATION_WIDTH/16)*scale)).get(0);
+    destNode =  map.getNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(officeBlockId),2*int((SIMULATION_WIDTH/16)*scale)).get(0);    
    
     pos = new PVector(srcNode.x,srcNode.y);
     path = null;
@@ -174,7 +171,7 @@ public class Agent {
       if (path.indexOf(toNode) == 0) {  
         // Arrived to destination
         pos = destNodePos;
-        this.initAgentInsideBuilding();
+        this.initAgent();
       } else {
         // Not destination. Look for next node.
         srcNode = toNode;

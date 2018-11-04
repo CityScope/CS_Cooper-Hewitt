@@ -32,8 +32,8 @@ public class Universe {
      glyphsMap.put("ped", pedGlyph);
 
      grid = new Grid();
-     world1 = new World(1, "image/background_01.png", glyphsMap, grid);
-     world2 = new World(2, "image/background_02.png", glyphsMap, grid);
+     world1 = new World(1, "image/background_01.png", glyphsMap);
+     world2 = new World(2, "image/background_02.png", glyphsMap);
      updatingWorld1 = false;
      updatingWorld2 = false;
 
@@ -105,7 +105,6 @@ public class World {
   // e.g. "car" --> RoadNetwork, ... etc
   private HashMap<String, RoadNetwork> networks;
   private HashMap<String, PImage[]> glyphsMap;
-  private Grid grid;
   private ArrayList<Agent> agents;
   
   int id;
@@ -113,11 +112,10 @@ public class World {
   PImage background;
   PGraphics pg;
 
-  World(int _id, String _background, HashMap<String, PImage[]> _glyphsMap, Grid _grid){
+  World(int _id, String _background, HashMap<String, PImage[]> _glyphsMap){
     id = _id;
     glyphsMap = _glyphsMap;
     background = loadImage(_background);
-    grid = _grid;
     agents = new ArrayList<Agent>();
 
     // Create the road networks.
@@ -140,7 +138,12 @@ public class World {
     pg = createGraphics(displayWidth, displayHeight, P2D);
   }
   
-  public void InitWorld() {}
+  
+  public void InitWorld() {
+    for (Agent a : agents) {
+      a.initAgent();
+    }  
+  }
 
 
   public void createAgents(int num) {
@@ -165,7 +168,7 @@ public class World {
       int occupationType = row.getInt("occupation_type");
       int age = row.getInt("age");
 
-      agents.add(new Agent(networks, glyphsMap, id, grid, residentialBlockId, officeBlockId, mobilityMotif, householdIncome, occupationType, age));
+      agents.add(new Agent(networks, glyphsMap, id, residentialBlockId, officeBlockId, mobilityMotif, householdIncome, occupationType, age));
 
       counter++;
       if (counter >= num) {
@@ -190,7 +193,7 @@ public class World {
       int occupationType = int(random(5)) + 1;  // [1, 5]
       int age = int(random(100));
 
-      agents.add(new Agent(networks, glyphsMap, id, grid, rBlockId, oBlockId, mobilityMotif, householdIncome, occupationType, age));
+      agents.add(new Agent(networks, glyphsMap, id, rBlockId, oBlockId, mobilityMotif, householdIncome, occupationType, age));
     }
   }
 
