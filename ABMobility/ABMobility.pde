@@ -12,6 +12,7 @@ public int displayHeight = int(SIMULATION_HEIGHT * scale);
 public int playGroundWidth = displayWidth;
 public int playGroundHeight = displayHeight;
 
+public boolean INIT_AGENTS_FROM_DATAFILE = true;
 public final String SIMULATED_POPULATION_DATA_FILEPATH = "data/simPop.csv";
 
 Universe universe;

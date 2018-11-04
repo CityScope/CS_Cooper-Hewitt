@@ -142,9 +142,18 @@ public class World {
   
   public void InitWorld() {}
 
-  public void createAgents(int num) {
-    /* Creates a certain number of agents from preprocessed data. */
 
+  public void createAgents(int num) {
+    if (INIT_AGENTS_FROM_DATAFILE) {
+      createAgentsFromDatafile(num);
+    } else {
+      createRandomAgents(num);
+    }
+  }
+  
+
+  public void createAgentsFromDatafile(int num) {
+    /* Creates a certain number of agents from preprocessed data. */
     Table simPopTable = loadTable(SIMULATED_POPULATION_DATA_FILEPATH, "header");
     int counter = 0;
     for (TableRow row : simPopTable.rows()) {
@@ -164,6 +173,27 @@ public class World {
       }
     }
   }
+
+
+  public void createRandomAgents(int num) {
+    for (int i = 0; i < num; i++) {
+      // Randomly assign agent blocks and attributes.
+      int rBlockId;
+      int oBlockId;
+      do {
+        rBlockId = int(random(24));
+        oBlockId =  int(random(24));
+      } while (rBlockId == oBlockId);
+
+      String mobilityMotif = "HWH";
+      int householdIncome = int(random(12));  // [0, 11]
+      int occupationType = int(random(5)) + 1;  // [1, 5]
+      int age = int(random(100));
+
+      agents.add(new Agent(networks, glyphsMap, id, grid, rBlockId, oBlockId, mobilityMotif, householdIncome, occupationType, age));
+    }
+  }
+
 
   public void update(){
     for (Agent a : agents) {
