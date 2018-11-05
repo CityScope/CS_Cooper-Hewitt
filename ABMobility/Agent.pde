@@ -49,12 +49,14 @@ public class Agent {
     // TODO(aberke|arnaud): Better handle zombie land nodes.
     // Currently, there are 18 fixed blocks on the table.
     if (residentialBlockId > 17 || officeBlockId > 17) {
+      
       return;
     }
 
-    srcNode =  map.getNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(residentialBlockId),2*int((SIMULATION_WIDTH/16)*scale)).get(0);
-    destNode =  map.getNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(officeBlockId),2*int((SIMULATION_WIDTH/16)*scale)).get(0);    
-   
+
+    srcNode =  map.getRandomNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(int(random(18))),2*int((SIMULATION_WIDTH/16)*scale));
+    destNode =  map.getRandomNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(int(random(18))),2*int((SIMULATION_WIDTH/16)*scale));
+    
     pos = new PVector(srcNode.x,srcNode.y);
     path = null;
     dir = new PVector(0.0, 0.0);
@@ -127,13 +129,13 @@ public class Agent {
 
     switch(mobilityType) {
       case "car" :
-        speed = 1.0+ random(-0.3,0.3);
+        speed = 0.7+ random(-0.3,0.3);
       break;
       case "bike" :
-        speed = 1.0+ random(-0.15,0.15);
+        speed = 0.2+ random(-0.15,0.15);
       break;
       case "ped" :
-        speed = 1.0 + random(-0.05,0.05);
+        speed = 0.1 + random(-0.05,0.05);
       break;
       default:
       break;
