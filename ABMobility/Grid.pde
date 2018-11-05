@@ -2,11 +2,9 @@
   private ArrayList<Building> buildings; // all the building (24)
   private ArrayList<Building> buildingsOnGrid; // Building present on the grid
   public HashMap<Integer,PVector> gridMap;
-  public float cellSize;
   
   Table table;
    Grid(){
-     cellSize=int((SIMULATION_WIDTH/16)*scale);;
      buildings = new ArrayList<Building>();
      buildingsOnGrid = new ArrayList<Building>();
      gridMap = new HashMap<Integer,PVector>();
@@ -63,7 +61,7 @@
    }
    
    public PVector getBuildingCenterPosistionPerId(int id){
-     return new PVector(buildings.get(id).loc.x*universe.grid.cellSize + buildings.get(id).size/2 ,buildings.get(id).loc.y*universe.grid.cellSize +buildings.get(id).size/2);
+     return new PVector(buildings.get(id).loc.x*GRID_CELL_SIZE + buildings.get(id).size/2 ,buildings.get(id).loc.y*GRID_CELL_SIZE +buildings.get(id).size/2);
    }
 
 }
@@ -88,15 +86,15 @@ public class Building{
     p.rectMode(CORNER);
     p.fill(#666666);
     p.stroke(#000000);
-    p.rect (loc.x*universe.grid.cellSize, loc.y*universe.grid.cellSize, size, size);
+    p.rect (loc.x*GRID_CELL_SIZE, loc.y*GRID_CELL_SIZE, size, size);
     p.textAlign(CENTER); 
     p.textSize(10);
     if(id!=-1){ 
       p.fill(#666666);
-      p.text("id:" + int(id ) + " R:" + nbR + " 0:" + nbO + " A:" + nbA, loc.x*universe.grid.cellSize+size/2, loc.y*universe.grid.cellSize+size*1.25);} 
+      p.text("id:" + int(id ) + " R:" + nbR + " 0:" + nbO + " A:" + nbA, loc.x*GRID_CELL_SIZE+size/2, loc.y*GRID_CELL_SIZE+size*1.25);} 
     else {
       p.fill(#660000);
-      p.text("id:" + -1 , loc.x*universe.grid.cellSize+size/2, loc.y*universe.grid.cellSize+size*1.25);
+      p.text("id:" + -1 , loc.x*GRID_CELL_SIZE+size/2, loc.y*GRID_CELL_SIZE+size*1.25);
     }
   }
 }

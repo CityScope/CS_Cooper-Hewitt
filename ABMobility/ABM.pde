@@ -1,4 +1,3 @@
-/* ABM CLASS ------------------------------------------------------------*/
 
 public class Universe {
   // This is a universe with two alternatives for future worlds.
@@ -139,14 +138,65 @@ public class World {
     pg = createGraphics(displayWidth, displayHeight, P2D);
   }
   
-  public void InitWorld() {}
+  
+  public void InitWorld() {
+    for (Agent a : agents) {
+      a.initAgent();
+    }  
+  }
+
 
   public void createAgents(int num) {
-    // Creates a certain number of agents in each pool
-    for (int i = 0; i < num; i++) {
-        agents.add(new Agent(networks, glyphsMap, id));
+    if (INIT_AGENTS_FROM_DATAFILE) {
+      createAgentsFromDatafile(num);
+    } else {
+      createRandomAgents(num);
     }
   }
+  
+
+  public void createAgentsFromDatafile(int num) {
+    /* Creates a certain number of agents from preprocessed data. */
+    Table simPopTable = loadTable(SIMULATED_POPULATION_DATA_FILEPATH, "header");
+    int counter = 0;
+    for (TableRow row : simPopTable.rows()) {
+      int residentialBlockId = row.getInt("residential_block");
+      int officeBlockId = row.getInt("office_block");
+      // TODO(aberke): do not use static mobility motif.
+      String mobilityMotif = "HWH";
+      int householdIncome = row.getInt("hh_income");
+      int occupationType = row.getInt("occupation_type");
+      int age = row.getInt("age");
+
+      agents.add(new Agent(networks, glyphsMap, id, residentialBlockId, officeBlockId, mobilityMotif, householdIncome, occupationType, age));
+
+      counter++;
+      if (counter >= num) {
+        break;
+      }
+    }
+  }
+
+
+  public void createRandomAgents(int num) {
+    for (int i = 0; i < num; i++) {
+      // Randomly assign agent blocks and attributes.
+      int rBlockId;
+      int oBlockId;
+      do {
+        rBlockId = int(random(24));
+        oBlockId =  int(random(24));
+      } while (rBlockId == oBlockId);
+
+      String mobilityMotif = "HWH";
+      int householdIncome = int(random(12));  // [0, 11]
+      int occupationType = int(random(5)) + 1;  // [1, 5]
+      int age = int(random(100));
+
+      agents.add(new Agent(networks, glyphsMap, id, rBlockId, oBlockId, mobilityMotif, householdIncome, occupationType, age));
+    }
+  }
+
 
   public void update(){
     for (Agent a : agents) {
