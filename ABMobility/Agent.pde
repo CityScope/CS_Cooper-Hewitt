@@ -44,19 +44,21 @@ public class Agent {
   
   
   public void initAgent() {
-    // get the src and dst nodes + calculate route
-    setupMobilityType(); // get mobility type and map
-    // TODO(aberke|arnaud): Better handle zombie land nodes.
-    // Currently, there are 18 fixed blocks on the table.
-    if (residentialBlockId > 17 || officeBlockId > 17) {
-      
-      return;
+    setupMobilityType(); 
+    if(universe.grid.isBuildingInCurrentGrid(residentialBlockId)){
+      srcNode =  map.getRandomNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(residentialBlockId),2*int((SIMULATION_WIDTH/16)*scale));
     }
-
-
-    srcNode =  map.getRandomNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(int(random(18))),2*int((SIMULATION_WIDTH/16)*scale));
-    destNode =  map.getRandomNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(int(random(18))),2*int((SIMULATION_WIDTH/16)*scale));
+    else{  
+      srcNode = map.getRandomNodeInZombieLand();
+    }
     
+    if(universe.grid.isBuildingInCurrentGrid(officeBlockId)){
+      destNode =  map.getRandomNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(officeBlockId),2*int((SIMULATION_WIDTH/16)*scale));
+    }
+    else{  
+      srcNode = map.getRandomNodeInZombieLand();
+    }
+        
     pos = new PVector(srcNode.x,srcNode.y);
     path = null;
     dir = new PVector(0.0, 0.0);
