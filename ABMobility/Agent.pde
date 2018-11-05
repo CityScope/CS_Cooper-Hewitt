@@ -72,7 +72,8 @@ public class Agent {
       return;
     }
     if (glyphs && (glyph.length > 0)) {
-      PImage img = glyph[frameCount % glyph.length];
+      //PImage img = glyph[frameCount % glyph.length];
+      PImage img = glyph[0];
       if (img != null) {
         p.pushMatrix();
         p.translate(pos.x, pos.y);
@@ -134,10 +135,10 @@ public class Agent {
         speed = 0.7+ random(-0.3,0.3);
       break;
       case "bike" :
-        speed = 0.2+ random(-0.15,0.15);
+        speed = 0.3+ random(-0.15,0.15);
       break;
       case "ped" :
-        speed = 0.1 + random(-0.05,0.05);
+        speed = 0.2 + random(-0.05,0.05);
       break;
       default:
       break;
