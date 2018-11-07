@@ -55,8 +55,11 @@
         buildingsOnGrid.get(i).nbA = -1;
       }
     }
-    JSONArray sliders = json.getJSONArray("slider");
-    state.slider=sliders.getFloat(0);
+    if(dynamicSlider){
+      JSONArray sliders = json.getJSONArray("slider");
+      state.slider=sliders.getFloat(0);
+    }
+    
     
     if(isBuildingInCurrentGrid(20)){
       showGlyphs = false;

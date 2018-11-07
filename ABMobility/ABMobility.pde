@@ -23,6 +23,7 @@ boolean showBackground = false;
 boolean showGlyphs = true;
 boolean showNetwork = false;
 boolean showAgent = true;
+boolean dynamicSlider = true;
 UDPReceiver udpR;
 
 
@@ -92,6 +93,9 @@ void keyPressed() {
     break;
   case 'n':
     showNetwork = !showNetwork;
+    break;
+  case 'd':
+    dynamicSlider = !dynamicSlider;
     break;
   
   }
