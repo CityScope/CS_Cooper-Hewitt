@@ -105,10 +105,10 @@ public class Agent {
     float[] mobilityChoiceProbabilities;
     if (worldId == 1) {
       // Bad world dummy probabilities:
-      mobilityChoiceProbabilities = new float[] {0.6, 0.2, 0.2};
+      mobilityChoiceProbabilities = new float[] {0.7, 0.2, 0.1};
     } else {
       // Good world dummy probabilities:
-      mobilityChoiceProbabilities = new float[] {0.2, 0.4, 0.4};
+      mobilityChoiceProbabilities = new float[] {0.1, 0.5, 0.4};
     }
     
     // Transform the probability distribution into an array to randomly sample from.

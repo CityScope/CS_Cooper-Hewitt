@@ -14,8 +14,7 @@ public int playGroundHeight = displayHeight;
 
 public boolean INIT_AGENTS_FROM_DATAFILE = true;
 public final String SIMULATED_POPULATION_DATA_FILEPATH = "data/simPop.csv";
-// The maximum number of agents to instantiate per world:
-public final int NUM_AGENTS_PER_WORLD = 1800;
+public final int NUM_AGENTS_PER_WORLD = 1000;
 
 
 Universe universe;
