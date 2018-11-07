@@ -137,7 +137,7 @@ public class World {
     models.add(new ABM(bikeNetwork, "bike", id));
     models.add(new ABM(pedNetwork, "ped", id));
 
-    createAgents(800);
+    createAgents(NUM_AGENTS_PER_WORLD);
 
     pg = createGraphics(displayWidth, displayHeight, P2D);
   }
