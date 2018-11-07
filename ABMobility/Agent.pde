@@ -56,7 +56,7 @@ public class Agent {
       destNode =  map.getRandomNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(officeBlockId),2*int((SIMULATION_WIDTH/16)*scale));
     }
     else{  
-      srcNode = map.getRandomNodeInZombieLand();
+      destNode = map.getRandomNodeInZombieLand();
     }
         
     pos = new PVector(srcNode.x,srcNode.y);
