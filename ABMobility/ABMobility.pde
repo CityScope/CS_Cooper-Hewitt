@@ -20,6 +20,7 @@ boolean showBuilding = true;
 boolean showBackground = false;
 boolean showGlyphs = true;
 boolean showNetwork = false;
+boolean showAgent = true;
 UDPReceiver udpR;
 
 

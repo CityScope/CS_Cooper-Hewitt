@@ -7,6 +7,7 @@ public class Universe {
    private boolean updatingWorld1;
    private boolean updatingWorld2;
    HashMap<String,Integer> colorMap;
+   HashMap<String,Integer> colorMapBW;
    HashMap<String, PImage[]> glyphsMap;
    Grid grid;
 
@@ -16,6 +17,9 @@ public class Universe {
    Universe(){
      colorMap = new HashMap<String,Integer>();
      colorMap.put("car",#FF0000);colorMap.put("bike",#00FF00);colorMap.put("ped",#0000FF);
+     
+     colorMapBW = new HashMap<String,Integer>();
+     colorMapBW.put("car",#DDDDDD);colorMapBW.put("bike",#888888);colorMapBW.put("ped",#444444);
      // Create the glyphs and hold in map
      PImage[] carGlyph = new PImage[1];
      carGlyph[0] = loadImage("image/car.gif");
@@ -228,7 +232,10 @@ public class World {
       m.draw(pg);
     }
     for (Agent agent : agents) {
-      agent.draw(pg, showGlyphs);
+      if(showAgent){
+        agent.draw(pg, showGlyphs);
+      }
+      
     }
 
     pg.endDraw();

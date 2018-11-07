@@ -32,7 +32,7 @@
    }
    
    public void updateGridFromUDP(String message){
-    println("message" + message);
+    //println("message" + message);
     JSONObject json = parseJSONObject(message); 
     JSONArray grids = json.getJSONArray("grid");
     for(int i=0; i < grids.size(); i++) {
@@ -49,6 +49,25 @@
         buildingsOnGrid.get(i).nbA = -1;
       }
     }
+    JSONArray sliders = json.getJSONArray("slider");
+    state.slider=sliders.getFloat(0);
+    
+    if(isBuildingInCurrentGrid(20)){
+      showGlyphs = false;
+    }else{
+      showGlyphs =true;
+    }
+    if(isBuildingInCurrentGrid(21)){
+      showNetwork = true;
+    }else{
+      showNetwork =false;
+    }
+    if(isBuildingInCurrentGrid(22)){
+      showAgent = true;
+    }else{
+      showAgent =false;
+    }
+    
    }
    
    public boolean isBuildingInCurrentGrid(int id){
@@ -84,9 +103,14 @@ public class Building{
   
   public void draw (PGraphics p){
     p.rectMode(CORNER);
-    p.fill(#666666);
+    if(( loc.x==3 || loc.x==11 ) && loc.y ==4){
+      p.fill(#999999);
+    }else{
+      p.fill(#CCCCCC);
+    }
+    
     p.stroke(#000000);
-    p.rect (loc.x*GRID_CELL_SIZE, loc.y*GRID_CELL_SIZE, size, size);
+    p.rect (loc.x*GRID_CELL_SIZE, loc.y*GRID_CELL_SIZE, size*0.9, size*0.9);
     p.textAlign(CENTER); 
     p.textSize(10);
     if(id!=-1){ 
