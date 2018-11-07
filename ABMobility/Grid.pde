@@ -2,6 +2,7 @@
   private ArrayList<Building> buildings; // all the building (24)
   private ArrayList<Building> buildingsOnGrid; // Building present on the grid
   public HashMap<Integer,PVector> gridMap;
+  HashMap<PVector,Integer> gridQRcolorMap;
   
   Table table;
    Grid(){
@@ -13,6 +14,11 @@
      gridMap.put(12,new PVector(1,7));gridMap.put(13,new PVector(3,7));gridMap.put(14,new PVector(6,7));gridMap.put(15,new PVector(8,7));gridMap.put(16,new PVector(11,7));gridMap.put(17,new PVector(13,7));
      gridMap.put(18,new PVector(-1,-1));gridMap.put(19,new PVector(-1,-1));gridMap.put(20,new PVector(-1,-1));gridMap.put(21,new PVector(-1,-1));gridMap.put(22,new PVector(-1,-1));gridMap.put(23,new PVector(-1,-1));
           
+     gridQRcolorMap = new HashMap<PVector,Integer>();
+     gridQRcolorMap.put(gridMap.get(0),#CCCCCC);gridQRcolorMap.put(gridMap.get(1),#CCCCCC);gridQRcolorMap.put(gridMap.get(2),#CCCCCC);gridQRcolorMap.put(gridMap.get(3),#CCCCCC);gridQRcolorMap.put(gridMap.get(4),#CCCCCC);gridQRcolorMap.put(gridMap.get(5),#CCCCCC);
+     gridQRcolorMap.put(gridMap.get(6),#CCCCCC);gridQRcolorMap.put(gridMap.get(7),#CCCCCC);gridQRcolorMap.put(gridMap.get(8),#CCCCCC);gridQRcolorMap.put(gridMap.get(9),#CCCCCC);gridQRcolorMap.put(gridMap.get(10),#CCCCCC);gridQRcolorMap.put(gridMap.get(11),#CCCCCC);
+     gridQRcolorMap.put(gridMap.get(12),#CCCCCC);gridQRcolorMap.put(gridMap.get(13),#CCCCCC);gridQRcolorMap.put(gridMap.get(14),#CCCCCC);gridQRcolorMap.put(gridMap.get(15),#CCCCCC);gridQRcolorMap.put(gridMap.get(16),#CCCCCC);gridQRcolorMap.put(gridMap.get(17),#CCCCCC);
+     
      table = loadTable("block/Cooper Hewitt Buildings - Building Blocks.csv", "header");
      for (TableRow row : table.rows()) {
        buildings.add(new Building(gridMap.get(row.getInt("id")),row.getInt("id"),row.getInt("R"),row.getInt("O"),row.getInt("A")));
@@ -103,12 +109,7 @@ public class Building{
   
   public void draw (PGraphics p){
     p.rectMode(CORNER);
-    if(( loc.x==3 || loc.x==11 ) && loc.y ==4){
-      p.fill(#999999);
-    }else{
-      p.fill(#CCCCCC);
-    }
-    
+    p.fill(universe.grid.gridQRcolorMap.get(loc));    
     p.stroke(#000000);
     p.rect (loc.x*GRID_CELL_SIZE, loc.y*GRID_CELL_SIZE, size*0.9, size*0.9);
     p.textAlign(CENTER); 
