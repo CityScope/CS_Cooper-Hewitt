@@ -143,7 +143,7 @@ public class RoadNetwork {
     Node tmpNode; 
     for (int i=0;i<graph.nodes.size();i++){
       tmpNode = (Node) graph.nodes.get(i);
-      if(tmpNode.x<0 || tmpNode.x>SIMULATION_WIDTH || tmpNode.y <0 || tmpNode.y>SIMULATION_WIDTH){
+      if(tmpNode.x<0 || tmpNode.x>SIMULATION_WIDTH || tmpNode.y <0 || tmpNode.y>SIMULATION_HEIGHT ){
         tmp.add(tmpNode);
       }
       }
@@ -155,7 +155,7 @@ public class RoadNetwork {
     Node tmpNode; 
     for (int i=0;i<graph.nodes.size();i++){
       tmpNode = (Node) graph.nodes.get(i);
-      if(tmpNode.x<0 || tmpNode.x>SIMULATION_WIDTH || tmpNode.y <0 || tmpNode.y>SIMULATION_WIDTH){
+      if(tmpNode.x<0 || tmpNode.x>SIMULATION_WIDTH || tmpNode.y <0 || tmpNode.y>SIMULATION_HEIGHT ){
         tmp.add(tmpNode);
       }
       }

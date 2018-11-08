@@ -23,7 +23,7 @@ public class Agent {
   private ArrayList<Node> path;
   private PVector dir;
   private float speed;
-
+  private boolean isZombie;
   private int homeBuildingId;
   private int workBuildingId;
   
@@ -40,6 +40,7 @@ public class Agent {
     householdIncome = _householdIncome;
     occupationType = _occupationType;
     age = _age;
+    isZombie=false;
   }
   
   
@@ -50,6 +51,8 @@ public class Agent {
     }
     else{  
       srcNode = map.getRandomNodeInZombieLand();
+      //println("I come from zombie land x: " + srcNode.x + " y: " + srcNode.y);
+      isZombie=true;
     }
     
     if(universe.grid.isBuildingInCurrentGrid(officeBlockId)){
@@ -57,6 +60,8 @@ public class Agent {
     }
     else{  
       destNode = map.getRandomNodeInZombieLand();
+      //println("I go zombie land x: " + destNode.x + " y: " + destNode.y);
+      isZombie=true;
     }
         
     pos = new PVector(srcNode.x,srcNode.y);
@@ -81,6 +86,12 @@ public class Agent {
         p.translate(-1, 0);
         p.image(img, 0, 0, img.width * scale, img.height * scale);
         p.popMatrix();
+        
+        /*if(isZombie){
+          p.fill(#CC0000);
+          p.ellipse(pos.x, pos.y, 10*scale, 10*scale);
+         }*/
+        
       }
     } else {
       p.noStroke();
