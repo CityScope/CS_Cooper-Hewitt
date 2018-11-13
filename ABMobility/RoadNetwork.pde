@@ -138,27 +138,15 @@ public class RoadNetwork {
   }
   
   
-  public ArrayList<Node> getNodeInZombieLand(){
-    ArrayList<Node> tmp = new ArrayList<Node>();
-    Node tmpNode; 
-    for (int i=0;i<graph.nodes.size();i++){
-      tmpNode = (Node) graph.nodes.get(i);
-      if(tmpNode.x<0 || tmpNode.x>SIMULATION_WIDTH || tmpNode.y <0 || tmpNode.y>SIMULATION_HEIGHT ){
-        tmp.add(tmpNode);
-      }
-      }
-    return tmp;
-  }
-  
   public Node getRandomNodeInZombieLand(){
     ArrayList<Node> tmp = new ArrayList<Node>();
     Node tmpNode; 
     for (int i=0;i<graph.nodes.size();i++){
       tmpNode = (Node) graph.nodes.get(i);
-      if(tmpNode.x<0 || tmpNode.x>SIMULATION_WIDTH || tmpNode.y <0 || tmpNode.y>SIMULATION_HEIGHT ){
+      if(tmpNode.x<0 || tmpNode.x>SIMULATION_WIDTH *scale || tmpNode.y <0 || tmpNode.y>SIMULATION_HEIGHT *scale ){
         tmp.add(tmpNode);
       }
-      }
+    }
     return tmp.get(int(random(tmp.size())));
   }  
 } 
