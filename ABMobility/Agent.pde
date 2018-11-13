@@ -54,14 +54,14 @@ public class Agent {
     // status is determined.
     setupMobilityType(); 
     if(residenceOnGrid){
-      srcNode =  map.getRandomNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(residentialBlockId),2*int((SIMULATION_WIDTH/16)*scale));
+      srcNode =  map.getRandomNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(residentialBlockId),BUILDING_SIZE);
     }
     else {
       srcNode = map.getRandomNodeInZombieLand();
     }
     
     if(officeOnGrid){
-      destNode =  map.getRandomNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(officeBlockId),2*int((SIMULATION_WIDTH/16)*scale));
+      destNode =  map.getRandomNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(officeBlockId),BUILDING_SIZE);
     }
     else {  
       destNode = map.getRandomNodeInZombieLand();
@@ -97,7 +97,7 @@ public class Agent {
     
     if(showZombie & isZombie){
             p.fill(#CC0000);
-            p.ellipse(pos.x, pos.y, 10*scale, 10*scale);
+            p.ellipse(pos.x, pos.y, 10*SCALE, 10*SCALE);
      }
     
      if(showCollisionPotential) {
