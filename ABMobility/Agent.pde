@@ -51,7 +51,6 @@ public class Agent {
     }
     else{  
       srcNode = map.getRandomNodeInZombieLand();
-      //println("I come from zombie land x: " + srcNode.x + " y: " + srcNode.y);
       isZombie=true;
     }
     
@@ -60,7 +59,6 @@ public class Agent {
     }
     else{  
       destNode = map.getRandomNodeInZombieLand();
-      //println("I go zombie land x: " + destNode.x + " y: " + destNode.y);
       isZombie=true;
     }
         

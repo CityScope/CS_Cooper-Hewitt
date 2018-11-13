@@ -14,7 +14,7 @@ public int playGroundHeight = displayHeight;
 
 public boolean INIT_AGENTS_FROM_DATAFILE = true;
 public final String SIMULATED_POPULATION_DATA_FILEPATH = "data/simPop.csv";
-public final int NUM_AGENTS_PER_WORLD = 1000;
+public final int NUM_AGENTS_PER_WORLD = 10;
 
 
 Universe universe;
@@ -67,22 +67,10 @@ void keyPressed() {
   case 's':
     drawer.ks.save();
     break;
-  case 'z':
-    state.slider = 0; 
-  break;
-  case 'x':
-    state.slider = max(state.slider - 0.05, 0); 
-  break;
   case 'c':
     state.slider = 0.5;
   break;
-  case 'v':
-    state.slider = min(state.slider + 0.05, 1);
-  break;
   case 'b':
-    state.slider = 1;
-  break;
-  case 'a':
     showBuilding= !showBuilding;
   break;
   case ' ':
@@ -98,5 +86,16 @@ void keyPressed() {
     dynamicSlider = !dynamicSlider;
     break;
   
+  }
+  
+  if (key == CODED) {
+    switch (keyCode){
+      case LEFT:
+      state.slider = max(state.slider - 0.05, 0); 
+      break;
+      case RIGHT:
+      state.slider = max(state.slider + 0.05, 0); 
+      break;
+    }
   }
 }
