@@ -82,7 +82,7 @@ public class RoadNetwork {
     
     // Resize map keeping ratio -->
     float mapRatio = 1.6 / 1.0;
-    this.size = new PVector(SIMULATION_WIDTH * scale, SIMULATION_HEIGHT * scale);
+    this.size = new PVector(DISPLAY_WIDTH, DISPLAY_HEIGHT);
   }
 
   private PVector toXY(float x, float y) {
@@ -102,7 +102,7 @@ public class RoadNetwork {
         }else{
           p.stroke(universe.colorMap.get(type));
           //p.stroke(random(255),random(255),random(255));
-        }  
+        }
         p.line(tempN.x, tempN.y, ((Connector)tempN.links.get(j)).n.x, ((Connector)tempN.links.get(j)).n.y);
       }
     }  
@@ -143,7 +143,7 @@ public class RoadNetwork {
     Node tmpNode; 
     for (int i=0;i<graph.nodes.size();i++){
       tmpNode = (Node) graph.nodes.get(i);
-      if(tmpNode.x<0 || tmpNode.x>SIMULATION_WIDTH *scale || tmpNode.y <0 || tmpNode.y>SIMULATION_HEIGHT *scale ){
+      if(tmpNode.x<0 || tmpNode.x>DISPLAY_WIDTH || tmpNode.y<0 || tmpNode.y>DISPLAY_HEIGHT){
         tmp.add(tmpNode);
       }
     }

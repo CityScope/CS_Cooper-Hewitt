@@ -42,12 +42,12 @@ public class Universe {
      updatingWorld2 = false;
 
       s = loadShader("mask.glsl");
-      s.set("width", float(displayWidth));
-      s.set("height", float(displayHeight));
+      s.set("width", float(DISPLAY_WIDTH));
+      s.set("height", float(DISPLAY_HEIGHT));
       s.set("left", world1.pg);
       s.set("right", world2.pg);
       s.set("divPoint", state.slider);
-     pg = createGraphics(displayWidth, displayHeight, P2D);
+     pg = createGraphics(DISPLAY_WIDTH, DISPLAY_HEIGHT, P2D);
    }
    
    void InitUniverse(){
@@ -93,12 +93,12 @@ public class Universe {
    }
    
    void draw(PGraphics p, float slider){
-    int stitchEdge = Math.round(displayWidth * slider);
+    int stitchEdge = Math.round(DISPLAY_WIDTH * slider);
     p.image(pg, 0, 0);
     // draw the center line
     p.pushStyle();
       p.stroke(255);
-      p.line(stitchEdge, 0, stitchEdge, displayHeight);
+      p.line(stitchEdge, 0, stitchEdge, DISPLAY_HEIGHT);
     p.popStyle();
    }
 }
@@ -142,7 +142,7 @@ public class World {
 
     createAgents(NUM_AGENTS_PER_WORLD);
 
-    pg = createGraphics(displayWidth, displayHeight, P2D);
+    pg = createGraphics(DISPLAY_WIDTH, DISPLAY_HEIGHT, P2D);
   }
   
   

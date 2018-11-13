@@ -95,7 +95,7 @@
 }
 
 public class Building{
-  int size = int((SIMULATION_WIDTH/16)*scale*2);
+  int size = BUILDING_SIZE;
   PVector loc;
   int id;
   int nbR;
