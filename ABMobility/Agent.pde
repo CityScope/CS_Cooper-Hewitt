@@ -53,18 +53,17 @@ public class Agent {
     // agent must travel, so it is determined after zombieland
     // status is determined.
     setupMobilityType(); 
-
     if(residenceOnGrid){
       srcNode =  map.getRandomNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(residentialBlockId),2*int((SIMULATION_WIDTH/16)*scale));
     }
-    else{  
+    else {
       srcNode = map.getRandomNodeInZombieLand();
     }
     
     if(officeOnGrid){
       destNode =  map.getRandomNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(officeBlockId),2*int((SIMULATION_WIDTH/16)*scale));
     }
-    else{  
+    else {  
       destNode = map.getRandomNodeInZombieLand();
     }
         
@@ -81,27 +80,24 @@ public class Agent {
       return;
     }
     if (glyphs && (glyph.length > 0)) {
-      //PImage img = glyph[frameCount % glyph.length];
       PImage img = glyph[0];
       if (img != null) {
         p.pushMatrix();
         p.translate(pos.x, pos.y);
         p.rotate(dir.heading() + PI * 0.5);
         p.translate(-1, 0);
-        p.image(img, 0, 0, img.width * scale, img.height * scale);
-        p.popMatrix();        
+        p.image(img, 0, 0, img.width * SCALE, img.height * SCALE);
+        p.popMatrix();
       }
     } else {
       p.noStroke();
       p.fill(universe.colorMap.get(mobilityType));
-      p.ellipse(pos.x, pos.y, 10*scale, 10*scale);
+      p.ellipse(pos.x, pos.y, 10*SCALE, 10*SCALE);
     }
     
-    if(showZombie){
-          if(isZombie){
+    if(showZombie & isZombie){
             p.fill(#CC0000);
             p.ellipse(pos.x, pos.y, 10*scale, 10*scale);
-          }
      }
     
      if(showCollisionPotential) {

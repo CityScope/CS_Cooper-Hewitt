@@ -1,16 +1,17 @@
 State state = new State();
 Drawer drawer;
 
-float scale = 0.5;
+float SCALE = 0.5;
 public final int SIMULATION_WIDTH = 2128;
 public final int SIMULATION_HEIGHT = 1330;
-public final int GRID_CELL_SIZE = int((SIMULATION_WIDTH/16)*scale);
+public final int GRID_CELL_SIZE = int((SIMULATION_WIDTH/16)*SCALE);
+public final int BUILDING_SIZE = int((SIMULATION_WIDTH/16)*SCALE*2);
 
-public int displayWidth = int(SIMULATION_WIDTH * scale);
-public int displayHeight = int(SIMULATION_HEIGHT * scale);
+public int DISPLAY_WIDTH = int(SIMULATION_WIDTH * SCALE);
+public int DISPLAY_HEIGHT = int(SIMULATION_HEIGHT * SCALE);
 
-public int playGroundWidth = displayWidth;
-public int playGroundHeight = displayHeight;
+public int playGroundWidth = DISPLAY_WIDTH;
+public int playGroundHeight = DISPLAY_HEIGHT;
 
 public boolean INIT_AGENTS_FROM_DATAFILE = true;
 public final String SIMULATED_POPULATION_DATA_FILEPATH = "data/simPop.csv";
@@ -34,15 +35,12 @@ void settings(){
 }
 
 void setup(){
-  // fullScreen(P3D, SPAN);
-  // size(displayWidth, displayHeight, P3D);
   drawer = new Drawer(this);
   drawer.initSurface();
   universe = new Universe();
   universe.InitUniverse();
   udpR = new UDPReceiver();
   frameRate(30);
-  //drawer.ks.load();
 } 
 
 void draw(){
