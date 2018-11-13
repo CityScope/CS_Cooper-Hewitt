@@ -83,22 +83,35 @@ public class Agent {
         p.rotate(dir.heading() + PI * 0.5);
         p.translate(-1, 0);
         p.image(img, 0, 0, img.width * scale, img.height * scale);
-        p.popMatrix();
-        
-        if(showZombie){
-          if(isZombie){
-            p.fill(#CC0000);
-            p.ellipse(pos.x, pos.y, 10*scale, 10*scale);
-          }
-        }
-       
-        
+        p.popMatrix();        
       }
     } else {
       p.noStroke();
       p.fill(universe.colorMap.get(mobilityType));
       p.ellipse(pos.x, pos.y, 10*scale, 10*scale);
     }
+    
+    if(showZombie){
+          if(isZombie){
+            p.fill(#CC0000);
+            p.ellipse(pos.x, pos.y, 10*scale, 10*scale);
+          }
+     }
+    
+    
+     if( showCollisionPotential) {
+       if(worldId==2){
+         for (Agent a: universe.world2.agents){
+           float dist = pos.dist(a.pos);
+           if (dist<20) {
+            p.stroke(lerpColor(universe.colorMap.get(mobilityType), universe.colorMap.get(a.mobilityType), 0.5));
+            p.strokeWeight(1);
+            p.line(pos.x, pos.y, a.pos.x, a.pos.y);
+            p.noStroke();
+          }
+        }
+       }
+     }
   }
 
   private String chooseMobilityType() {

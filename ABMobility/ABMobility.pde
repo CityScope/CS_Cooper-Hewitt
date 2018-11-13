@@ -25,6 +25,7 @@ boolean showNetwork = false;
 boolean showAgent = true;
 boolean showZombie = false;
 boolean dynamicSlider = true;
+boolean showCollisionPotential = false;
 UDPReceiver udpR;
 
 
@@ -69,7 +70,7 @@ void keyPressed() {
     drawer.ks.save();
     break;
   case 'c':
-    state.slider = 0.5;
+    showCollisionPotential=!showCollisionPotential;
   break;
   case 'b':
     showBuilding= !showBuilding;
