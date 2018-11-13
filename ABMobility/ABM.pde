@@ -123,9 +123,12 @@ public class World {
     agents = new ArrayList<Agent>();
 
     // Create the road networks.
-    RoadNetwork carNetwork = new RoadNetwork("network/Complex_network/car_"+id+".geojson", "car");
-    RoadNetwork bikeNetwork = new RoadNetwork("network/Complex_network/bike_"+id+".geojson", "bike");
-    RoadNetwork pedNetwork = new RoadNetwork("network/Complex_network/ped_"+id+".geojson", "ped");
+    
+    
+    
+    RoadNetwork carNetwork = new RoadNetwork("network/current_network/car_"+id+".geojson", "car");
+    RoadNetwork bikeNetwork = new RoadNetwork("network/current_network/bike_"+id+".geojson", "bike");
+    RoadNetwork pedNetwork = new RoadNetwork("network/current_network/ped_"+id+".geojson", "ped");
     networks = new HashMap<String, RoadNetwork>();
     networks.put("car", carNetwork);
     networks.put("bike", bikeNetwork);
