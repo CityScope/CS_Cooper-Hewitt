@@ -1,8 +1,8 @@
 
 public class Universe {
   // This is a universe with two alternatives for future worlds.
-   private World world1;
-   private World world2;
+   private World world1; // 'Bad' world with private cars
+   private World world2; // 'Good' world with shared transit
    // Booleans manage threading of world updates.
    private boolean updatingWorld1;
    private boolean updatingWorld2;
@@ -123,9 +123,6 @@ public class World {
     agents = new ArrayList<Agent>();
 
     // Create the road networks.
-    
-    
-    
     RoadNetwork carNetwork = new RoadNetwork("network/current_network/car_"+id+".geojson", "car");
     RoadNetwork bikeNetwork = new RoadNetwork("network/current_network/bike_"+id+".geojson", "bike");
     RoadNetwork pedNetwork = new RoadNetwork("network/current_network/ped_"+id+".geojson", "ped");
@@ -140,7 +137,7 @@ public class World {
     models.add(new ABM(bikeNetwork, "bike", id));
     models.add(new ABM(pedNetwork, "ped", id));
 
-    createAgents(NUM_AGENTS_PER_WORLD);
+    createAgents();
 
     pg = createGraphics(DISPLAY_WIDTH, DISPLAY_HEIGHT, P2D);
   }
@@ -152,12 +149,21 @@ public class World {
     }  
   }
 
+  public void createAgents() {
+    // In the 'bad' world (1) there are additional agents created as 'zombie agents'.
+    // They are assigned a residence or office permenantly in zombie land
+    int numNormalAgents = NUM_AGENTS_PER_WORLD;
+    int numZombieAgents = 0;
+    if (id == 1) {
+      numZombieAgents = int((0.5)*NUM_AGENTS_PER_WORLD);  // Additional 50% -- This number should be tweaked.
+    }
 
-  public void createAgents(int num) {
     if (INIT_AGENTS_FROM_DATAFILE) {
-      createAgentsFromDatafile(num);
+      createRandomAgents(numZombieAgents, true);
+      createAgentsFromDatafile(numNormalAgents);
     } else {
-      createRandomAgents(num);
+      createRandomAgents(numZombieAgents, true);
+      createRandomAgents(numNormalAgents, false);
     }
   }
   
@@ -185,23 +191,37 @@ public class World {
   }
 
 
-  public void createRandomAgents(int num) {
+  public void createRandomAgents(int num, boolean zombie) {
     for (int i = 0; i < num; i++) {
-      // Randomly assign agent blocks and attributes.
-      int rBlockId;
-      int oBlockId;
-      do {
-        rBlockId = int(random(24));
-        oBlockId =  int(random(24));
-      } while (rBlockId == oBlockId);
-
-      String mobilityMotif = "HWH";
-      int householdIncome = int(random(12));  // [0, 11]
-      int occupationType = int(random(5)) + 1;  // [1, 5]
-      int age = int(random(100));
-
-      agents.add(new Agent(networks, glyphsMap, id, rBlockId, oBlockId, mobilityMotif, householdIncome, occupationType, age));
+      createRandomAgent(zombie);
     }
+  }
+
+  public void createRandomAgent(boolean isZombie) {
+    // Randomly assign agent blocks and attributes.
+    int rBlockId;
+    int oBlockId;
+    do {
+      rBlockId = int(random(PHYSICAL_BUILDINGS_COUNT));
+      oBlockId =  int(random(PHYSICAL_BUILDINGS_COUNT));
+    } while (rBlockId == oBlockId);
+
+    // If this agent is a zombie,
+    // either R or O block must be a virtual block in zombie land.
+    if (isZombie) {
+      if (int(random(2)) < 1) {
+        rBlockId = VIRTUAL_ZOMBIE_BUILDING_ID;
+      } else {
+        oBlockId = VIRTUAL_ZOMBIE_BUILDING_ID;
+      }
+    }
+
+    String mobilityMotif = "HWH";
+    int householdIncome = int(random(12));  // [0, 11]
+    int occupationType = int(random(5)) + 1;  // [1, 5]
+    int age = int(random(100));
+
+    agents.add(new Agent(networks, glyphsMap, id, rBlockId, oBlockId, mobilityMotif, householdIncome, occupationType, age)); 
   }
 
 
