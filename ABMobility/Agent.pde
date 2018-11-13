@@ -45,21 +45,27 @@ public class Agent {
   
   
   public void initAgent() {
+    boolean residenceOnGrid = universe.grid.isBuildingInCurrentGrid(residentialBlockId);
+    boolean officeOnGrid = universe.grid.isBuildingInCurrentGrid(officeBlockId);
+    isZombie = !(residenceOnGrid && officeOnGrid);
+
+    // Mobility choice partly determined by distance
+    // agent must travel, so it is determined after zombieland
+    // status is determined.
     setupMobilityType(); 
-    if(universe.grid.isBuildingInCurrentGrid(residentialBlockId)){
+
+    if(residenceOnGrid){
       srcNode =  map.getRandomNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(residentialBlockId),2*int((SIMULATION_WIDTH/16)*scale));
     }
     else{  
       srcNode = map.getRandomNodeInZombieLand();
-      isZombie=true;
     }
     
-    if(universe.grid.isBuildingInCurrentGrid(officeBlockId)){
+    if(officeOnGrid){
       destNode =  map.getRandomNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(officeBlockId),2*int((SIMULATION_WIDTH/16)*scale));
     }
     else{  
       destNode = map.getRandomNodeInZombieLand();
-      isZombie=true;
     }
         
     pos = new PVector(srcNode.x,srcNode.y);
@@ -98,8 +104,7 @@ public class Agent {
           }
      }
     
-    
-     if( showCollisionPotential) {
+     if(showCollisionPotential) {
        if(worldId==2){
          for (Agent a: universe.world2.agents){
            float dist = pos.dist(a.pos);
@@ -126,14 +131,24 @@ public class Agent {
 
     // How likely agent is to choose one mode of mobility over another depends
     // on whether agent is in 'bad' vs 'good' world.
+    // It also depends on how far an agent must travel.  Agents from 'zombieland'
+    // are traveling further and more likely to take a car.
     String[] mobilityTypes = {"car", "bike", "ped"};
     float[] mobilityChoiceProbabilities;
     if (worldId == 1) {
       // Bad world dummy probabilities:
-      mobilityChoiceProbabilities = new float[] {0.7, 0.2, 0.1};
+      if (isZombie) {
+        mobilityChoiceProbabilities = new float[] {0.9, 0.1, 0};
+      } else {
+        mobilityChoiceProbabilities = new float[] {0.7, 0.2, 0.1};
+      }
     } else {
       // Good world dummy probabilities:
-      mobilityChoiceProbabilities = new float[] {0.1, 0.5, 0.4};
+      if (isZombie) {
+        mobilityChoiceProbabilities = new float[] {0.3, 0.4, 0.3};
+      } else {
+        mobilityChoiceProbabilities = new float[] {0.1, 0.5, 0.4};
+      }
     }
     
     // Transform the probability distribution into an array to randomly sample from.
