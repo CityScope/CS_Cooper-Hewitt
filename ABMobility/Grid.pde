@@ -1,4 +1,14 @@
-  public class Grid {
+
+public final int PHYSICAL_BUILDINGS_COUNT = 24;
+// There are 'virtual buildings' in 'zombie land'.
+// These buildings do not have physical representations and can
+// never be placed on the grid.  They are permenantly in zombie land.
+// Utility: Agents assigned to a residence or office in zombie buildings
+// always go in or out of 'zombie land'.
+public final int VIRTUAL_ZOMBIE_BUILDING_ID = PHYSICAL_BUILDINGS_COUNT + 1;
+
+
+public class Grid {
   private ArrayList<Building> buildings; // all the building (24)
   private ArrayList<Building> buildingsOnGrid; // Building present on the grid
   public HashMap<Integer,PVector> gridMap;
