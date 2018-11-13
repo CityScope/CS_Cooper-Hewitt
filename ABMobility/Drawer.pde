@@ -20,29 +20,29 @@ public class Drawer{
   }
   
   void drawSurface(){
-      universe.updateGraphics(state.slider);
-      offscreenSurface.beginDraw();
-      offscreenSurface.clear();
-      offscreenSurface.background(0);
-      drawTableBackGround(offscreenSurface);
-      offscreenSurface.rectMode(CENTER);
-      offscreenSurface.stroke(#FF0000);
-      offscreenSurface.noFill();
-      offscreenSurface.rect(playGroundWidth/2,playGroundHeight/2,2128*scale, 1330*scale);
-      universe.update();
-      universe.draw(offscreenSurface,state.slider);
-      if(showBuilding){
-         universe.grid.draw(offscreenSurface);
-      }
-      offscreenSurface.endDraw();
-      for (int i=0; i<nbProjector;i++){
-        subSurface.beginDraw();
-        subSurface.clear();
-        subSurface.image(offscreenSurface, -(playGroundWidth/nbProjector)*i, 0);
-      
-        subSurface.endDraw();
-        surface[i].render(subSurface);
-      }
+    universe.updateGraphics(state.slider);
+    offscreenSurface.beginDraw();
+    offscreenSurface.clear();
+    offscreenSurface.background(0);
+    drawTableBackGround(offscreenSurface);
+    offscreenSurface.rectMode(CENTER);
+    offscreenSurface.stroke(#FF0000);
+    offscreenSurface.noFill();
+    offscreenSurface.rect(playGroundWidth/2,playGroundHeight/2,2128*SCALE, 1330*SCALE);
+    universe.update();
+    universe.draw(offscreenSurface,state.slider);
+    if(showBuilding){
+       universe.grid.draw(offscreenSurface);
+    }
+    offscreenSurface.endDraw();
+    for (int i=0; i<nbProjector;i++){
+      subSurface.beginDraw();
+      subSurface.clear();
+      subSurface.image(offscreenSurface, -(playGroundWidth/nbProjector)*i, 0);
+    
+      subSurface.endDraw();
+      surface[i].render(subSurface);
+    }
   }
   
   void drawTableBackGround(PGraphics p) {
