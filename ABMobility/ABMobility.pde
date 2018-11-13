@@ -41,14 +41,12 @@ void setup(){
   universe = new Universe();
   universe.InitUniverse();
   udpR = new UDPReceiver();
+  frameRate(30);
   //drawer.ks.load();
 } 
 
 void draw(){
   drawScene();
-  /*if (frameCount % 10000 == 0){
-    universe.InitUniverse();
-  }*/
 }
 
 /* Draw ------------------------------------------------------ */

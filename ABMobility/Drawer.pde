@@ -20,10 +20,7 @@ public class Drawer{
   }
   
   void drawSurface(){
-
-    // NOTE(Yasushi Sakai): we need to avoid nesting beginDraw()
       universe.updateGraphics(state.slider);
-
       offscreenSurface.beginDraw();
       offscreenSurface.clear();
       offscreenSurface.background(0);
@@ -32,12 +29,8 @@ public class Drawer{
       offscreenSurface.stroke(#FF0000);
       offscreenSurface.noFill();
       offscreenSurface.rect(playGroundWidth/2,playGroundHeight/2,2128*scale, 1330*scale);
-
-      // 
       universe.update();
       universe.draw(offscreenSurface,state.slider);
-      //
-
       if(showBuilding){
          universe.grid.draw(offscreenSurface);
       }
