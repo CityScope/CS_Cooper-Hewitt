@@ -91,7 +91,11 @@ public class Agent {
       }
     } else {
       p.noStroke();
-      p.fill(universe.colorMap.get(mobilityType));
+      if(worldId==1){
+      p.fill(universe.colorMapBad.get(mobilityType));
+      }else{
+        p.fill(universe.colorMapGood.get(mobilityType));
+      }
       p.ellipse(pos.x, pos.y, 10*SCALE, 10*SCALE);
     }
     

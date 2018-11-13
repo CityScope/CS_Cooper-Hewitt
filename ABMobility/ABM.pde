@@ -7,6 +7,8 @@ public class Universe {
    private boolean updatingWorld1;
    private boolean updatingWorld2;
    HashMap<String,Integer> colorMap;
+   HashMap<String,Integer> colorMapGood;
+   HashMap<String,Integer> colorMapBad;
    HashMap<String,Integer> colorMapBW;
    HashMap<String, PImage[]> glyphsMap;
    Grid grid;
@@ -16,7 +18,13 @@ public class Universe {
    
    Universe(){
      colorMap = new HashMap<String,Integer>();
-     colorMap.put("car",#FF0000);colorMap.put("bike",#00FF00);colorMap.put("ped",#0000FF);
+     colorMapGood = new HashMap<String,Integer>();
+     colorMapBad = new HashMap<String,Integer>();
+     //colorMap.put("car",#FF0000);colorMap.put("bike",#00FF00);colorMap.put("ped",#0000FF);
+     
+     colorMap.put("car",color(255,255,255));colorMap.put("bike",color(120,52,165));colorMap.put("ped",color(255,227,26));
+     colorMapGood.put("car",color(255,255,255));colorMapGood.put("bike",color(0,234,169));colorMapGood.put("ped",color(141,198,255));
+     colorMapBad.put("car",color(255,255,255));colorMapBad.put("bike",color(120,52,165));colorMapBad.put("ped",color(255,85,118));
      
      colorMapBW = new HashMap<String,Integer>();
      colorMapBW.put("car",#DDDDDD);colorMapBW.put("bike",#888888);colorMapBW.put("ped",#444444);
@@ -123,9 +131,9 @@ public class World {
     agents = new ArrayList<Agent>();
 
     // Create the road networks.
-    RoadNetwork carNetwork = new RoadNetwork("network/current_network/car_"+id+".geojson", "car");
-    RoadNetwork bikeNetwork = new RoadNetwork("network/current_network/bike_"+id+".geojson", "bike");
-    RoadNetwork pedNetwork = new RoadNetwork("network/current_network/ped_"+id+".geojson", "ped");
+    RoadNetwork carNetwork = new RoadNetwork("network/current_network/car_"+id+".geojson", "car",id);
+    RoadNetwork bikeNetwork = new RoadNetwork("network/current_network/bike_"+id+".geojson", "bike",id);
+    RoadNetwork pedNetwork = new RoadNetwork("network/current_network/ped_"+id+".geojson", "ped",id);
     networks = new HashMap<String, RoadNetwork>();
     networks.put("car", carNetwork);
     networks.put("bike", bikeNetwork);
