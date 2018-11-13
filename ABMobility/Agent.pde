@@ -85,10 +85,13 @@ public class Agent {
         p.image(img, 0, 0, img.width * scale, img.height * scale);
         p.popMatrix();
         
-        /*if(isZombie){
-          p.fill(#CC0000);
-          p.ellipse(pos.x, pos.y, 10*scale, 10*scale);
-         }*/
+        if(showZombie){
+          if(isZombie){
+            p.fill(#CC0000);
+            p.ellipse(pos.x, pos.y, 10*scale, 10*scale);
+          }
+        }
+       
         
       }
     } else {

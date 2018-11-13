@@ -14,7 +14,7 @@ public int playGroundHeight = displayHeight;
 
 public boolean INIT_AGENTS_FROM_DATAFILE = true;
 public final String SIMULATED_POPULATION_DATA_FILEPATH = "data/simPop.csv";
-public final int NUM_AGENTS_PER_WORLD = 10;
+public final int NUM_AGENTS_PER_WORLD = 1000;
 
 
 Universe universe;
@@ -23,6 +23,7 @@ boolean showBackground = false;
 boolean showGlyphs = true;
 boolean showNetwork = false;
 boolean showAgent = true;
+boolean showZombie = false;
 boolean dynamicSlider = true;
 UDPReceiver udpR;
 
@@ -84,6 +85,9 @@ void keyPressed() {
     break;
   case 'd':
     dynamicSlider = !dynamicSlider;
+    break;
+  case 'z':
+    showZombie=!showZombie;
     break;
   
   }
