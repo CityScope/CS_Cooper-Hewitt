@@ -30,22 +30,22 @@ public class Universe {
      colorMapBW.put("car",#DDDDDD);colorMapBW.put("bike",#888888);colorMapBW.put("ped",#444444);
      // Create the glyphs and hold in map
      PImage[] carGlyph = new PImage[1];
-     carGlyph[0] = loadImage("image/car.gif");
+     carGlyph[0] = loadImage("image/glyphs/car.gif");
      PImage[] bikeGlyph = new PImage[2];
-     bikeGlyph[0] = loadImage("image/bike-0.gif");
-     bikeGlyph[1] = loadImage("image/bike-1.gif");
+     bikeGlyph[0] = loadImage("image/glyphs/bike-0.gif");
+     bikeGlyph[1] = loadImage("image/glyphs/bike-1.gif");
      PImage[] pedGlyph = new PImage[3];
-     pedGlyph[0] = loadImage("image/human-0.gif");
-     pedGlyph[1] = loadImage("image/human-1.gif");
-     pedGlyph[2] = loadImage("image/human-2.gif");
+     pedGlyph[0] = loadImage("image/glyphs/human-0.gif");
+     pedGlyph[1] = loadImage("image/glyphs/human-1.gif");
+     pedGlyph[2] = loadImage("image/glyphs/human-2.gif");
      glyphsMap = new HashMap<String, PImage[]>();
      glyphsMap.put("car", carGlyph);
      glyphsMap.put("bike", bikeGlyph);
      glyphsMap.put("ped", pedGlyph);
 
      grid = new Grid();
-     world1 = new World(1, "image/background_01.png", glyphsMap);
-     world2 = new World(2, "image/background_02.png", glyphsMap);
+     world1 = new World(1, "image/background/background_01.png", glyphsMap);
+     world2 = new World(2, "image/background/background_02.png", glyphsMap);
      updatingWorld1 = false;
      updatingWorld2 = false;
 
