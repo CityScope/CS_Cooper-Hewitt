@@ -11,13 +11,14 @@ public final int VIRTUAL_ZOMBIE_BUILDING_ID = PHYSICAL_BUILDINGS_COUNT + 1;
 public class Grid {
   private ArrayList<Building> buildings; // all the building (24)
   private ArrayList<Building> buildingsOnGrid; // Building present on the grid
-  public HashMap<Integer,PVector> gridMap;
+  public HashMap<Integer, PVector> gridMap;
   HashMap<PVector,Integer> gridQRcolorMap;
   
   Table table;
    Grid(){
+
+    // initialize buildings
      buildings = new ArrayList<Building>();
-     buildingsOnGrid = new ArrayList<Building>();
      gridMap = new HashMap<Integer,PVector>();
      gridMap.put(0,new PVector(1,1));gridMap.put(1,new PVector(3,1));gridMap.put(2,new PVector(6,1));gridMap.put(3,new PVector(8,1));gridMap.put(4,new PVector(11,1));gridMap.put(5,new PVector(13,1));
      gridMap.put(6,new PVector(1,4));gridMap.put(7,new PVector(3,4));gridMap.put(8,new PVector(6,4));gridMap.put(9,new PVector(8,4));gridMap.put(10,new PVector(11,4));gridMap.put(11,new PVector(13,4));
@@ -31,11 +32,25 @@ public class Grid {
      
      table = loadTable("block/Cooper Hewitt Buildings - Building Blocks.csv", "header");
      for (TableRow row : table.rows()) {
-       buildings.add(new Building(gridMap.get(row.getInt("id")),row.getInt("id"),row.getInt("R"),row.getInt("O"),row.getInt("A")));
+      // initialize buildings from data
+      int id = row.getInt("id");
+      int loc = id;  // initial location is same as building id
+      int capacityR = row.getInt("R");
+      int capacityO = row.getInt("O");
+      int capacityA = row.getInt("A");
+      Building b = new Building(gridMap.get(loc), id, capacityR, capacityO, capacityA);
+      buildings.add(b);
      }
      
-     for (int i=0;i<=18;i++){
-       buildingsOnGrid.add(new Building(gridMap.get(i),i,0,0,0));
+     // initialize buildings on grid as the first 18 buildings
+     buildingsOnGrid = new ArrayList<Building>();
+     int i = 0;
+     for (Building b: buildings) {
+      buildingsOnGrid.add(b);
+      i += 1;
+      if (i >= 18) {
+        break;
+      }
      }
    }
    
@@ -54,18 +69,18 @@ public class Grid {
     for(int i=0; i < grids.size(); i++) {
       if(grids.getJSONArray(i).getInt(0) !=-1){
         buildingsOnGrid.get(i).id = grids.getJSONArray(i).getInt(0);
-        buildingsOnGrid.get(i).nbR = buildings.get(grids.getJSONArray(i).getInt(0)).nbR;
-        buildingsOnGrid.get(i).nbO = buildings.get(grids.getJSONArray(i).getInt(0)).nbO;
-        buildingsOnGrid.get(i).nbA = buildings.get(grids.getJSONArray(i).getInt(0)).nbA;
+        buildingsOnGrid.get(i).capacityR = buildings.get(grids.getJSONArray(i).getInt(0)).capacityR;
+        buildingsOnGrid.get(i).capacityO = buildings.get(grids.getJSONArray(i).getInt(0)).capacityO;
+        buildingsOnGrid.get(i).capacityA = buildings.get(grids.getJSONArray(i).getInt(0)).capacityA;
       }
-      else{
+      else {
         buildingsOnGrid.get(i).id = -1;
-        buildingsOnGrid.get(i).nbR = -1;
-        buildingsOnGrid.get(i).nbO = -1;
-        buildingsOnGrid.get(i).nbA = -1;
+        buildingsOnGrid.get(i).capacityR = -1;
+        buildingsOnGrid.get(i).capacityO = -1;
+        buildingsOnGrid.get(i).capacityA = -1;
       }
     }
-    if(dynamicSlider){
+    if(dynamicSlider) {
       JSONArray sliders = json.getJSONArray("slider");
       state.slider=sliders.getFloat(0);
     }
@@ -102,37 +117,4 @@ public class Grid {
      return new PVector(buildings.get(id).loc.x*GRID_CELL_SIZE + buildings.get(id).size/2 ,buildings.get(id).loc.y*GRID_CELL_SIZE +buildings.get(id).size/2);
    }
 
-}
-
-public class Building{
-  int size = BUILDING_SIZE;
-  PVector loc;
-  int id;
-  int nbR;
-  int nbO;
-  int nbA;
-  boolean isActive;
-  Building(PVector _loc, int _id, int _nbR, int _nbO, int _nbA){
-    loc = _loc;
-    id = _id;
-    nbR= _nbR;
-    nbO= _nbO;
-    nbA= _nbA;
-  }
-  
-  public void draw (PGraphics p){
-    //p.rectMode(CORNER);
-    p.fill(universe.grid.gridQRcolorMap.get(loc));    
-    p.stroke(#000000);
-    p.rect (loc.x*GRID_CELL_SIZE+size/2, loc.y*GRID_CELL_SIZE+size/2, size*0.9, size*0.9);
-    p.textAlign(CENTER); 
-    p.textSize(10);
-    if(id!=-1){ 
-      p.fill(#666666);
-      p.text("id:" + int(id ) + " R:" + nbR + " 0:" + nbO + " A:" + nbA, loc.x*GRID_CELL_SIZE+size/2, loc.y*GRID_CELL_SIZE+size*1.25);} 
-    else {
-      p.fill(#660000);
-      p.text("id:" + -1 , loc.x*GRID_CELL_SIZE+size/2, loc.y*GRID_CELL_SIZE+size*1.25);
-    }
-  }
 }
