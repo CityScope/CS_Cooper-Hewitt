@@ -22,7 +22,7 @@ global {
 	float tolerance <- 1.0 parameter: true;
 	
 	//if true, split the lines at their intersection
-	bool split_lines <- true parameter: true;
+	bool split_lines <- true parameter: false;
 	
 	//if true, keep only the main connected components of the network
 	bool reduce_to_main_connected_components <- true parameter: true;
@@ -31,64 +31,46 @@ global {
 	
 	list<list<point>> connected_components ;
 	list<rgb> colors;
-	graph road_network_clean;
 			
 	init {
-		write shape.width;
 		//clean data, with the given options
 		//list<geometry> clean_lines <- clean_data ? clean_network(road_shapefile.contents,tolerance,split_lines,reduce_to_main_connected_components) : road_shapefile.contents;
 		list<geometry> clean_lines <- clean_data ? clean_network(geo_file.contents,tolerance,split_lines,reduce_to_main_connected_components) : geo_file.contents;
 		write length(clean_lines);
+		write "" + first(geo_file.contents).attributes;
 		//create road from the clean lines
-		create road from: clean_lines;
+		create road from: clean_lines with: [oneway::bool(get("oneway")), length::float(get("length"))];
 		
 		//build a network from the road agents
-		road_network_clean <- as_edge_graph(road);
+		graph road_network_clean <- as_edge_graph(road);
+		
+		save road to: "../includes/car_clean.geojson" type:json with: [oneway::"oneway",length::"length"];
 		
 		//computed the connected components of the graph (for visualization purpose)
 		connected_components <- list<list<point>>(connected_components_of(road_network_clean));
 		loop times: length(connected_components) {colors << rnd_color(255);}
-		create people number:100{
-			location<-any_location_in(one_of(road));
-			target <-any_location_in(one_of(road));
-		}
-    }
-    
-    reflex when: cycle=1{
-    	save road to: "../includes/car_clean.geojson" type:json;
     }
 }
 
 //Species to represent the roads
 species road {
+	bool oneway;
+	float length;
 	aspect default {
-		draw shape color: #darkgray;
-	}
-}
-
-species people skills:[moving]{
-	point target;
-	reflex move{
-		//do goto target:target on:road_network_clean speed:world.shape.width*0.0001;
-		do wander on:road_network_clean speed:world.shape.width*0.0001;
-	}
-	
-	aspect default{
-		draw circle(world.shape.width*0.005) color:#red;
+		draw shape color: #black;
 	}
 }
 
 experiment clean_network type: gui {
 	
 	output {
-		display network background:#black{
+		display network {
 			
 			species road ;
-			species people;
 			graphics "connected components" {
 				loop i from: 0 to: length(connected_components) - 1 {
 					loop j from: 0 to: length(connected_components[i]) - 1 {
-						draw circle(200) color: colors[i] at: connected_components[i][j];	
+						draw circle(300) color: colors[i] at: connected_components[i][j];	
 					}
 				}
 			}
