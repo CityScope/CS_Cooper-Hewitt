@@ -7,12 +7,11 @@ public class Agent {
   private HashMap<String, PImage[]> glyphsMap;
   private RoadNetwork map;  // Curent network used for mobility type.
   private int worldId;  // 1=Bad world; 2=Good world
-  // TODO(arnaud+aberke): create proper zombie land nodes.
-  // For now, if an agent's residential or office block is not on the table,
-  // agent does nothing.
+
+
   private int residentialBlockId;
   private int officeBlockId;
-  private String mobilityMotif;
+  private int amenityBlockId;
   private int householdIncome;
   private int occupationType;
   private int age;
@@ -24,23 +23,33 @@ public class Agent {
   private PVector dir;
   private float speed;
   private boolean isZombie;
-  private int homeBuildingId;
-  private int workBuildingId;
-  
+
+  // Agents have mobility motifs that determine their trips
+  // mobility motifs are made up of sequences of:
+  // R (residential)
+  // O (office)
+  // A (amenity)
+  // The sequence represents the agent's daily mobility patterns
+  private String mobilityMotif;
+
 
   Agent(HashMap<String, RoadNetwork> _networks, HashMap<String, PImage[]> _glyphsMap, int _worldId,
-        int _residentialBlockId, int _officeBlockId, String _mobilityMotif,
+        int _residentialBlockId, int _officeBlockId, int _amenityBlockId,
+        String _mobilityMotif,
         int _householdIncome, int _occupationType, int _age){
     networks = _networks;
     glyphsMap = _glyphsMap;
     worldId = _worldId;
     residentialBlockId = _residentialBlockId;
     officeBlockId = _officeBlockId;
-    mobilityMotif = _mobilityMotif;
+    amenityBlockId = _amenityBlockId;
+    // TODO(aberke): Use true mobility motif
+    // mobilityMotif = _mobilityMotif;
+    mobilityMotif = "ROR";
     householdIncome = _householdIncome;
     occupationType = _occupationType;
     age = _age;
-    isZombie=false;
+    isZombie = false;
   }
   
   

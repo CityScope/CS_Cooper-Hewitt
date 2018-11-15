@@ -183,19 +183,52 @@ public class World {
     for (TableRow row : simPopTable.rows()) {
       int residentialBlockId = row.getInt("residential_block");
       int officeBlockId = row.getInt("office_block");
-      // TODO(aberke): do not use static mobility motif.
-      String mobilityMotif = "HWH";
+      int amenityBlockId = row.getInt("amenity_block");
+
+      String mobilityMotif = getMobilityMotif(row);
       int householdIncome = row.getInt("hh_income");
       int occupationType = row.getInt("occupation_type");
       int age = row.getInt("age");
-
-      agents.add(new Agent(networks, glyphsMap, id, residentialBlockId, officeBlockId, mobilityMotif, householdIncome, occupationType, age));
+      Agent a = new Agent(networks, glyphsMap, id, residentialBlockId, officeBlockId, amenityBlockId, mobilityMotif, householdIncome, occupationType, age);
+      agents.add(a);
 
       counter++;
       if (counter >= num) {
         break;
       }
     }
+  }
+
+  public String getMobilityMotif(TableRow row) {
+    /* Parses a data row to return a mobility motif */
+    // mobility motifs are made up of sequences of:
+    // R (residential)
+    // O (office)
+    // A (amenity)
+    // The sequence represents the agent's daily mobility patterns
+    // Options:
+    // motif_RAOAR motif_RAOR  motif_RAR motif_ROAOR motif_ROAR  motif_ROOR  motif_ROR
+    String mobilityMotif = "ROR"; // default motif
+    if (row.getInt("motif_RAAR") == 1) {
+      mobilityMotif = "RAAR";
+    } else if (row.getInt("motif_RAOAR") == 1) {
+      mobilityMotif = "RAOAR";
+    } else if (row.getInt("motif_RAOR") == 1) {
+      mobilityMotif = "RAOR";
+    } else if (row.getInt("motif_RAR") == 1) {
+      mobilityMotif = "RAR";
+    } else if (row.getInt("motif_ROAOR") == 1) {
+      mobilityMotif = "ROAOR";
+    } else if (row.getInt("motif_ROAR") == 1) {
+      mobilityMotif = "ROAR";
+    } else if (row.getInt("motif_RAAR") == 1) {
+      mobilityMotif = "RAAR";
+    } else if (row.getInt("motif_ROOR") == 1) {
+      mobilityMotif = "ROOR";
+    }
+    // There is also a motif_R in the data, but our agents do not just stay home...
+    // default is  "ROR"
+    return mobilityMotif;
   }
 
 
@@ -209,10 +242,12 @@ public class World {
     // Randomly assign agent blocks and attributes.
     int rBlockId;
     int oBlockId;
+    int aBlockId;
     do {
       rBlockId = int(random(PHYSICAL_BUILDINGS_COUNT));
-      oBlockId =  int(random(PHYSICAL_BUILDINGS_COUNT));
-    } while (rBlockId == oBlockId);
+      oBlockId = int(random(PHYSICAL_BUILDINGS_COUNT));
+      aBlockId = int(random(PHYSICAL_BUILDINGS_COUNT));
+    } while (rBlockId == oBlockId || rBlockId == aBlockId || oBlockId == aBlockId);
 
     // If this agent is a zombie,
     // either R or O block must be a virtual block in zombie land.
@@ -224,12 +259,12 @@ public class World {
       }
     }
 
-    String mobilityMotif = "HWH";
+    String mobilityMotif = "ROR";
     int householdIncome = int(random(12));  // [0, 11]
     int occupationType = int(random(5)) + 1;  // [1, 5]
     int age = int(random(100));
 
-    agents.add(new Agent(networks, glyphsMap, id, rBlockId, oBlockId, mobilityMotif, householdIncome, occupationType, age)); 
+    agents.add(new Agent(networks, glyphsMap, id, rBlockId, oBlockId, aBlockId, mobilityMotif, householdIncome, occupationType, age)); 
   }
 
 
