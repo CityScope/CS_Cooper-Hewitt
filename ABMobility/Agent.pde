@@ -38,6 +38,8 @@ public class Agent {
   // Variables specific to trip within mobility motif sequence.
   private int srcBlockId;  // source block for current trip
   private int destBlockId;  // destination block for current trip
+  // Keeps track of destination location so that if block is moved, destination can update
+  private PVector destBlockLocation;
   private String mobilityType;
   private PImage[] glyph;
   private PVector pos;
@@ -124,26 +126,44 @@ public class Agent {
     // status is determined.
     setupMobilityType();
 
+    destBlockLocation = universe.grid.getBuildingLocationById(destBlockId);
+    
     // Get the nodes on the graph
     // Note the graph is specific to mobility type and was chosen when mobility type was set up.
-    if(srcOnGrid){
-      srcNode =  map.getRandomNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(srcBlockId),BUILDING_SIZE);
+    srcNode = getNodeByBlockId(srcBlockId);
+    destNode = getNodeByBlockId(destBlockId);
+
+    calcRoute();
+  }
+
+
+  public Node getNodeByBlockId(int blockId) {
+    if (universe.grid.isBuildingInCurrentGrid(blockId)) {
+      return map.getRandomNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(blockId),BUILDING_SIZE);
     } else {
-      srcNode = map.getRandomNodeInZombieLand();
+      return map.getRandomNodeInZombieLand();
     }
-    
-    if(destOnGrid){
-      destNode =  map.getRandomNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(destBlockId),BUILDING_SIZE);
-    } else {  
-      destNode = map.getRandomNodeInZombieLand();
-    }
-        
+  }
+
+
+  private void calcRoute() {
     pos = new PVector(srcNode.x, srcNode.y);
     path = null;
     dir = new PVector(0.0, 0.0);
-    
-    calcRoute();
+
+    if (srcNode == destNode) {
+      // Agent already in destination
+      toNode = destNode;
+      return;
+    }
+    // Next node is available
+    ArrayList<Node> newPath = map.graph.aStar(srcNode, destNode);
+    if ( newPath != null ) {
+      path = newPath;
+      toNode = path.get(path.size() - 2); // what happens if there are only two nodes?
+    }
   }
+
 
   public int getBlockIdByType(String type) {
     int blockId = 0;
@@ -268,28 +288,22 @@ public class Agent {
     }     
   }
 
-
-  private boolean calcRoute() {
-    if (srcNode == destNode) {
-      // Agent already in destination
-      toNode = destNode;
-      return true;
-    } else {
-      // Next node is available
-      ArrayList<Node> newPath = map.graph.aStar(srcNode, destNode);
-      if ( newPath != null ) {
-        path = newPath;
-        toNode = path.get(path.size() - 2); // what happens if there are only two nodes?
-        return true;
-      }
-    }
-    return false;
-  }
   
   public void update() {
+    // Check if the agent's destination block has been moved
+    PVector currDestBlockLocation = universe.grid.getBuildingLocationById(destBlockId);
+    if (currDestBlockLocation != destBlockLocation) {
+      // The destination block has been moved!  Update the route.
+      println("updating route");
+      destBlockLocation = currDestBlockLocation;
+      destNode = getNodeByBlockId(destBlockId);
+      calcRoute();
+    }
+
     if (path == null) { // in zombie land
       return;
     }
+
     PVector toNodePos = new PVector(toNode.x, toNode.y);
     PVector destNodePos = new PVector(destNode.x, destNode.y);
     dir = PVector.sub(toNodePos, pos);  // unnormalized direction to go

@@ -13,9 +13,13 @@ public class Grid {
   private ArrayList<Building> buildingsOnGrid; // Building present on the grid
   public HashMap<Integer, PVector> gridMap;
   HashMap<PVector,Integer> gridQRcolorMap;
+
+  public PVector zombieLandLocation;
   
   Table table;
    Grid(){
+
+    zombieLandLocation = new PVector(-1, -1);
 
     // initialize buildings
      buildings = new ArrayList<Building>();
@@ -23,7 +27,7 @@ public class Grid {
      gridMap.put(0,new PVector(1,1));gridMap.put(1,new PVector(3,1));gridMap.put(2,new PVector(6,1));gridMap.put(3,new PVector(8,1));gridMap.put(4,new PVector(11,1));gridMap.put(5,new PVector(13,1));
      gridMap.put(6,new PVector(1,4));gridMap.put(7,new PVector(3,4));gridMap.put(8,new PVector(6,4));gridMap.put(9,new PVector(8,4));gridMap.put(10,new PVector(11,4));gridMap.put(11,new PVector(13,4));
      gridMap.put(12,new PVector(1,7));gridMap.put(13,new PVector(3,7));gridMap.put(14,new PVector(6,7));gridMap.put(15,new PVector(8,7));gridMap.put(16,new PVector(11,7));gridMap.put(17,new PVector(13,7));
-     gridMap.put(18,new PVector(-1,-1));gridMap.put(19,new PVector(-1,-1));gridMap.put(20,new PVector(-1,-1));gridMap.put(21,new PVector(-1,-1));gridMap.put(22,new PVector(-1,-1));gridMap.put(23,new PVector(-1,-1));
+     gridMap.put(18, zombieLandLocation);gridMap.put(19, zombieLandLocation);gridMap.put(20, zombieLandLocation);gridMap.put(21, zombieLandLocation);gridMap.put(22, zombieLandLocation);gridMap.put(23, zombieLandLocation);
           
      gridQRcolorMap = new HashMap<PVector,Integer>();
      gridQRcolorMap.put(gridMap.get(0),#888888);gridQRcolorMap.put(gridMap.get(1),#888888);gridQRcolorMap.put(gridMap.get(2),#CCCCCC);gridQRcolorMap.put(gridMap.get(3),#CCCCCC);gridQRcolorMap.put(gridMap.get(4),#888888);gridQRcolorMap.put(gridMap.get(5),#888888);
@@ -104,17 +108,25 @@ public class Grid {
     
    }
    
-   public boolean isBuildingInCurrentGrid(int id){
-     for (Building b: buildingsOnGrid){
-       if (b.id == id){
-         return true;
-       }
-     }
-     return false;
-   }
-   
-   public PVector getBuildingCenterPosistionPerId(int id){
-     return new PVector(buildings.get(id).loc.x*GRID_CELL_SIZE + buildings.get(id).size/2 ,buildings.get(id).loc.y*GRID_CELL_SIZE +buildings.get(id).size/2);
-   }
+  public boolean isBuildingInCurrentGrid(int id){
+    for (Building b: buildingsOnGrid){
+      if (b.id == id){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public PVector getBuildingCenterPosistionPerId(int id) {
+    PVector buildingLoc = getBuildingLocationById(id);
+    return new PVector(buildingLoc.x*GRID_CELL_SIZE + BUILDING_SIZE/2, buildingLoc.y*GRID_CELL_SIZE + BUILDING_SIZE/2);
+  }
+
+  public PVector getBuildingLocationById(int id) {
+    if (id < buildings.size()) {
+      return buildings.get(id).loc;
+    }
+    return zombieLandLocation;
+  }
 
 }
