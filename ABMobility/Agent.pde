@@ -192,7 +192,7 @@ public class Agent {
          for (Agent a: universe.world2.agents){
            float dist = pos.dist(a.pos);
            if (dist<20) {
-            p.stroke(lerpColor(universe.colorMap.get(mobilityType), universe.colorMap.get(a.mobilityType), 0.5));
+            p.stroke(lerpColor(universe.colorMapGood.get(mobilityType), universe.colorMapGood.get(a.mobilityType), 0.5));
             p.strokeWeight(1);
             p.line(pos.x, pos.y, a.pos.x, a.pos.y);
             p.noStroke();
