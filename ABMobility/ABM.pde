@@ -206,8 +206,6 @@ public class World {
     // O (office)
     // A (amenity)
     // The sequence represents the agent's daily mobility patterns
-    // Options:
-    // motif_RAOAR motif_RAOR  motif_RAR motif_ROAOR motif_ROAR  motif_ROOR  motif_ROR
     String mobilityMotif = "ROR"; // default motif
     if (row.getInt("motif_RAAR") == 1) {
       mobilityMotif = "RAAR";

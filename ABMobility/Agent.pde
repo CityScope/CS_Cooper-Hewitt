@@ -1,3 +1,10 @@
+// Mobility motifs are sequences of 'types' of places to go.
+// These types correspond to building blocks on the gridwhere these
+// types of activity take place.
+public final String RESIDENTIAL = "R";
+public final String OFFICE = "O";
+public final String AMENITY = "A";
+
 
 public class Agent {
 
@@ -15,14 +22,6 @@ public class Agent {
   private int householdIncome;
   private int occupationType;
   private int age;
-  private String mobilityType;
-  private PImage[] glyph;
-  private PVector pos;
-  private Node srcNode, destNode, toNode;  // toNode is like next node
-  private ArrayList<Node> path;
-  private PVector dir;
-  private float speed;
-  private boolean isZombie;
 
   // Agents have mobility motifs that determine their trips
   // mobility motifs are made up of sequences of:
@@ -31,6 +30,22 @@ public class Agent {
   // A (amenity)
   // The sequence represents the agent's daily mobility patterns
   private String mobilityMotif;
+  private String[] mobilitySequence;
+  // ms keeps track of where agent is in their mobility sequence.
+  // The value cycles through the indicies of the mobilitySequenceArray.
+  private int ms;
+
+  // Variables specific to trip within mobility motif sequence.
+  private int srcBlockId;  // source block for current trip
+  private int destBlockId;  // destination block for current trip
+  private String mobilityType;
+  private PImage[] glyph;
+  private PVector pos;
+  private Node srcNode, destNode, toNode;  // toNode is like next node
+  private ArrayList<Node> path;
+  private PVector dir;
+  private float speed;
+  private boolean isZombie;
 
 
   Agent(HashMap<String, RoadNetwork> _networks, HashMap<String, PImage[]> _glyphsMap, int _worldId,
@@ -43,9 +58,7 @@ public class Agent {
     residentialBlockId = _residentialBlockId;
     officeBlockId = _officeBlockId;
     amenityBlockId = _amenityBlockId;
-    // TODO(aberke): Use true mobility motif
-    // mobilityMotif = _mobilityMotif;
-    mobilityMotif = "ROR";
+    mobilityMotif = _mobilityMotif;
     householdIncome = _householdIncome;
     occupationType = _occupationType;
     age = _age;
@@ -54,33 +67,94 @@ public class Agent {
   
   
   public void initAgent() {
-    boolean residenceOnGrid = universe.grid.isBuildingInCurrentGrid(residentialBlockId);
-    boolean officeOnGrid = universe.grid.isBuildingInCurrentGrid(officeBlockId);
-    isZombie = !(residenceOnGrid && officeOnGrid);
+    // Set up mobility sequence.  The agent travels through this sequence.
+    ms = 0;
+    switch(mobilityMotif) {
+      case "ROR" :
+        mobilitySequence = new String[] {"R", "O"};
+        break;
+      case "RAAR" :
+        mobilitySequence = new String[] {"R", "A", "A"};
+        break;
+      case "RAOR" :
+        mobilitySequence = new String[] {"R", "A", "O"};
+        break;
+      case "RAR" :
+        mobilitySequence = new String[] {"R", "A"};
+        break;
+      case "ROAOR" :
+        mobilitySequence = new String[] {"R", "O", "A", "O"};
+        break;
+      case "ROAR" :
+        mobilitySequence = new String[] {"R", "O", "A"};
+        break;
+      case "ROOR" :
+        mobilitySequence = new String[] {"R", "O", "O"};
+        break;
+      default:
+        mobilitySequence = new String[] {"R", "O"};
+        break;
+    }
+
+    destBlockId = -1;
+    setupNextTrip();
+  }
+
+
+  public void setupNextTrip() {
+    // destination block < 0 before the first trip (right after agent is initialized).
+    if (destBlockId < 0) {
+      srcBlockId = getBlockIdByType(mobilitySequence[ms]);
+    } else {
+      // The destination block becomes the source block for the next trip.
+      srcBlockId = destBlockId;
+    }
+
+    ms = (ms + 1) % mobilitySequence.length;
+    String destType = mobilitySequence[ms];
+    destBlockId = getBlockIdByType(destType);
+
+    // Determine whether this agent 'isZombie': is going to or from 'zombie land'
+    boolean srcOnGrid = universe.grid.isBuildingInCurrentGrid(srcBlockId);
+    boolean destOnGrid = universe.grid.isBuildingInCurrentGrid(destBlockId);
+    isZombie = !(srcOnGrid && destOnGrid);
 
     // Mobility choice partly determined by distance
     // agent must travel, so it is determined after zombieland
     // status is determined.
-    setupMobilityType(); 
-    if(residenceOnGrid){
-      srcNode =  map.getRandomNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(residentialBlockId),BUILDING_SIZE);
-    }
-    else {
+    setupMobilityType();
+
+    // Get the nodes on the graph
+    // Note the graph is specific to mobility type and was chosen when mobility type was set up.
+    if(srcOnGrid){
+      srcNode =  map.getRandomNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(srcBlockId),BUILDING_SIZE);
+    } else {
       srcNode = map.getRandomNodeInZombieLand();
     }
     
-    if(officeOnGrid){
-      destNode =  map.getRandomNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(officeBlockId),BUILDING_SIZE);
-    }
-    else {  
+    if(destOnGrid){
+      destNode =  map.getRandomNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(destBlockId),BUILDING_SIZE);
+    } else {  
       destNode = map.getRandomNodeInZombieLand();
     }
         
-    pos = new PVector(srcNode.x,srcNode.y);
+    pos = new PVector(srcNode.x, srcNode.y);
     path = null;
     dir = new PVector(0.0, 0.0);
     
     calcRoute();
+  }
+
+  public int getBlockIdByType(String type) {
+    int blockId = 0;
+    if (type == RESIDENTIAL) {
+      blockId = residentialBlockId;
+    } else if (type == OFFICE) {
+      blockId = officeBlockId;
+    } else if (type == AMENITY) {
+      blockId = amenityBlockId;
+    }
+    return blockId;
   }
 
 
@@ -225,7 +299,7 @@ public class Agent {
       if (path.indexOf(toNode) == 0) {  
         // Arrived to destination
         pos = destNodePos;
-        this.initAgent();
+        this.setupNextTrip();
       } else {
         // Not destination. Look for next node.
         srcNode = toNode;
