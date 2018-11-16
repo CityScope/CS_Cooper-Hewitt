@@ -7,10 +7,10 @@ public final int PHYSICAL_BUILDINGS_COUNT = 24;
 // always go in or out of 'zombie land'.
 public final int VIRTUAL_ZOMBIE_BUILDING_ID = PHYSICAL_BUILDINGS_COUNT + 1;
 
-
 public class Grid {
   private ArrayList<Building> buildings; // all the building (24)
   private ArrayList<Building> buildingsOnGrid; // Building present on the grid
+  private ArrayList<GridInteractionAnimation> gridAnimation;
   public HashMap<Integer, PVector> gridMap;
   HashMap<PVector,Integer> gridQRcolorMap;
 
@@ -48,9 +48,13 @@ public class Grid {
      
      // initialize buildings on grid as the first 18 buildings
      buildingsOnGrid = new ArrayList<Building>();
+     gridAnimation = new ArrayList<GridInteractionAnimation>();
+     
+     // is there a reason not using a simple for loop?
      int i = 0;
      for (Building b: buildings) {
       buildingsOnGrid.add(b);
+      gridAnimation.add(new GridInteractionAnimation(b.loc));
       i += 1;
       if (i >= 18) {
         break;
@@ -64,6 +68,10 @@ public class Grid {
          b.draw(p);
        }
      }
+
+     for (GridInteractionAnimation ga: gridAnimation){
+       ga.draw(p);
+     }
    }
    
    public void updateGridFromUDP(String message){
@@ -71,17 +79,30 @@ public class Grid {
     JSONObject json = parseJSONObject(message); 
     JSONArray grids = json.getJSONArray("grid");
     for(int i=0; i < grids.size(); i++) {
+      Building b = buildingsOnGrid.get(i);
       if(grids.getJSONArray(i).getInt(0) !=-1){
-        buildingsOnGrid.get(i).id = grids.getJSONArray(i).getInt(0);
-        buildingsOnGrid.get(i).capacityR = buildings.get(grids.getJSONArray(i).getInt(0)).capacityR;
-        buildingsOnGrid.get(i).capacityO = buildings.get(grids.getJSONArray(i).getInt(0)).capacityO;
-        buildingsOnGrid.get(i).capacityA = buildings.get(grids.getJSONArray(i).getInt(0)).capacityA;
+
+        // something was put onto the table
+        if(b.id == -1){
+          gridAnimation.get(i).put();
+        }
+
+        b.id = grids.getJSONArray(i).getInt(0);
+        b.capacityR = buildings.get(grids.getJSONArray(i).getInt(0)).capacityR;
+        b.capacityO = buildings.get(grids.getJSONArray(i).getInt(0)).capacityO;
+        b.capacityA = buildings.get(grids.getJSONArray(i).getInt(0)).capacityA;
       }
       else {
-        buildingsOnGrid.get(i).id = -1;
-        buildingsOnGrid.get(i).capacityR = -1;
-        buildingsOnGrid.get(i).capacityO = -1;
-        buildingsOnGrid.get(i).capacityA = -1;
+
+        // the building was taken from the table
+        if(b.id != -1){
+          gridAnimation.get(i).take();
+        }
+
+        b.id = -1;
+        b.capacityR = -1;
+        b.capacityO = -1;
+        b.capacityA = -1;
       }
     }
     if(dynamicSlider) {
@@ -129,4 +150,9 @@ public class Grid {
     return zombieLandLocation;
   }
 
+  public void resetAnimation(){
+    for(GridInteractionAnimation ga: gridAnimation){
+      ga.take();
+    }
+  }
 }
