@@ -101,9 +101,9 @@ public class Grid {
       showNetwork =false;
     }
     if(isBuildingInCurrentGrid(22)){
-      showAgent = true;
+      showCollisionPotential = true;
     }else{
-      showAgent =false;
+      showCollisionPotential = false;
     }
     
    }
