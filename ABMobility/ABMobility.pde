@@ -29,7 +29,6 @@ boolean dynamicSlider = true;
 boolean showCollisionPotential = false;
 UDPReceiver udpR;
 
-
 void settings(){
   fullScreen(P3D, SPAN);
 }
@@ -71,6 +70,10 @@ void keyPressed() {
   case 'b':
     showBuilding= !showBuilding;
   break;
+  case 't':
+    universe.grid.resetAnimation(); 
+  break;
+
   case ' ':
    showBackground=!showBackground;
   break;
