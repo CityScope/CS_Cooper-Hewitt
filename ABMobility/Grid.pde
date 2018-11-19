@@ -80,7 +80,7 @@ public class Grid {
     JSONArray grids = json.getJSONArray("grid");
     for(int i=0; i < grids.size(); i++) {
       Building b = buildingsOnGrid.get(i);
-      if(grids.getJSONArray(i).getInt(0) !=-1){
+      if(grids.getJSONArray(i).getInt(0) != -1){
 
         // something was put onto the table
         if(b.id == -1){
@@ -107,7 +107,7 @@ public class Grid {
     }
     if(dynamicSlider) {
       JSONArray sliders = json.getJSONArray("slider");
-      state.slider=sliders.getFloat(0);
+      state.slider = 1.0 - sliders.getFloat(0);
     }
     
     
