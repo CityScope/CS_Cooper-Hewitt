@@ -133,8 +133,13 @@ JSONObject compileJson () {
     grid.setJSONArray(i, cell); 
   }
 
+  // slider is a array
+  
+  JSONArray sliderArray = new JSONArray();
+  addSlider.setFloat(0, slider);
+
   data.setJSONArray("grid", grid);
-  data.setFloat("slider", slider);
+  data.setJSONArray("slider", sliderArray);
 
   return data;
 }
