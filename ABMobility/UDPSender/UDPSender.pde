@@ -136,7 +136,7 @@ JSONObject compileJson () {
   // slider is a array
   
   JSONArray sliderArray = new JSONArray();
-  addSlider.setFloat(0, slider);
+  sliderArray.setFloat(0, slider);
 
   data.setJSONArray("grid", grid);
   data.setJSONArray("slider", sliderArray);
