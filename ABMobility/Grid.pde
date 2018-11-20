@@ -35,9 +35,24 @@ public class Grid {
      gridMap.put(18, zombieLandLocation);gridMap.put(19, zombieLandLocation);gridMap.put(20, zombieLandLocation);gridMap.put(21, zombieLandLocation);gridMap.put(22, zombieLandLocation);gridMap.put(23, zombieLandLocation);
           
      gridQRcolorMap = new HashMap<PVector,Integer>();
-     gridQRcolorMap.put(gridMap.get(0),#888888);gridQRcolorMap.put(gridMap.get(1),#888888);gridQRcolorMap.put(gridMap.get(2),#CCCCCC);gridQRcolorMap.put(gridMap.get(3),#CCCCCC);gridQRcolorMap.put(gridMap.get(4),#888888);gridQRcolorMap.put(gridMap.get(5),#888888);
-     gridQRcolorMap.put(gridMap.get(6),#888888);gridQRcolorMap.put(gridMap.get(7),#888888);gridQRcolorMap.put(gridMap.get(8),#CCCCCC);gridQRcolorMap.put(gridMap.get(9),#CCCCCC);gridQRcolorMap.put(gridMap.get(10),#888888);gridQRcolorMap.put(gridMap.get(11),#888888);
-     gridQRcolorMap.put(gridMap.get(12),#888888);gridQRcolorMap.put(gridMap.get(13),#888888);gridQRcolorMap.put(gridMap.get(14),#CCCCCC);gridQRcolorMap.put(gridMap.get(15),#CCCCCC);gridQRcolorMap.put(gridMap.get(16),#888888);gridQRcolorMap.put(gridMap.get(17),#888888);
+     gridQRcolorMap.put(gridMap.get(0),#888888);
+     gridQRcolorMap.put(gridMap.get(1),#888888);
+     gridQRcolorMap.put(gridMap.get(2),#CCCCCC);
+     gridQRcolorMap.put(gridMap.get(3),#CCCCCC);
+     gridQRcolorMap.put(gridMap.get(4),#888888);
+     gridQRcolorMap.put(gridMap.get(5),#888888);
+     gridQRcolorMap.put(gridMap.get(6),#888888);
+     gridQRcolorMap.put(gridMap.get(7),#666666);
+     gridQRcolorMap.put(gridMap.get(8),#CCCCCC);
+     gridQRcolorMap.put(gridMap.get(9),#CCCCCC);
+     gridQRcolorMap.put(gridMap.get(10),#666666);
+     gridQRcolorMap.put(gridMap.get(11),#888888);
+     gridQRcolorMap.put(gridMap.get(12),#888888);
+     gridQRcolorMap.put(gridMap.get(13),#666666);
+     gridQRcolorMap.put(gridMap.get(14),#CCCCCC);
+     gridQRcolorMap.put(gridMap.get(15),#CCCCCC);
+     gridQRcolorMap.put(gridMap.get(16),#777777);
+     gridQRcolorMap.put(gridMap.get(17),#888888);
      
      table = loadTable("block/Cooper Hewitt Buildings - Building Blocks.csv", "header");
      for (TableRow row : table.rows()) {

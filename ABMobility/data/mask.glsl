@@ -18,8 +18,8 @@ void main() {
   vec2 n = vec2(gl_FragCoord.x / width, gl_FragCoord.y / height);
 
   if(n.x < divPoint){
-    gl_FragColor = texture2D(right, n).rgba;
-  } else {
     gl_FragColor = texture2D(left, n).rgba;
+  } else {
+    gl_FragColor = texture2D(right, n).rgba;
   }
 }
