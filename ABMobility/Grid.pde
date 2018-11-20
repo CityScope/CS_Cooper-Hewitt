@@ -136,9 +136,7 @@ public class Grid {
 
     }   
     
-    //FIXME: Keep this for now in case we want to keep the permanent special effect see issue #86. This part of the code will have to be remove when issue #86 is closed
-    /*if(showTemporalSpecialEffect){
-    }
+    //FIXME: See issue #86. This part of the code will have to be remove when issue #86 is closed
     if(isBuildingInCurrentGrid(20)){
       showGlyphs = false;
     }else{
@@ -153,7 +151,7 @@ public class Grid {
       showCollisionPotential = true;
     }else{
       showCollisionPotential = false;
-    }*/
+    }
   }
 
   public boolean isBuildingInCurrentGrid(int id){
