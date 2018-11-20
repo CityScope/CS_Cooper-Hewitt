@@ -20,7 +20,7 @@ public class Building {
     capacityA = _capacityA;
   }
   
-  public void draw (PGraphics p){
+  public void draw (PGraphics p) {
     //p.rectMode(CORNER);
     p.fill(universe.grid.gridQRcolorMap.get(loc));    
     p.stroke(#000000);
