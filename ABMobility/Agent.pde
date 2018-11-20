@@ -294,7 +294,6 @@ public class Agent {
     PVector currDestBlockLocation = universe.grid.getBuildingLocationById(destBlockId);
     if (currDestBlockLocation != destBlockLocation) {
       // The destination block has been moved!  Update the route.
-      println("updating route");
       destBlockLocation = currDestBlockLocation;
       destNode = getNodeByBlockId(destBlockId);
       calcRoute();

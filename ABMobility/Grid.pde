@@ -1,4 +1,8 @@
 
+// There are set locations on the grid where buildings
+// can be placed.
+public final int BUILDING_LOCATIONS = 18;
+
 public final int PHYSICAL_BUILDINGS_COUNT = 24;
 // There are 'virtual buildings' in 'zombie land'.
 // These buildings do not have physical representations and can
@@ -8,8 +12,9 @@ public final int PHYSICAL_BUILDINGS_COUNT = 24;
 public final int VIRTUAL_ZOMBIE_BUILDING_ID = PHYSICAL_BUILDINGS_COUNT + 1;
 
 public class Grid {
-  private ArrayList<Building> buildings; // all the building (24)
-  private ArrayList<Building> buildingsOnGrid; // Building present on the grid
+  // The buildings array is indexed by the ids of the buildings it holds.
+  // i.e. it maps Building.id --> Building for buildings 0...24
+  private ArrayList<Building> buildings;
   private ArrayList<GridInteractionAnimation> gridAnimation;
   public HashMap<Integer, PVector> gridMap;
   HashMap<PVector,Integer> gridQRcolorMap;
@@ -45,15 +50,12 @@ public class Grid {
       Building b = new Building(gridMap.get(loc), id, capacityR, capacityO, capacityA);
       buildings.add(b);
      }
-     
-     // initialize buildings on grid as the first 18 buildings
-     buildingsOnGrid = new ArrayList<Building>();
+
      gridAnimation = new ArrayList<GridInteractionAnimation>();
      
      // is there a reason not using a simple for loop?
      int i = 0;
      for (Building b: buildings) {
-      buildingsOnGrid.add(b);
       gridAnimation.add(new GridInteractionAnimation(b.loc));
       i += 1;
       if (i >= 18) {
@@ -62,58 +64,80 @@ public class Grid {
      }
    }
    
-   public void draw(PGraphics p){
-     for (Building b: buildingsOnGrid){
-       if(b.loc.x!=-1){
-         b.draw(p);
-       }
-     }
-
-     for (GridInteractionAnimation ga: gridAnimation){
-       ga.draw(p);
-     }
-   }
-   
-   public void updateGridFromUDP(String message){
-    //println("message" + message);
-    JSONObject json = parseJSONObject(message); 
-    JSONArray grids = json.getJSONArray("grid");
-    for(int i=0; i < grids.size(); i++) {
-      Building b = buildingsOnGrid.get(i);
-      if(grids.getJSONArray(i).getInt(0) != -1){
-
-        // something was put onto the table
-        if(b.id == -1){
-          //update the id of the buildign to send the information of which special building has been sent to the grid Animation
-          b.id = grids.getJSONArray(i).getInt(0);
-          gridAnimation.get(i).put(b.id);
-        }
-
-        
-        b.capacityR = buildings.get(grids.getJSONArray(i).getInt(0)).capacityR;
-        b.capacityO = buildings.get(grids.getJSONArray(i).getInt(0)).capacityO;
-        b.capacityA = buildings.get(grids.getJSONArray(i).getInt(0)).capacityA;
-      }
-      else {
-
-        // the building was taken from the table
-        if(b.id != -1){
-          gridAnimation.get(i).take(b.id);
-        }
-
-        b.id = -1;
-        b.capacityR = -1;
-        b.capacityO = -1;
-        b.capacityA = -1;
+   public void draw(PGraphics p) {
+    // Draw building block locations
+    drawBuildingBlocks(p);
+    // Draw buildings
+    for (Building b: buildings) {
+      if (b.loc != zombieLandLocation) {
+        b.draw(p);
       }
     }
+    // Draw grid animations (if they occured)
+    for (GridInteractionAnimation ga: gridAnimation){
+      ga.draw(p);
+    }
+  }
+
+  public void drawBuildingBlocks(PGraphics p) {
+    /* Lights up location where building block goes.
+      This is important to provide the scanner enough light to scan
+      whether or not a building is in the location.
+    */
+    for (int i=0; i<BUILDING_LOCATIONS; i++) {
+      PVector loc = gridMap.get(i);
+      p.fill(255);    
+      p.stroke(#000000);
+      p.rect(loc.x*GRID_CELL_SIZE+BUILDING_SIZE/2, loc.y*GRID_CELL_SIZE+BUILDING_SIZE/2, BUILDING_SIZE*0.9, BUILDING_SIZE*0.9);
+    }
+  }
+   
+   public void updateGridFromUDP(String message) {
+    // Take account of which buildings we have not seen in 
+    // the incoming message.
+    int[] buildingIdsFromData = new int[PHYSICAL_BUILDINGS_COUNT];
+    for (int i=0; i<PHYSICAL_BUILDINGS_COUNT; i++) {
+      buildingIdsFromData[i] = 0;
+    }
+
+    JSONObject json = parseJSONObject(message); 
+    JSONArray grids = json.getJSONArray("grid"); // maps building location --> Building
+    for(int i=0; i < grids.size(); i++) {
+      int buildingId = grids.getJSONArray(i).getInt(0);
+
+      if((buildingId >= 0) && (buildingId < PHYSICAL_BUILDINGS_COUNT)) {
+        Building building = buildings.get(buildingId);
+        
+        // building with buildingId is on the table
+        if (building.loc == zombieLandLocation) {
+          // building was previously not on table - it has just been put on table.
+          gridAnimation.get(i).put(buildingId);
+        }
+        building.loc = gridMap.get(i);
+        // Record that the building is on the grid
+        buildingIdsFromData[buildingId] = 1;
+      } else {
+        if (!gridAnimation.get(i).isPut) {
+          gridAnimation.get(i).take(buildingId);
+        }
+      }
+    }
+
+    for (int buildingId=0; buildingId<PHYSICAL_BUILDINGS_COUNT; buildingId++) {
+      if (buildingIdsFromData[buildingId] == 0) {
+        Building building = buildings.get(buildingId);
+        building.loc = zombieLandLocation;
+      }
+    }
+
     if(dynamicSlider) {
       JSONArray sliders = json.getJSONArray("slider");
       state.slider = 1.0 - sliders.getFloat(0);
+
     }   
     
     //FIXME: Keep this for now in case we want to keep the permanent special effect see issue #86
-    /*if(isBuildingInCurrentGrid(20)){
+    if(isBuildingInCurrentGrid(20)){
       showGlyphs = false;
     }else{
       showGlyphs =true;
@@ -127,15 +151,13 @@ public class Grid {
       showCollisionPotential = true;
     }else{
       showCollisionPotential = false;
-    }*/
-    
-    
-   }
-   
+    }
+  }
+
   public boolean isBuildingInCurrentGrid(int id){
-    for (Building b: buildingsOnGrid){
-      if (b.id == id){
-        return true;
+    for (Building b: buildings){
+      if (b.id == id) {
+        return (b.loc != zombieLandLocation);
       }
     }
     return false;
