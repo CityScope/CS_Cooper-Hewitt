@@ -9,8 +9,11 @@ public class GridInteractionAnimation {
 
   PVector center; 
   float start; // start millis of animation
+  float specialStart; // start millis of animation
   boolean isActive;
   boolean isPut;
+  boolean isActiveSpecial;
+  int specialEffectId;
   
   public GridInteractionAnimation(PVector _loc){
     center = new PVector(
@@ -19,8 +22,11 @@ public class GridInteractionAnimation {
         );
 
     start = 0.0;
+    specialStart= 0.0;
     isActive = true;
     isPut = false;
+    isActiveSpecial=true;
+    specialEffectId=-1;
   }
 
   void drawLine(PGraphics p, float elapsed, boolean flip){
@@ -43,18 +49,38 @@ public class GridInteractionAnimation {
     isActive = true; 
     start = millis();
   }
-
-  void put(){
+  
+  void activateSpecial(boolean value, int id){
+    isActiveSpecial = value;
+    specialEffectId = id;
+    if(id==20){
+      showGlyphs = isActiveSpecial ? false : true;
+    }
+    if(id==21){
+      showNetwork = isActiveSpecial ? true :false;
+    }
+    if(id==22){
+      showCollisionPotential = isActiveSpecial ? true : false;
+    }
+    specialStart = millis();
+  }
+  
+  void put(int id){
     isPut = false;
     activate();
+    activateSpecial(true,id);
   }
 
-  void take(){
+  void take(int id){
     isPut = true;
     activate();
+    activateSpecial(false,id);
   }
-
   void draw(PGraphics p){
+    drawGridInteraction(p);
+    drawSpecialEffect(p);
+  }
+  void drawGridInteraction(PGraphics p){
 
     if(!isActive) return;
 
@@ -87,7 +113,15 @@ public class GridInteractionAnimation {
      
     p.popMatrix();
   }
-
+  
+  void drawSpecialEffect(PGraphics p){
+    if(!isActiveSpecial)   return;    
+    float t = 0.1*(millis() - specialStart) / DURATION;
+    if(t < 0 || t > 1){
+      activateSpecial(false,specialEffectId);
+      return;
+    }
+  }
 }
 
 /// below are utility functions for animation

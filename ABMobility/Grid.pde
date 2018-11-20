@@ -84,10 +84,12 @@ public class Grid {
 
         // something was put onto the table
         if(b.id == -1){
-          gridAnimation.get(i).put();
+          //update the id of the buildign to send the information of which special building has been sent to the grid Animation
+          b.id = grids.getJSONArray(i).getInt(0);
+          gridAnimation.get(i).put(b.id);
         }
 
-        b.id = grids.getJSONArray(i).getInt(0);
+        
         b.capacityR = buildings.get(grids.getJSONArray(i).getInt(0)).capacityR;
         b.capacityO = buildings.get(grids.getJSONArray(i).getInt(0)).capacityO;
         b.capacityA = buildings.get(grids.getJSONArray(i).getInt(0)).capacityA;
@@ -96,7 +98,7 @@ public class Grid {
 
         // the building was taken from the table
         if(b.id != -1){
-          gridAnimation.get(i).take();
+          gridAnimation.get(i).take(b.id);
         }
 
         b.id = -1;
@@ -108,10 +110,10 @@ public class Grid {
     if(dynamicSlider) {
       JSONArray sliders = json.getJSONArray("slider");
       state.slider = 1.0 - sliders.getFloat(0);
-    }
+    }   
     
-    
-    if(isBuildingInCurrentGrid(20)){
+    //FIXME: Keep this for now in case we want to keep the permanent special effect see issue #86
+    /*if(isBuildingInCurrentGrid(20)){
       showGlyphs = false;
     }else{
       showGlyphs =true;
@@ -125,7 +127,8 @@ public class Grid {
       showCollisionPotential = true;
     }else{
       showCollisionPotential = false;
-    }
+    }*/
+    
     
    }
    
@@ -152,7 +155,7 @@ public class Grid {
 
   public void resetAnimation(){
     for(GridInteractionAnimation ga: gridAnimation){
-      ga.take();
+      ga.take(-1);
     }
   }
 }
