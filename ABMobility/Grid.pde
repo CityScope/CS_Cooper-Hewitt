@@ -126,14 +126,14 @@ public class Grid {
         // building with buildingId is on the table
         if (building.loc == zombieLandLocation) {
           // building was previously not on table - it has just been put on table.
-          gridAnimation.get(i).put(buildingId);
+          gridAnimation.get(i).put();
         }
         building.loc = gridMap.get(i);
         // Record that the building is on the grid
         buildingIdsFromData[buildingId] = 1;
       } else {
         if (!gridAnimation.get(i).isPut) {
-          gridAnimation.get(i).take(buildingId);
+          gridAnimation.get(i).take();
         }
       }
     }
@@ -150,27 +150,8 @@ public class Grid {
       state.slider = 1.0 - sliders.getFloat(0);
 
     }   
-    
-    //FIXME: Keep this for now in case we want to keep the permanent special effect see issue #86. This part of the code will have to be remove when issue #86 is closed
-    /*if(showTemporalSpecialEffect){
-    }
-    if(isBuildingInCurrentGrid(20)){
-      showGlyphs = false;
-    }else{
-      showGlyphs =true;
-    }
-    if(isBuildingInCurrentGrid(21)){
-      showNetwork = true;
-    }else{
-      showNetwork =false;
-    }
-    if(isBuildingInCurrentGrid(22)){
-      showCollisionPotential = true;
-    }else{
-      showCollisionPotential = false;
-    }*/
   }
-
+    
   public boolean isBuildingInCurrentGrid(int id){
     for (Building b: buildings){
       if (b.id == id) {
@@ -194,7 +175,7 @@ public class Grid {
 
   public void resetAnimation(){
     for(GridInteractionAnimation ga: gridAnimation){
-      ga.take(-1);
+      ga.take();
     }
   }
 }
