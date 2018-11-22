@@ -19,7 +19,6 @@ public class GridInteractionAnimation {
         );
 
     start = 0.0;
-    specialStart= 0.0;
     isActive = true;
     isPut = false;
   }
