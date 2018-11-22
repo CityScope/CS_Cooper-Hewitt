@@ -1,7 +1,7 @@
 State state = new State();
 Drawer drawer;
 
-float SCALE = 0.5;
+float SCALE = 1.0;
 public final int SIMULATION_WIDTH = 2128;
 public final int SIMULATION_HEIGHT = 1330;
 public final int GRID_CELL_SIZE = int((SIMULATION_WIDTH/16)*SCALE);
