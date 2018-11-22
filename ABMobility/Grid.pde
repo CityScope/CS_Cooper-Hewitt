@@ -18,10 +18,10 @@ public class Grid {
   private ArrayList<GridInteractionAnimation> gridAnimation;
   public HashMap<Integer, PVector> gridMap;
   HashMap<PVector,Integer> gridQRcolorMap;
-
   public PVector zombieLandLocation;
-  
   Table table;
+  int currentBlockAnimated;
+  
    Grid(){
 
     zombieLandLocation = new PVector(-1, -1);
@@ -112,6 +112,7 @@ public class Grid {
         if (building.loc == zombieLandLocation) {
           // building was previously not on table - it has just been put on table.
           gridAnimation.get(i).put();
+          currentBlockAnimated = buildingId;
         }
         building.loc = gridMap.get(i);
         // Record that the building is on the grid

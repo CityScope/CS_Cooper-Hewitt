@@ -179,47 +179,56 @@ public class Agent {
 
 
   public void draw(PGraphics p, boolean glyphs) {
-    if (pos == null || path == null) {  // in zombie land.
-      return;
-    }
-    if (glyphs && (glyph.length > 0)) {
-      PImage img = glyph[0];
-      if (img != null) {
-        p.pushMatrix();
-        p.translate(pos.x, pos.y);
-        p.rotate(dir.heading() + PI * 0.5);
-        p.translate(-1, 0);
-        p.image(img, 0, 0, img.width * SCALE, img.height * SCALE);
-        p.popMatrix();
-      }
-    } else {
-      p.noStroke();
-      if(worldId==1){
-      p.fill(universe.colorMapBad.get(mobilityType));
-      }else{
-        p.fill(universe.colorMapGood.get(mobilityType));
-      }
-      p.ellipse(pos.x, pos.y, 10*SCALE, 10*SCALE);
-    }
     
-    if(showZombie & isZombie){
-            p.fill(#CC0000);
-            p.ellipse(pos.x, pos.y, 10*SCALE, 10*SCALE);
-     }
-    
-     if(showCollisionPotential) {
-       if(worldId==2){
-         for (Agent a: universe.world2.agents){
-           float dist = pos.dist(a.pos);
-           if (dist<20) {
-            p.stroke(lerpColor(universe.colorMapGood.get(mobilityType), universe.colorMapGood.get(a.mobilityType), 0.5));
-            p.strokeWeight(1);
-            p.line(pos.x, pos.y, a.pos.x, a.pos.y);
-            p.noStroke();
-          }
+    if(inAnimationMode && enableAnimationMode){
+      if(residentialBlockId == universe.grid.currentBlockAnimated || officeBlockId ==  universe.grid.currentBlockAnimated ||officeBlockId == universe.grid.currentBlockAnimated){
+        p.fill(#FF0000);
+        p.ellipse(pos.x, pos.y, 10*SCALE, 10*SCALE);
+      }
+    }
+    else{  
+      if (pos == null || path == null) {  // in zombie land.
+        return;
+      }
+      if (glyphs && (glyph.length > 0)) {
+        PImage img = glyph[0];
+        if (img != null) {
+          p.pushMatrix();
+          p.translate(pos.x, pos.y);
+          p.rotate(dir.heading() + PI * 0.5);
+          p.translate(-1, 0);
+          p.image(img, 0, 0, img.width * SCALE, img.height * SCALE);
+          p.popMatrix();
         }
+      } else {
+        p.noStroke();
+        if(worldId==1){
+        p.fill(universe.colorMapBad.get(mobilityType));
+        }else{
+          p.fill(universe.colorMapGood.get(mobilityType));
+        }
+        p.ellipse(pos.x, pos.y, 10*SCALE, 10*SCALE);
+      }
+      
+      if(showZombie & isZombie){
+              p.fill(#CC0000);
+              p.ellipse(pos.x, pos.y, 10*SCALE, 10*SCALE);
        }
-     }
+      
+       if(showCollisionPotential) {
+         if(worldId==2){
+           for (Agent a: universe.world2.agents){
+             float dist = pos.dist(a.pos);
+             if (dist<20) {
+              p.stroke(lerpColor(universe.colorMapGood.get(mobilityType), universe.colorMapGood.get(a.mobilityType), 0.5));
+              p.strokeWeight(1);
+              p.line(pos.x, pos.y, a.pos.x, a.pos.y);
+              p.noStroke();
+            }
+          }
+         }
+       }
+    }
   }
 
   private String chooseMobilityType() {

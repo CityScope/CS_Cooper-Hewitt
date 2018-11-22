@@ -4,12 +4,11 @@ public class GridInteractionAnimation {
 
   int OFFSET = 2;
   int LINE_LENGTH = 5;
-  int DURATION = 1000; // milliseconds
+  int DURATION = 2000; // milliseconds
   int LINE_NUM = 4;
 
   PVector center; 
   float start; // start millis of animation
-  float specialStart; // start millis of animation
   boolean isActive;
   boolean isPut;
   
@@ -59,11 +58,12 @@ public class GridInteractionAnimation {
 
   void draw(PGraphics p){
     if(!isActive) return;
-
+    inAnimationMode = true;
     float t = (millis() - start) / DURATION;
 
     if(t < 0 || t > 1){
       isActive = false;
+      inAnimationMode = false;
     }
 
     p.pushMatrix();

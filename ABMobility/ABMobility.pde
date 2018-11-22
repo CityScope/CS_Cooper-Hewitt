@@ -27,6 +27,8 @@ boolean showAgent = true;
 boolean showZombie = false;
 boolean dynamicSlider = true;
 boolean showCollisionPotential = false;
+boolean inAnimationMode = false;
+boolean enableAnimationMode = false;
 UDPReceiver udpR;
 
 void settings(){
