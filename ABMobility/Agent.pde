@@ -48,6 +48,7 @@ public class Agent {
   private PVector dir;
   private float speed;
   private boolean isZombie;
+  private color myColor;
 
 
   Agent(HashMap<String, RoadNetwork> _networks, HashMap<String, PImage[]> _glyphsMap, int _worldId,
@@ -180,10 +181,18 @@ public class Agent {
 
   public void draw(PGraphics p, boolean glyphs) {
     
+    if(worldId==1){
+      myColor = universe.colorMapBad.get(mobilityType);
+    }else{
+      myColor=universe.colorMapGood.get(mobilityType);
+    }
+    p.fill(myColor);
     if(inAnimationMode && enableAnimationMode){
-      if(residentialBlockId == universe.grid.currentBlockAnimated || officeBlockId ==  universe.grid.currentBlockAnimated ||officeBlockId == universe.grid.currentBlockAnimated){
-        p.fill(#FF0000);
+      if(residentialBlockId == universe.grid.currentBlockAnimated || officeBlockId ==  universe.grid.currentBlockAnimated || amenityBlockId == universe.grid.currentBlockAnimated){
+        //p.fill(#FF0000);
+        int curRadius;
         p.ellipse(pos.x, pos.y, 10*SCALE, 10*SCALE);
+        //drawPath(p,myColor);
       }
     }
     else{  
@@ -202,11 +211,6 @@ public class Agent {
         }
       } else {
         p.noStroke();
-        if(worldId==1){
-        p.fill(universe.colorMapBad.get(mobilityType));
-        }else{
-          p.fill(universe.colorMapGood.get(mobilityType));
-        }
         p.ellipse(pos.x, pos.y, 10*SCALE, 10*SCALE);
       }
       
@@ -228,6 +232,24 @@ public class Agent {
           }
          }
        }
+    }
+  }
+  
+    // DRAW AGENT PATH TO DESTINATION --->
+  public void drawPath(PGraphics p, color c) {
+    if (path != null) {
+      for (int i=1; i<path.size(); i++) {
+        PVector iNodePos = new PVector(path.get(i).x,path.get(i).y),
+        iPrevNodePos = new PVector(path.get(i-1).x,path.get(i-1).y),
+        toNodePos = new PVector(toNode.x,toNode.y);
+        //int weight = i <= path.indexOf(toNode) ? 3 : 1;  // Already traveled route is thiner than remaining route --->
+        p.stroke(c); 
+        p.strokeWeight(1); 
+        p.noFill();
+        p.line( iNodePos.x, iNodePos.y, iPrevNodePos.x, iPrevNodePos.y );
+        //p.strokeWeight(3);  // Route from pos to next node is always thicker --->
+      //  p.line( pos.x, pos.y, toNodePos.x, toNodePos.y );
+      }
     }
   }
 

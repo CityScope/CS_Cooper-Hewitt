@@ -67,16 +67,17 @@ public class Grid {
    public void draw(PGraphics p) {
     // Draw building block locations
     drawBuildingBlocks(p);
+    // Draw grid animations (if they occured)
+    for (GridInteractionAnimation ga: gridAnimation){
+      ga.draw(p);
+    }
     // Draw buildings
     for (Building b: buildings) {
       if (b.loc != zombieLandLocation) {
         b.draw(p);
       }
     }
-    // Draw grid animations (if they occured)
-    for (GridInteractionAnimation ga: gridAnimation){
-      ga.draw(p);
-    }
+    
   }
 
   public void drawBuildingBlocks(PGraphics p) {
@@ -114,6 +115,7 @@ public class Grid {
           gridAnimation.get(i).put();
           currentBlockAnimated = buildingId;
         }
+        
         building.loc = gridMap.get(i);
         // Record that the building is on the grid
         buildingIdsFromData[buildingId] = 1;

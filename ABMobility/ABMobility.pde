@@ -28,7 +28,7 @@ boolean showZombie = false;
 boolean dynamicSlider = true;
 boolean showCollisionPotential = false;
 boolean inAnimationMode = false;
-boolean enableAnimationMode = false;
+boolean enableAnimationMode = true;
 UDPReceiver udpR;
 
 void settings(){
@@ -46,6 +46,7 @@ void setup(){
 
 void draw(){
   drawScene();
+  //println(frameRate);
 }
 
 /* Draw ------------------------------------------------------ */
