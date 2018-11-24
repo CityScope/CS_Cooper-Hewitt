@@ -102,9 +102,23 @@ public class Grid {
     }
 
     JSONObject json = parseJSONObject(message); 
+    
+    // parseJSONObject returns null if unparsable (processing docs)
+    if(json == null) return;
+
     JSONArray grids = json.getJSONArray("grid"); // maps building location --> Building
+    if(grids == null) return;
+
     for(int i=0; i < grids.size(); i++) {
-      int buildingId = grids.getJSONArray(i).getInt(0);
+      int buildingId;
+      try{
+        grids.getJSONArray(i).getInt(0);
+      } catch (Exception e) {
+        // getInt(n) returns an exception, different from getJSONArray
+        // if getJSONArray(i) is null, we will catch this.
+        // I should return, not break
+        return
+      }
 
       if((buildingId >= 0) && (buildingId < PHYSICAL_BUILDINGS_COUNT)) {
         Building building = buildings.get(buildingId);
@@ -134,9 +148,13 @@ public class Grid {
     }
 
     if(dynamicSlider) {
-      JSONArray sliders = json.getJSONArray("slider");
-      state.slider = 1.0 - sliders.getFloat(0);
-
+      JSONArray sliders = son.getJSONArray("slider");
+      if(sliders == null) return;
+      try{
+        state.slider = 1.0 - sliders.getFloat(0);
+      } catch (Exception e){
+        return;
+      }
     }   
   }
     
