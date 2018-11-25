@@ -65,8 +65,7 @@ public class Grid {
    }
    
    public void draw(PGraphics p) {
-    // Draw building block locations
-    drawBuildingBlocks(p);
+    
     // Draw grid animations (if they occured)
     for (GridInteractionAnimation ga: gridAnimation){
       ga.draw(p);
@@ -77,7 +76,8 @@ public class Grid {
         b.draw(p);
       }
     }
-    
+    // Draw building block locations
+    drawBuildingBlocks(p);    
   }
 
   public void drawBuildingBlocks(PGraphics p) {
@@ -87,8 +87,8 @@ public class Grid {
     */
     for (int i=0; i<BUILDING_LOCATIONS; i++) {
       PVector loc = gridMap.get(i);
-      p.fill(255);    
-      p.stroke(#000000);
+      p.fill(universe.grid.gridQRcolorMap.get(loc)); 
+      p.stroke(universe.grid.gridQRcolorMap.get(loc));
       p.rect(loc.x*GRID_CELL_SIZE+BUILDING_SIZE/2, loc.y*GRID_CELL_SIZE+BUILDING_SIZE/2, BUILDING_SIZE*0.9, BUILDING_SIZE*0.9);
     }
   }
