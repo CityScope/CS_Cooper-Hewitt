@@ -21,6 +21,7 @@ public class Grid {
   public PVector zombieLandLocation;
   Table table;
   int currentBlockAnimated;
+  int currentGridAnimated;
   
    Grid(){
 
@@ -143,6 +144,7 @@ public class Grid {
           // building was previously not on table - it has just been put on table.
           gridAnimation.get(i).put();
           currentBlockAnimated = buildingId;
+          currentGridAnimated= i;
         }
         
         building.loc = gridMap.get(i);
