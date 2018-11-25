@@ -43,11 +43,12 @@ public class GridInteractionAnimation {
   }
   
   void dynamicSquare(PGraphics p,float t,color c){
-    p.fill(c);
+    p.noFill();
+    p.stroke(c);
     p.rect(center.x, center.y, BUILDING_SIZE+t*100, BUILDING_SIZE+t*100);
-    p.fill(c,70);
+    p.stroke(c,70);
     p.rect(center.x, center.y, BUILDING_SIZE+BUILDING_SIZE*0.25+t*100, BUILDING_SIZE+BUILDING_SIZE*0.25+t*100);
-    p.fill(c,100);
+    p.stroke(c,100);
     p.rect(center.x, center.y, BUILDING_SIZE+BUILDING_SIZE*0.5+t*100, BUILDING_SIZE+BUILDING_SIZE*0.5+t*100);
     p.rect(center.x, center.y, BUILDING_SIZE+t*100, BUILDING_SIZE+t*100);
   }
