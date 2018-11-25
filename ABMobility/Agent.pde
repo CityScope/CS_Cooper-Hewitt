@@ -189,8 +189,16 @@ public class Agent {
     p.fill(myColor);
     if(inAnimationMode && enableAnimationMode){
       if(residentialBlockId == universe.grid.currentBlockAnimated || officeBlockId ==  universe.grid.currentBlockAnimated || amenityBlockId == universe.grid.currentBlockAnimated){
+        
+        if(universe.grid.gridAnimation.get(universe.grid.currentGridAnimated).center.x < state.slider * SIMULATION_WIDTH){
+          p.fill(#FFFFFF);
+          p.stroke(#FFFFFF);
+        }else{
+          p.fill(#FF0000);
+          p.stroke(#FF0000);
+        }
         p.ellipse(pos.x, pos.y, 10*SCALE, 10*SCALE);
-        p.stroke(universe.colorMapGood.get(mobilityType));
+        //p.stroke(##FFFFF);
         p.strokeWeight(1);
         p.line(pos.x, pos.y, universe.grid.gridAnimation.get(universe.grid.currentGridAnimated).center.x, universe.grid.gridAnimation.get(universe.grid.currentGridAnimated).center.y);
         p.noStroke();
