@@ -165,9 +165,9 @@ class Particle {
   // Method to display
   void display(PGraphics p) {
     if(universe.grid.gridAnimation.get(universe.grid.currentGridAnimated).center.x < state.slider * SIMULATION_WIDTH){
-      c= #FFFFFF;
-    }else{
       c= #FF0000;
+    }else{
+      c= #FFFFFF;
     }
     p.stroke(c,lifespan);
     p.fill(c,lifespan);

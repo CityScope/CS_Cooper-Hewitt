@@ -191,11 +191,11 @@ public class Agent {
       if(residentialBlockId == universe.grid.currentBlockAnimated || officeBlockId ==  universe.grid.currentBlockAnimated || amenityBlockId == universe.grid.currentBlockAnimated){
         
         if(universe.grid.gridAnimation.get(universe.grid.currentGridAnimated).center.x < state.slider * SIMULATION_WIDTH){
-          p.fill(#FFFFFF);
-          p.stroke(#FFFFFF);
-        }else{
           p.fill(#FF0000);
           p.stroke(#FF0000);
+        }else{
+          p.fill(#FFFFFF);
+          p.stroke(#FFFFFF);
         }
         p.ellipse(pos.x, pos.y, 10*SCALE, 10*SCALE);
         //p.stroke(##FFFFF);
@@ -315,13 +315,13 @@ public class Agent {
 
     switch(mobilityType) {
       case "car" :
-        speed = 0.7+ random(-0.3,0.3);
+        speed = SCALE*1.4+ random(-SCALE*0.6,SCALE*0.6);
       break;
       case "bike" :
-        speed = 0.3+ random(-0.15,0.15);
+        speed = SCALE*0.6+ random(-0.3*SCALE,0.3*SCALE);
       break;
       case "ped" :
-        speed = 0.2 + random(-0.05,0.05);
+        speed = SCALE*0.4 + random(-0.1*SCALE,0.1*SCALE);
       break;
       default:
       break;

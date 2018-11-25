@@ -20,7 +20,7 @@ public final int NUM_AGENTS_PER_WORLD = 1000;
 
 Universe universe;
 boolean showBuilding = true;
-boolean showBackground = false;
+boolean showBackground = true;
 boolean showGlyphs = true;
 boolean showNetwork = false;
 boolean showAgent = true;
