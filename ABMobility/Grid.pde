@@ -112,12 +112,12 @@ public class Grid {
     for(int i=0; i < grids.size(); i++) {
       int buildingId;
       try{
-        grids.getJSONArray(i).getInt(0);
+        buildingId = grids.getJSONArray(i).getInt(0);
       } catch (Exception e) {
         // getInt(n) returns an exception, different from getJSONArray
         // if getJSONArray(i) is null, we will catch this.
         // I should return, not break
-        return
+        return;
       }
 
       if((buildingId >= 0) && (buildingId < PHYSICAL_BUILDINGS_COUNT)) {
@@ -148,7 +148,7 @@ public class Grid {
     }
 
     if(dynamicSlider) {
-      JSONArray sliders = son.getJSONArray("slider");
+      JSONArray sliders = json.getJSONArray("slider");
       if(sliders == null) return;
       try{
         state.slider = 1.0 - sliders.getFloat(0);
