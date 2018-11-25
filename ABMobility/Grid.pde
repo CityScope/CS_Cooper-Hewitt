@@ -18,10 +18,10 @@ public class Grid {
   private ArrayList<GridInteractionAnimation> gridAnimation;
   public HashMap<Integer, PVector> gridMap;
   HashMap<PVector,Integer> gridQRcolorMap;
-
   public PVector zombieLandLocation;
-  
   Table table;
+  int currentBlockAnimated;
+  
    Grid(){
 
     zombieLandLocation = new PVector(-1, -1);
@@ -80,18 +80,19 @@ public class Grid {
    }
    
    public void draw(PGraphics p) {
-    // Draw building block locations
-    drawBuildingBlocks(p);
+    
+    // Draw grid animations (if they occured)
+    for (GridInteractionAnimation ga: gridAnimation){
+      ga.draw(p);
+    }
     // Draw buildings
     for (Building b: buildings) {
       if (b.loc != zombieLandLocation) {
         b.draw(p);
       }
     }
-    // Draw grid animations (if they occured)
-    for (GridInteractionAnimation ga: gridAnimation){
-      ga.draw(p);
-    }
+    // Draw building block locations
+    drawBuildingBlocks(p);    
   }
 
   public void drawBuildingBlocks(PGraphics p) {
@@ -101,8 +102,8 @@ public class Grid {
     */
     for (int i=0; i<BUILDING_LOCATIONS; i++) {
       PVector loc = gridMap.get(i);
-      p.fill(255);    
-      p.stroke(#000000);
+      p.fill(universe.grid.gridQRcolorMap.get(loc)); 
+      p.stroke(universe.grid.gridQRcolorMap.get(loc));
       p.rect(loc.x*GRID_CELL_SIZE+BUILDING_SIZE/2, loc.y*GRID_CELL_SIZE+BUILDING_SIZE/2, BUILDING_SIZE*0.9, BUILDING_SIZE*0.9);
     }
   }
@@ -116,9 +117,23 @@ public class Grid {
     }
 
     JSONObject json = parseJSONObject(message); 
+    
+    // parseJSONObject returns null if unparsable (processing docs)
+    if(json == null) return;
+
     JSONArray grids = json.getJSONArray("grid"); // maps building location --> Building
+    if(grids == null) return;
+
     for(int i=0; i < grids.size(); i++) {
-      int buildingId = grids.getJSONArray(i).getInt(0);
+      int buildingId;
+      try{
+        buildingId = grids.getJSONArray(i).getInt(0);
+      } catch (Exception e) {
+        // getInt(n) returns an exception, different from getJSONArray
+        // if getJSONArray(i) is null, we will catch this.
+        // I should return, not break
+        return;
+      }
 
       if((buildingId >= 0) && (buildingId < PHYSICAL_BUILDINGS_COUNT)) {
         Building building = buildings.get(buildingId);
@@ -127,7 +142,9 @@ public class Grid {
         if (building.loc == zombieLandLocation) {
           // building was previously not on table - it has just been put on table.
           gridAnimation.get(i).put();
+          currentBlockAnimated = buildingId;
         }
+        
         building.loc = gridMap.get(i);
         // Record that the building is on the grid
         buildingIdsFromData[buildingId] = 1;
@@ -147,8 +164,12 @@ public class Grid {
 
     if(dynamicSlider) {
       JSONArray sliders = json.getJSONArray("slider");
-      state.slider = 1.0 - sliders.getFloat(0);
-
+      if(sliders == null) return;
+      try{
+        state.slider = 1.0 - sliders.getFloat(0);
+      } catch (Exception e){
+        return;
+      }
     }   
   }
     

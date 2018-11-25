@@ -48,6 +48,7 @@ public class Agent {
   private PVector dir;
   private float speed;
   private boolean isZombie;
+  private color myColor;
 
 
   Agent(HashMap<String, RoadNetwork> _networks, HashMap<String, PImage[]> _glyphsMap, int _worldId,
@@ -179,47 +180,77 @@ public class Agent {
 
 
   public void draw(PGraphics p, boolean glyphs) {
-    if (pos == null || path == null) {  // in zombie land.
-      return;
-    }
-    if (glyphs && (glyph.length > 0)) {
-      PImage img = glyph[0];
-      if (img != null) {
-        p.pushMatrix();
-        p.translate(pos.x, pos.y);
-        p.rotate(dir.heading() + PI * 0.5);
-        p.translate(-1, 0);
-        p.image(img, 0, 0, img.width * SCALE, img.height * SCALE);
-        p.popMatrix();
-      }
-    } else {
-      p.noStroke();
-      if(worldId==1){
-      p.fill(universe.colorMapBad.get(mobilityType));
-      }else{
-        p.fill(universe.colorMapGood.get(mobilityType));
-      }
-      p.ellipse(pos.x, pos.y, 10*SCALE, 10*SCALE);
-    }
     
-    if(showZombie & isZombie){
-            p.fill(#CC0000);
-            p.ellipse(pos.x, pos.y, 10*SCALE, 10*SCALE);
-     }
-    
-     if(showCollisionPotential) {
-       if(worldId==2){
-         for (Agent a: universe.world2.agents){
-           float dist = pos.dist(a.pos);
-           if (dist<20) {
-            p.stroke(lerpColor(universe.colorMapGood.get(mobilityType), universe.colorMapGood.get(a.mobilityType), 0.5));
-            p.strokeWeight(1);
-            p.line(pos.x, pos.y, a.pos.x, a.pos.y);
-            p.noStroke();
-          }
+    if(worldId==1){
+      myColor = universe.colorMapBad.get(mobilityType);
+    }else{
+      myColor=universe.colorMapGood.get(mobilityType);
+    }
+    p.fill(myColor);
+    if(inAnimationMode && enableAnimationMode){
+      if(residentialBlockId == universe.grid.currentBlockAnimated || officeBlockId ==  universe.grid.currentBlockAnimated || amenityBlockId == universe.grid.currentBlockAnimated){
+        //p.fill(#FF0000);
+        int curRadius;
+        p.ellipse(pos.x, pos.y, 10*SCALE, 10*SCALE);
+        //drawPath(p,myColor);
+      }
+    }
+    else{  
+      if (pos == null || path == null) {  // in zombie land.
+        return;
+      }
+      if (glyphs && (glyph.length > 0)) {
+        PImage img = glyph[0];
+        if (img != null) {
+          p.pushMatrix();
+          p.translate(pos.x, pos.y);
+          p.rotate(dir.heading() + PI * 0.5);
+          p.translate(-1, 0);
+          p.image(img, 0, 0, img.width * SCALE, img.height * SCALE);
+          p.popMatrix();
         }
+      } else {
+        p.noStroke();
+        p.ellipse(pos.x, pos.y, 10*SCALE, 10*SCALE);
+      }
+      
+      if(showZombie & isZombie){
+              p.fill(#CC0000);
+              p.ellipse(pos.x, pos.y, 10*SCALE, 10*SCALE);
        }
-     }
+      
+       if(showCollisionPotential) {
+         if(worldId==2){
+           for (Agent a: universe.world2.agents){
+             float dist = pos.dist(a.pos);
+             if (dist<40) {
+              p.stroke(lerpColor(universe.colorMapGood.get(mobilityType), universe.colorMapGood.get(a.mobilityType), 0.5));
+              p.strokeWeight(1);
+              p.line(pos.x, pos.y, a.pos.x, a.pos.y);
+              p.noStroke();
+            }
+          }
+         }
+       }
+    }
+  }
+  
+    // DRAW AGENT PATH TO DESTINATION --->
+  public void drawPath(PGraphics p, color c) {
+    if (path != null) {
+      for (int i=1; i<path.size(); i++) {
+        PVector iNodePos = new PVector(path.get(i).x,path.get(i).y),
+        iPrevNodePos = new PVector(path.get(i-1).x,path.get(i-1).y),
+        toNodePos = new PVector(toNode.x,toNode.y);
+        //int weight = i <= path.indexOf(toNode) ? 3 : 1;  // Already traveled route is thiner than remaining route --->
+        p.stroke(c); 
+        p.strokeWeight(1); 
+        p.noFill();
+        p.line( iNodePos.x, iNodePos.y, iPrevNodePos.x, iPrevNodePos.y );
+        //p.strokeWeight(3);  // Route from pos to next node is always thicker --->
+      //  p.line( pos.x, pos.y, toNodePos.x, toNodePos.y );
+      }
+    }
   }
 
   private String chooseMobilityType() {
