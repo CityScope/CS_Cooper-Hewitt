@@ -6,6 +6,13 @@ public class RoadNetwork {
   private Pathfinder graph;
   private String type;
   private int worldId;
+
+  // There are nodes in 'zombie land'.
+  // They are out of bounds of the map.  Agents come in and out of the
+  // perimeter of the grid/world via zombie land nodes.
+  private ArrayList<Node> zombieLandNodes;
+
+
   /* <--- CONSTRUCTOR ---> */
   RoadNetwork(String GeoJSONfile, String _type, int _worldId) {
 
@@ -59,7 +66,9 @@ public class RoadNetwork {
         }
       }
     graph = new Pathfinder(nodes); 
-  }
+    }
+  
+    setupZombieLandNodes();
   }
 
    // RETURN EXISTING NODE (SAME COORDINATES) IF EXISTS -->
@@ -92,6 +101,17 @@ public class RoadNetwork {
       map(x, this.bounds[0].x, this.bounds[1].x, 0, size.x),
       map(y, this.bounds[0].y, this.bounds[1].y, size.y, 0)
     );
+  }
+
+  private void setupZombieLandNodes() {
+    zombieLandNodes = new ArrayList<Node>();
+    Node node; 
+    for (int i=0; i<graph.nodes.size(); i++){
+      node = (Node) graph.nodes.get(i);
+      if(node.x<0 || node.x>DISPLAY_WIDTH || node.y<0 || node.y>DISPLAY_HEIGHT){
+        zombieLandNodes.add(node);
+      }
+    }
   }
   
   public void draw(PGraphics p){    
@@ -142,18 +162,10 @@ public class RoadNetwork {
     return tmp.get(int(random(tmp.size())));
   }
   
-  
   public Node getRandomNodeInZombieLand(){
-    ArrayList<Node> tmp = new ArrayList<Node>();
-    Node tmpNode; 
-    for (int i=0;i<graph.nodes.size();i++){
-      tmpNode = (Node) graph.nodes.get(i);
-      if(tmpNode.x<0 || tmpNode.x>DISPLAY_WIDTH || tmpNode.y<0 || tmpNode.y>DISPLAY_HEIGHT){
-        tmp.add(tmpNode);
-      }
-    }
-    return tmp.get(int(random(tmp.size())));
-  }  
+    return zombieLandNodes.get(int(random(zombieLandNodes.size())));
+  }
+
 } 
 
 
