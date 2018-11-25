@@ -33,15 +33,6 @@ public class GridInteractionAnimation {
     ps.run(p);
   }
   
-  void dynamicRadius(PGraphics p,float t, color c){
-    p.fill(c);
-    p.ellipse(center.x, center.y, BUILDING_SIZE+t*100, BUILDING_SIZE+t*100);
-    p.fill(c,70);
-    p.ellipse(center.x, center.y, BUILDING_SIZE+BUILDING_SIZE*0.25+t*100, BUILDING_SIZE+BUILDING_SIZE*0.25+t*100);
-    p.fill(c,100);
-    p.ellipse(center.x, center.y, BUILDING_SIZE+BUILDING_SIZE*0.5+t*100, BUILDING_SIZE+BUILDING_SIZE*0.5+t*100);
-  }
-  
   void dynamicSquare(PGraphics p,float t,color c){
     p.noFill();
     p.stroke(c);
@@ -116,9 +107,7 @@ public class GridInteractionAnimation {
     if(isPut == false){
       inAnimationMode = true;
       dynamicSquare(p,pow(t,t),#FFFFFF);
-      runParticleSystem(p);
-      //dynamicRadius(p,pow(t,t),#FFFFFF);
-      
+      runParticleSystem(p);     
       minimalLine(p,t);
     }
     

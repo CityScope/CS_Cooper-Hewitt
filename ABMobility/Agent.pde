@@ -189,10 +189,11 @@ public class Agent {
     p.fill(myColor);
     if(inAnimationMode && enableAnimationMode){
       if(residentialBlockId == universe.grid.currentBlockAnimated || officeBlockId ==  universe.grid.currentBlockAnimated || amenityBlockId == universe.grid.currentBlockAnimated){
-        //p.fill(#FF0000);
-        int curRadius;
         p.ellipse(pos.x, pos.y, 10*SCALE, 10*SCALE);
-        //drawPath(p,myColor);
+        p.stroke(universe.colorMapGood.get(mobilityType));
+        p.strokeWeight(1);
+        p.line(pos.x, pos.y, universe.grid.gridAnimation.get(universe.grid.currentGridAnimated).center.x, universe.grid.gridAnimation.get(universe.grid.currentGridAnimated).center.y);
+        p.noStroke();
       }
     }
     else{  
