@@ -63,13 +63,13 @@ public class Grid {
     gridQRcolorMap.put(gridMap.get(4), #888888);
     gridQRcolorMap.put(gridMap.get(5), #888888);
     gridQRcolorMap.put(gridMap.get(6), #888888);
-    gridQRcolorMap.put(gridMap.get(7), #666666);
+    gridQRcolorMap.put(gridMap.get(7), #888888);
     gridQRcolorMap.put(gridMap.get(8), #CCCCCC);
     gridQRcolorMap.put(gridMap.get(9), #CCCCCC);
-    gridQRcolorMap.put(gridMap.get(10), #666666);
+    gridQRcolorMap.put(gridMap.get(10), #999999);
     gridQRcolorMap.put(gridMap.get(11), #888888);
     gridQRcolorMap.put(gridMap.get(12), #888888);
-    gridQRcolorMap.put(gridMap.get(13), #666666);
+    gridQRcolorMap.put(gridMap.get(13), #888888);
     gridQRcolorMap.put(gridMap.get(14), #CCCCCC);
     gridQRcolorMap.put(gridMap.get(15), #CCCCCC);
     gridQRcolorMap.put(gridMap.get(16), #777777);
@@ -112,7 +112,7 @@ public class Grid {
         b.draw(p);
       }
     }
-    // Draw building block locations
+    // Draw building block locations (this is redundant with the b.draw(p) but it's to be sure to display the -1 block)
     drawBuildingBlocks(p);
   }
 
@@ -125,7 +125,7 @@ public class Grid {
       PVector loc = gridMap.get(i);
       p.fill(universe.grid.gridQRcolorMap.get(loc)); 
       p.stroke(universe.grid.gridQRcolorMap.get(loc));
-      p.rect(loc.x*GRID_CELL_SIZE+BUILDING_SIZE/2, loc.y*GRID_CELL_SIZE+BUILDING_SIZE/2, BUILDING_SIZE*0.9, BUILDING_SIZE*0.9);
+      p.rect(loc.x*GRID_CELL_SIZE+BUILDING_SIZE/2, loc.y*GRID_CELL_SIZE+BUILDING_SIZE/2, BUILDING_SIZE*0.8, BUILDING_SIZE*0.8);
     }
   }
 

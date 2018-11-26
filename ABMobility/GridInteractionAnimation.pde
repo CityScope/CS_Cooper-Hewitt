@@ -110,10 +110,12 @@ public class GridInteractionAnimation {
     if (isPut == false) {
       showConnectionBetweenAgentAndBuilding = true;
       showRemaninginAgentAndBuilding = true;
+      if(t<0.2){
+        dynamicSquare(p, pow(t, t), #FFFFFF);
+      }
       if(t>0.4){
         showConnectionBetweenAgentAndBuilding = false;
       }
-      dynamicSquare(p, pow(t, t), #FFFFFF);
     }
 
     if (t < 0 || t > 1) {
