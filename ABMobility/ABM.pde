@@ -20,7 +20,6 @@ public class Universe {
      colorMap = new HashMap<String,Integer>();
      colorMapGood = new HashMap<String,Integer>();
      colorMapBad = new HashMap<String,Integer>();
-     //colorMap.put("car",#FF0000);colorMap.put("bike",#00FF00);colorMap.put("ped",#0000FF);
      
      colorMap.put("car",color(255,255,255));colorMap.put("bike",color(120,52,165));colorMap.put("ped",color(255,227,26));
      colorMapGood.put("car",color(255,255,255));colorMapGood.put("bike",color(0,234,169));colorMapGood.put("ped",color(141,198,255));
@@ -286,7 +285,6 @@ public class World {
 
   public void updateGraphics() {
     pg.beginDraw();
-
     pg.background(0);
     if(showBackground){
       pg.image(background, 0, 0, pg.width, pg.height);
@@ -298,10 +296,8 @@ public class World {
     for (Agent agent : agents) {
       if(showAgent){
         agent.draw(pg, showGlyphs);
-      }
-      
+      } 
     }
-
     pg.endDraw();
   }
 

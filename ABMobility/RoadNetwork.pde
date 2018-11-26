@@ -165,7 +165,6 @@ public class RoadNetwork {
   public Node getRandomNodeInZombieLand(){
     return zombieLandNodes.get(int(random(zombieLandNodes.size())));
   }
-
 } 
 
 

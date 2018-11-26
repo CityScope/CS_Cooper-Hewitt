@@ -29,8 +29,8 @@ boolean dynamicSlider = true;
 boolean showCollisionPotential = false;
 boolean inAnimationMode = false;
 boolean enableAnimationMode = true;
+boolean devMode = false;
 UDPReceiver udpR;
-boolean devMode = true;
 
 void settings(){
   fullScreen(P3D, SPAN);
@@ -47,7 +47,6 @@ void setup(){
 
 void draw(){
   drawScene();
-  //println(frameRate);
   if(!devMode){
     drawer.ks.load();
   }
@@ -61,43 +60,40 @@ void drawScene() {
 }
 
 void keyPressed() {
-  switch(key) {
-    //Keystone trigger  
-  case 'k':
-    drawer.ks.toggleCalibration();
-    break;  
-  case 'l':
-    drawer.ks.load();
-    break; 
-  case 's':
-    drawer.ks.save();
+  switch(key) { 
+    case 'k':
+      drawer.ks.toggleCalibration();
+      break;  
+    case 'l':
+      drawer.ks.load();
+      break; 
+    case 's':
+      drawer.ks.save();
+      break;
+    case 'c':
+      showCollisionPotential=!showCollisionPotential;
     break;
-  case 'c':
-    showCollisionPotential=!showCollisionPotential;
-  break;
-  case 'b':
-    showBuilding= !showBuilding;
-  break;
-  case 't':
-    universe.grid.resetAnimation(); 
-  break;
-
-  case ' ':
-   showBackground=!showBackground;
-  break;
-  case 'g':
-    showGlyphs = !showGlyphs;
+    case 'b':
+      showBuilding= !showBuilding;
     break;
-  case 'n':
-    showNetwork = !showNetwork;
+    case 't':
+      universe.grid.resetAnimation(); 
     break;
-  case 'd':
-    dynamicSlider = !dynamicSlider;
+    case ' ':
+     showBackground=!showBackground;
     break;
-  case 'z':
-    showZombie=!showZombie;
-    break;
-  
+    case 'g':
+      showGlyphs = !showGlyphs;
+      break;
+    case 'n':
+      showNetwork = !showNetwork;
+      break;
+    case 'd':
+      dynamicSlider = !dynamicSlider;
+      break;
+    case 'z':
+      showZombie=!showZombie;
+      break;
   }
   
   if (key == CODED) {

@@ -180,7 +180,6 @@ public class Agent {
 
 
   public void draw(PGraphics p, boolean glyphs) {
-    
     if(worldId==1){
       myColor = universe.colorMapBad.get(mobilityType);
     }else{
@@ -188,8 +187,7 @@ public class Agent {
     }
     p.fill(myColor);
     if(inAnimationMode && enableAnimationMode){
-      if(residentialBlockId == universe.grid.currentBlockAnimated || officeBlockId ==  universe.grid.currentBlockAnimated || amenityBlockId == universe.grid.currentBlockAnimated){
-        
+      if(residentialBlockId == universe.grid.currentBlockAnimated || officeBlockId ==  universe.grid.currentBlockAnimated || amenityBlockId == universe.grid.currentBlockAnimated){    
         if(universe.grid.gridAnimation.get(universe.grid.currentGridAnimated).center.x < state.slider * SIMULATION_WIDTH){
           p.fill(#FF0000);
           p.stroke(#FF0000);
@@ -198,7 +196,6 @@ public class Agent {
           p.stroke(#FFFFFF);
         }
         p.ellipse(pos.x, pos.y, 10*SCALE, 10*SCALE);
-        //p.stroke(##FFFFF);
         p.strokeWeight(1);
         p.line(pos.x, pos.y, universe.grid.gridAnimation.get(universe.grid.currentGridAnimated).center.x, universe.grid.gridAnimation.get(universe.grid.currentGridAnimated).center.y);
         p.noStroke();

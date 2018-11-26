@@ -18,8 +18,9 @@ public class UDPReceiver{
   UDPReceiver(){
     udp = new UDP( this, PORT ); //from Termite desktop
     udp.listen( true );
-    println("I listen to" + PORT); 
-  
+    if(devMode){
+      println("I listen to" + PORT); 
+    }
   }
   void receive( byte[] data, String ip, int port ) {  // <-- extended handler
     messageIn = new String( data );
