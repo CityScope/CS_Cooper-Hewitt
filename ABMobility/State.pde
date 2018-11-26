@@ -1,13 +1,13 @@
 
 // global state
 
-class State{
+class State {
 
-    boolean isGlyph;
-    public float slider;
+  boolean isGlyph;
+  public float slider;
 
-    public State(){
-        slider = 0.5;
-        isGlyph = false;
-    }
+  public State() {
+    slider = 0.5;
+    isGlyph = false;
+  }
 }

@@ -4,7 +4,7 @@ public class GridInteractionAnimation {
 
   int OFFSET = 2;
   int LINE_LENGTH = 5;
-  int DURATION = 3000; // milliseconds
+  int DURATION = 8000; // milliseconds
   int LINE_NUM = 4;
 
   PVector center; 
@@ -12,51 +12,54 @@ public class GridInteractionAnimation {
   boolean isActive;
   boolean isPut;
   ParticleSystem ps;
-  
-  public GridInteractionAnimation(PVector _loc){
+
+  public GridInteractionAnimation(PVector _loc) {
     center = new PVector(
-        _loc.x * GRID_CELL_SIZE + BUILDING_SIZE * 0.5,
-        _loc.y * GRID_CELL_SIZE + BUILDING_SIZE * 0.5
-        );
+      _loc.x * GRID_CELL_SIZE + BUILDING_SIZE * 0.5, 
+      _loc.y * GRID_CELL_SIZE + BUILDING_SIZE * 0.5
+      );
 
     start = 0.0;
     isActive = true;
     isPut = false;
-    ps = new ParticleSystem(center,#FFFFFF);
+    ps = new ParticleSystem(center, #FFFFFF);
   }
-  
-  void runParticleSystem(PGraphics p){
-    for(int i=0;i<=20;i++){
+
+  void runParticleSystem(PGraphics p) {
+    for (int i=0; i<=20; i++) {
       ps.addParticle();
     }
-    
+
     ps.run(p);
   }
-  
-  void dynamicSquare(PGraphics p,float t,color c){
-    p.noFill();
-    p.stroke(c);
-    p.rect(center.x, center.y, BUILDING_SIZE+t*100, BUILDING_SIZE+t*100);
-    p.stroke(c,70);
-    p.rect(center.x, center.y, BUILDING_SIZE+BUILDING_SIZE*0.25+t*100, BUILDING_SIZE+BUILDING_SIZE*0.25+t*100);
+
+  void dynamicSquare(PGraphics p, float t, color c) {
+    //p.noFill();
+    p.fill(c,20);
     p.stroke(c,100);
+    p.rect(center.x, center.y, BUILDING_SIZE+t*100, BUILDING_SIZE+t*100);
+    p.fill(c,20);
+    p.stroke(c, 100);
+    p.rect(center.x, center.y, BUILDING_SIZE+BUILDING_SIZE*0.25+t*100, BUILDING_SIZE+BUILDING_SIZE*0.25+t*100);
+    p.fill(c,20);
+    p.stroke(c, 100);
     p.rect(center.x, center.y, BUILDING_SIZE+BUILDING_SIZE*0.5+t*100, BUILDING_SIZE+BUILDING_SIZE*0.5+t*100);
     p.rect(center.x, center.y, BUILDING_SIZE+t*100, BUILDING_SIZE+t*100);
   }
-  
-  void minimalLine(PGraphics p, float t){
+
+  void minimalLine(PGraphics p, float t) {
     p.pushMatrix();
     p.stroke(#FFFFFF);
     p.translate(center.x, center.y);
 
     float unitX = BUILDING_SIZE / LINE_NUM;
-    for(int r = 0; r < 4; r++){
+    for (int r = 0; r < 4; r++) {
       p.pushMatrix();
       p.rotate(PI * 0.5 * r);
       p.translate(-BUILDING_SIZE * 0.5, 0); // new line
 
       p.pushMatrix();
-      for(int i = 0; i < LINE_NUM; i++){
+      for (int i = 0; i < LINE_NUM; i++) {
         drawLine(p, t, isPut);
         p.translate(unitX, 0);
       }
@@ -65,58 +68,59 @@ public class GridInteractionAnimation {
 
       p.popMatrix(); // origin is back to center
     }
-     
+
     p.popMatrix();
   }
 
-  void drawLine(PGraphics p, float elapsed, boolean flip){
+  void drawLine(PGraphics p, float elapsed, boolean flip) {
     float t;
-    if(!flip){
+    if (!flip) {
       t = cubicEase(min(1.0, elapsed));
     } else {
       t = 1.0 - cubicEase(min(1.0, elapsed));
     }
     float l = LINE_LENGTH * t;
     p.line(
-        0,
-        -(BUILDING_SIZE * 0.5 + OFFSET),
-        0,
-        -(BUILDING_SIZE * 0.5 + OFFSET + l)
-        );
+      0, 
+      -(BUILDING_SIZE * 0.5 + OFFSET), 
+      0, 
+      -(BUILDING_SIZE * 0.5 + OFFSET + l)
+      );
   }
 
-  void activate(){
+  void activate() {
     isActive = true; 
     start = millis();
   }
-  
 
-  void put(){
+
+  void put() {
     isPut = false;
     activate();
   }
 
-  void take(){
+  void take() {
     isPut = true;
     activate();
   }
 
-  void draw(PGraphics p){
-    if(!isActive) return;
+  void draw(PGraphics p) {
+    if (!isActive) return;
     float t = (millis() - start) / DURATION;
-    if(isPut == false){
-      inAnimationMode = true;
-      dynamicSquare(p,pow(t,t),#FFFFFF);
-      runParticleSystem(p);     
-      minimalLine(p,t);
+    if (isPut == false) {
+      showConnectionBetweenAgentAndBuilding = true;
+      showRemaninginAgentAndBuilding = true;
+      if(t>0.4){
+        showConnectionBetweenAgentAndBuilding = false;
+      }
+      dynamicSquare(p, pow(t, t), #FFFFFF);
     }
-    
-    if(t < 0 || t > 1){
+
+    if (t < 0 || t > 1) {
       isActive = false;
-      inAnimationMode = false;
+      showConnectionBetweenAgentAndBuilding = false;
+      showRemaninginAgentAndBuilding = false;
     }
-
-
   }
 }
 
@@ -124,7 +128,7 @@ public class GridInteractionAnimation {
 
 final float E = 2.7182818284;
 
-float sigmoidEase(float t){
+float sigmoidEase(float t) {
   float x = map(t, 0.0, 1.0, -10, 10);
   return 1.0 / (1.0 + pow(E, -x));
 }
@@ -142,8 +146,8 @@ class Particle {
   color c;
 
   Particle(PVector l, color _c) {
-    acceleration = new PVector(random(-0.1, 0.1),random(-0.1,0.1));
-    velocity = new PVector(random(-5,5),random(-5,5));
+    acceleration = new PVector(random(-0.1, 0.1), random(-0.1, 0.1));
+    velocity = new PVector(random(-5, 5), random(-5, 5));
     location = l.get();
     lifespan = 255.0;
     c= _c;
@@ -164,20 +168,20 @@ class Particle {
 
   // Method to display
   void display(PGraphics p) {
-    if(universe.grid.gridAnimation.get(universe.grid.currentGridAnimated).center.x < state.slider * SIMULATION_WIDTH){
+    if (universe.grid.gridAnimation.get(universe.grid.currentGridAnimated).center.x < state.slider * SIMULATION_WIDTH) {
       c= #FF0000;
-    }else{
+    } else {
       c= #FFFFFF;
     }
-    p.stroke(c,lifespan);
-    p.fill(c,lifespan);
-    p.ellipse(location.x,location.y,10*SCALE,10*SCALE);  
+    p.stroke(c, lifespan);
+    p.fill(c, lifespan);
+    p.ellipse(location.x, location.y, 10*SCALE, 10*SCALE);
   }
-  
-  void applyForce(PVector force){
+
+  void applyForce(PVector force) {
     acceleration.add(force);
   }
-  
+
   // Is the particle still useful?
   boolean isDead() {
     if (lifespan < 0.0) {
@@ -203,11 +207,11 @@ class ParticleSystem {
   }
 
   void addParticle() {
-      particles.add(new Particle(origin,c));
+    particles.add(new Particle(origin, c));
   }
-  
-  void applyForce(PVector force){
-    for(Particle p : particles){
+
+  void applyForce(PVector force) {
+    for (Particle p : particles) {
       p.applyForce(force);
     }
   } 

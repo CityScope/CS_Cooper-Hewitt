@@ -27,16 +27,16 @@ boolean showAgent = true;
 boolean showZombie = false;
 boolean dynamicSlider = true;
 boolean showCollisionPotential = false;
-boolean inAnimationMode = false;
-boolean enableAnimationMode = true;
+boolean showConnectionBetweenAgentAndBuilding = false;
+boolean showRemaninginAgentAndBuilding = false;
 boolean devMode = false;
 UDPReceiver udpR;
 
-void settings(){
+void settings() {
   fullScreen(P3D, SPAN);
 }
 
-void setup(){
+void setup() {
   drawer = new Drawer(this);
   drawer.initSurface();
   universe = new Universe();
@@ -45,12 +45,11 @@ void setup(){
   frameRate(30);
 } 
 
-void draw(){
+void draw() {
   drawScene();
-  if(!devMode){
+  if (!devMode) {
     drawer.ks.load();
   }
-  
 }
 
 /* Draw ------------------------------------------------------ */
@@ -61,47 +60,47 @@ void drawScene() {
 
 void keyPressed() {
   switch(key) { 
-    case 'k':
-      drawer.ks.toggleCalibration();
-      break;  
-    case 'l':
-      drawer.ks.load();
-      break; 
-    case 's':
-      drawer.ks.save();
-      break;
-    case 'c':
-      showCollisionPotential=!showCollisionPotential;
+  case 'k':
+    drawer.ks.toggleCalibration();
+    break;  
+  case 'l':
+    drawer.ks.load();
+    break; 
+  case 's':
+    drawer.ks.save();
     break;
-    case 'b':
-      showBuilding= !showBuilding;
+  case 'c':
+    showCollisionPotential=!showCollisionPotential;
     break;
-    case 't':
-      universe.grid.resetAnimation(); 
+  case 'b':
+    showBuilding= !showBuilding;
     break;
-    case ' ':
-     showBackground=!showBackground;
+  case 't':
+    universe.grid.resetAnimation(); 
     break;
-    case 'g':
-      showGlyphs = !showGlyphs;
-      break;
-    case 'n':
-      showNetwork = !showNetwork;
-      break;
-    case 'd':
-      dynamicSlider = !dynamicSlider;
-      break;
-    case 'z':
-      showZombie=!showZombie;
-      break;
+  case ' ':
+    showBackground=!showBackground;
+    break;
+  case 'g':
+    showGlyphs = !showGlyphs;
+    break;
+  case 'n':
+    showNetwork = !showNetwork;
+    break;
+  case 'd':
+    dynamicSlider = !dynamicSlider;
+    break;
+  case 'z':
+    showZombie=!showZombie;
+    break;
   }
-  
+
   if (key == CODED) {
-    switch (keyCode){
-      case LEFT:
+    switch (keyCode) {
+    case LEFT:
       state.slider = max(state.slider - 0.05, 0); 
       break;
-      case RIGHT:
+    case RIGHT:
       state.slider = max(state.slider + 0.05, 0); 
       break;
     }

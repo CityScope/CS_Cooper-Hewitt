@@ -1,94 +1,104 @@
 
 public class Universe {
   // This is a universe with two alternatives for future worlds.
-   private World world1; // 'Bad' world with private cars
-   private World world2; // 'Good' world with shared transit
-   // Booleans manage threading of world updates.
-   private boolean updatingWorld1;
-   private boolean updatingWorld2;
-   HashMap<String,Integer> colorMap;
-   HashMap<String,Integer> colorMapGood;
-   HashMap<String,Integer> colorMapBad;
-   HashMap<String,Integer> colorMapBW;
-   HashMap<String, PImage[]> glyphsMap;
-   Grid grid;
+  private World world1; // 'Bad' world with private cars
+  private World world2; // 'Good' world with shared transit
+  // Booleans manage threading of world updates.
+  private boolean updatingWorld1;
+  private boolean updatingWorld2;
+  HashMap<String, Integer> colorMap;
+  HashMap<String, Integer> colorMapGood;
+  HashMap<String, Integer> colorMapBad;
+  HashMap<String, Integer> colorMapBW;
+  HashMap<String, PImage[]> glyphsMap;
+  Grid grid;
 
-   PShader s;
-   PGraphics pg;
-   
-   Universe(){
-     colorMap = new HashMap<String,Integer>();
-     colorMapGood = new HashMap<String,Integer>();
-     colorMapBad = new HashMap<String,Integer>();
-     
-     colorMap.put("car",color(255,255,255));colorMap.put("bike",color(120,52,165));colorMap.put("ped",color(255,227,26));
-     colorMapGood.put("car",color(255,255,255));colorMapGood.put("bike",color(0,234,169));colorMapGood.put("ped",color(141,198,255));
-     colorMapBad.put("car",color(255,255,255));colorMapBad.put("bike",color(120,52,165));colorMapBad.put("ped",color(255,85,118));
-     
-     colorMapBW = new HashMap<String,Integer>();
-     colorMapBW.put("car",#DDDDDD);colorMapBW.put("bike",#888888);colorMapBW.put("ped",#444444);
-     // Create the glyphs and hold in map
-     PImage[] carGlyph = new PImage[1];
-     carGlyph[0] = loadImage("image/glyphs/car.gif");
-     PImage[] bikeGlyph = new PImage[2];
-     bikeGlyph[0] = loadImage("image/glyphs/bike-0.gif");
-     bikeGlyph[1] = loadImage("image/glyphs/bike-1.gif");
-     PImage[] pedGlyph = new PImage[3];
-     pedGlyph[0] = loadImage("image/glyphs/human-0.gif");
-     pedGlyph[1] = loadImage("image/glyphs/human-1.gif");
-     pedGlyph[2] = loadImage("image/glyphs/human-2.gif");
-     glyphsMap = new HashMap<String, PImage[]>();
-     glyphsMap.put("car", carGlyph);
-     glyphsMap.put("bike", bikeGlyph);
-     glyphsMap.put("ped", pedGlyph);
+  PShader s;
+  PGraphics pg;
 
-     grid = new Grid();
-     world1 = new World(1, "image/background/background_01.png", glyphsMap);
-     world2 = new World(2, "image/background/background_02.png", glyphsMap);
-     updatingWorld1 = false;
-     updatingWorld2 = false;
+  Universe() {
+    colorMap = new HashMap<String, Integer>();
+    colorMapGood = new HashMap<String, Integer>();
+    colorMapBad = new HashMap<String, Integer>();
 
-      s = loadShader("mask.glsl");
-      s.set("width", float(DISPLAY_WIDTH));
-      s.set("height", float(DISPLAY_HEIGHT));
-      s.set("left", world1.pg);
-      s.set("right", world2.pg);
-      s.set("divPoint", state.slider);
-     pg = createGraphics(DISPLAY_WIDTH, DISPLAY_HEIGHT, P2D);
-   }
-   
-   void InitUniverse(){
-     world1.InitWorld();
-     world2.InitWorld();
-   }
+    colorMap.put("car", color(255, 255, 255));
+    colorMap.put("bike", color(120, 52, 165));
+    colorMap.put("ped", color(255, 227, 26));
+    colorMapGood.put("car", color(255, 255, 255));
+    colorMapGood.put("bike", color(0, 234, 169));
+    colorMapGood.put("ped", color(141, 198, 255));
+    colorMapBad.put("car", color(255, 255, 255));
+    colorMapBad.put("bike", color(120, 52, 165));
+    colorMapBad.put("ped", color(255, 85, 118));
 
-   void update() {
+    colorMapBW = new HashMap<String, Integer>();
+    colorMapBW.put("car", #DDDDDD);
+    colorMapBW.put("bike", #888888);
+    colorMapBW.put("ped", #444444);
+    // Create the glyphs and hold in map
+    PImage[] carGlyph = new PImage[1];
+    carGlyph[0] = loadImage("image/glyphs/car.gif");
+    PImage[] bikeGlyph = new PImage[2];
+    bikeGlyph[0] = loadImage("image/glyphs/bike-0.gif");
+    bikeGlyph[1] = loadImage("image/glyphs/bike-1.gif");
+    PImage[] pedGlyph = new PImage[3];
+    pedGlyph[0] = loadImage("image/glyphs/human-0.gif");
+    pedGlyph[1] = loadImage("image/glyphs/human-1.gif");
+    pedGlyph[2] = loadImage("image/glyphs/human-2.gif");
+    glyphsMap = new HashMap<String, PImage[]>();
+    glyphsMap.put("car", carGlyph);
+    glyphsMap.put("bike", bikeGlyph);
+    glyphsMap.put("ped", pedGlyph);
+
+    grid = new Grid();
+    world1 = new World(1, "image/background/background_01.png", glyphsMap);
+    world2 = new World(2, "image/background/background_02.png", glyphsMap);
+    updatingWorld1 = false;
+    updatingWorld2 = false;
+
+    s = loadShader("mask.glsl");
+    s.set("width", float(DISPLAY_WIDTH));
+    s.set("height", float(DISPLAY_HEIGHT));
+    s.set("left", world1.pg);
+    s.set("right", world2.pg);
+    s.set("divPoint", state.slider);
+    pg = createGraphics(DISPLAY_WIDTH, DISPLAY_HEIGHT, P2D);
+  }
+
+  void InitUniverse() {
+    world1.InitWorld();
+    world2.InitWorld();
+  }
+
+  void update() {
     // Update the worlds and models + agents they contain
     // in separate threads than the main thread which draws
     // the graphics.
     if (!updatingWorld1) {
       updatingWorld1 = true;
       Thread t1 = new Thread(new Runnable() {
-        public void run(){
+        public void run() {
           world1.update();
           updatingWorld1 = false;
         }
-      });
+      }
+      );
       t1.start();
     }
     if (!updatingWorld2) {
       updatingWorld2 = true;
       Thread t2 = new Thread(new Runnable() {
-        public void run(){
+        public void run() {
           world2.update();
           updatingWorld2 = false;
         }
-      });
+      }
+      );
       t2.start();
     }
-   }
+  }
 
-   void updateGraphics(float slider){
+  void updateGraphics(float slider) {
     world1.updateGraphics();
     world2.updateGraphics();
 
@@ -97,17 +107,17 @@ public class Universe {
     pg.shader(s);
     pg.rect(0, 0, pg.width, pg.height);
     pg.endDraw();
-   }
-   
-   void draw(PGraphics p, float slider){
+  }
+
+  void draw(PGraphics p, float slider) {
     int stitchEdge = Math.round(DISPLAY_WIDTH * slider);
     p.image(pg, 0, 0);
     // draw the center line
     p.pushStyle();
-      p.stroke(255);
-      p.line(stitchEdge, 0, stitchEdge, DISPLAY_HEIGHT);
+    p.stroke(255);
+    p.line(stitchEdge, 0, stitchEdge, DISPLAY_HEIGHT);
     p.popStyle();
-   }
+  }
 }
 
 public class World {
@@ -117,22 +127,22 @@ public class World {
   private HashMap<String, RoadNetwork> networks;
   private HashMap<String, PImage[]> glyphsMap;
   private ArrayList<Agent> agents;
-  
+
   int id;
 
   PImage background;
   PGraphics pg;
 
-  World(int _id, String _background, HashMap<String, PImage[]> _glyphsMap){
+  World(int _id, String _background, HashMap<String, PImage[]> _glyphsMap) {
     id = _id;
     glyphsMap = _glyphsMap;
     background = loadImage(_background);
     agents = new ArrayList<Agent>();
 
     // Create the road networks.
-    RoadNetwork carNetwork = new RoadNetwork("network/current_network/car_"+id+".geojson", "car",id);
-    RoadNetwork bikeNetwork = new RoadNetwork("network/current_network/bike_"+id+".geojson", "bike",id);
-    RoadNetwork pedNetwork = new RoadNetwork("network/current_network/ped_"+id+".geojson", "ped",id);
+    RoadNetwork carNetwork = new RoadNetwork("network/current_network/car_"+id+".geojson", "car", id);
+    RoadNetwork bikeNetwork = new RoadNetwork("network/current_network/bike_"+id+".geojson", "bike", id);
+    RoadNetwork pedNetwork = new RoadNetwork("network/current_network/ped_"+id+".geojson", "ped", id);
     networks = new HashMap<String, RoadNetwork>();
     networks.put("car", carNetwork);
     networks.put("bike", bikeNetwork);
@@ -148,12 +158,12 @@ public class World {
 
     pg = createGraphics(DISPLAY_WIDTH, DISPLAY_HEIGHT, P2D);
   }
-  
-  
+
+
   public void InitWorld() {
     for (Agent a : agents) {
       a.initAgent();
-    }  
+    }
   }
 
   public void createAgents() {
@@ -173,7 +183,7 @@ public class World {
       createRandomAgents(numNormalAgents, false);
     }
   }
-  
+
 
   public void createAgentsFromDatafile(int num) {
     /* Creates a certain number of agents from preprocessed data. */
@@ -261,21 +271,21 @@ public class World {
     int occupationType = int(random(5)) + 1;  // [1, 5]
     int age = int(random(100));
 
-    agents.add(new Agent(networks, glyphsMap, id, rBlockId, oBlockId, aBlockId, mobilityMotif, householdIncome, occupationType, age)); 
+    agents.add(new Agent(networks, glyphsMap, id, rBlockId, oBlockId, aBlockId, mobilityMotif, householdIncome, occupationType, age));
   }
 
 
-  public void update(){
+  public void update() {
     for (Agent a : agents) {
       a.update();
     }
   }
 
-  public void draw(PGraphics p){
+  public void draw(PGraphics p) {
     p.background(0);
     p.image(background, 0, 0, p.width, p.height);
 
-    for (ABM m: models){
+    for (ABM m : models) {
       m.draw(p);
     }
     for (Agent agent : agents) {
@@ -286,21 +296,20 @@ public class World {
   public void updateGraphics() {
     pg.beginDraw();
     pg.background(0);
-    if(showBackground){
+    if (showBackground) {
       pg.image(background, 0, 0, pg.width, pg.height);
     }
-    
-    for(ABM m: models){
+
+    for (ABM m : models) {
       m.draw(pg);
     }
     for (Agent agent : agents) {
-      if(showAgent){
+      if (showAgent) {
         agent.draw(pg, showGlyphs);
-      } 
+      }
     }
     pg.endDraw();
   }
-
 }
 
 
@@ -311,18 +320,19 @@ public class ABM {
   private String type;
   private int worldId;
   public color modelColor;
-  
-  ABM(RoadNetwork _map, String _type, int _worldId){
+
+  ABM(RoadNetwork _map, String _type, int _worldId) {
     map=_map;
     type= _type;
     worldId= _worldId;
   }
-  
-  public void initModel() {}
-  
-  public void draw(PGraphics p){
+
+  public void initModel() {
+  }
+
+  public void draw(PGraphics p) {
     if (showNetwork) {
-      map.draw(p); 
+      map.draw(p);
     }
   }
 }

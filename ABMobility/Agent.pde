@@ -51,10 +51,10 @@ public class Agent {
   private color myColor;
 
 
-  Agent(HashMap<String, RoadNetwork> _networks, HashMap<String, PImage[]> _glyphsMap, int _worldId,
-        int _residentialBlockId, int _officeBlockId, int _amenityBlockId,
-        String _mobilityMotif,
-        int _householdIncome, int _occupationType, int _age){
+  Agent(HashMap<String, RoadNetwork> _networks, HashMap<String, PImage[]> _glyphsMap, int _worldId, 
+    int _residentialBlockId, int _officeBlockId, int _amenityBlockId, 
+    String _mobilityMotif, 
+    int _householdIncome, int _occupationType, int _age) {
     networks = _networks;
     glyphsMap = _glyphsMap;
     worldId = _worldId;
@@ -67,36 +67,36 @@ public class Agent {
     age = _age;
     isZombie = false;
   }
-  
-  
+
+
   public void initAgent() {
     // Set up mobility sequence.  The agent travels through this sequence.
     ms = 0;
     switch(mobilityMotif) {
-      case "ROR" :
-        mobilitySequence = new String[] {"R", "O"};
-        break;
-      case "RAAR" :
-        mobilitySequence = new String[] {"R", "A", "A"};
-        break;
-      case "RAOR" :
-        mobilitySequence = new String[] {"R", "A", "O"};
-        break;
-      case "RAR" :
-        mobilitySequence = new String[] {"R", "A"};
-        break;
-      case "ROAOR" :
-        mobilitySequence = new String[] {"R", "O", "A", "O"};
-        break;
-      case "ROAR" :
-        mobilitySequence = new String[] {"R", "O", "A"};
-        break;
-      case "ROOR" :
-        mobilitySequence = new String[] {"R", "O", "O"};
-        break;
-      default:
-        mobilitySequence = new String[] {"R", "O"};
-        break;
+    case "ROR" :
+      mobilitySequence = new String[] {"R", "O"};
+      break;
+    case "RAAR" :
+      mobilitySequence = new String[] {"R", "A", "A"};
+      break;
+    case "RAOR" :
+      mobilitySequence = new String[] {"R", "A", "O"};
+      break;
+    case "RAR" :
+      mobilitySequence = new String[] {"R", "A"};
+      break;
+    case "ROAOR" :
+      mobilitySequence = new String[] {"R", "O", "A", "O"};
+      break;
+    case "ROAR" :
+      mobilitySequence = new String[] {"R", "O", "A"};
+      break;
+    case "ROOR" :
+      mobilitySequence = new String[] {"R", "O", "O"};
+      break;
+    default:
+      mobilitySequence = new String[] {"R", "O"};
+      break;
     }
 
     destBlockId = -1;
@@ -128,7 +128,7 @@ public class Agent {
     setupMobilityType();
 
     destBlockLocation = universe.grid.getBuildingLocationById(destBlockId);
-    
+
     // Get the nodes on the graph
     // Note the graph is specific to mobility type and was chosen when mobility type was set up.
     srcNode = getNodeByBlockId(srcBlockId);
@@ -140,7 +140,7 @@ public class Agent {
 
   public Node getNodeByBlockId(int blockId) {
     if (universe.grid.isBuildingInCurrentGrid(blockId)) {
-      return map.getRandomNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(blockId),BUILDING_SIZE);
+      return map.getRandomNodeInsideROI(universe.grid.getBuildingCenterPosistionPerId(blockId), BUILDING_SIZE);
     } else {
       return map.getRandomNodeInZombieLand();
     }
@@ -180,28 +180,32 @@ public class Agent {
 
 
   public void draw(PGraphics p, boolean glyphs) {
-    if(worldId==1){
+    if (worldId==1) {
       myColor = universe.colorMapBad.get(mobilityType);
-    }else{
+    } else {
       myColor=universe.colorMapGood.get(mobilityType);
     }
     p.fill(myColor);
-    if(inAnimationMode && enableAnimationMode){
-      if(residentialBlockId == universe.grid.currentBlockAnimated || officeBlockId ==  universe.grid.currentBlockAnimated || amenityBlockId == universe.grid.currentBlockAnimated){    
-        if(universe.grid.gridAnimation.get(universe.grid.currentGridAnimated).center.x < state.slider * SIMULATION_WIDTH){
+    if (showRemaninginAgentAndBuilding) {
+      if (residentialBlockId == universe.grid.currentBlockAnimated || officeBlockId ==  universe.grid.currentBlockAnimated || amenityBlockId == universe.grid.currentBlockAnimated) {    
+        if (universe.grid.gridAnimation.get(universe.grid.currentGridAnimated).center.x < state.slider * SIMULATION_WIDTH) {
           p.fill(#FF0000);
           p.stroke(#FF0000);
-        }else{
+        } else {
           p.fill(#FFFFFF);
           p.stroke(#FFFFFF);
         }
+        p.fill(myColor);
+        p.stroke(myColor);
         p.ellipse(pos.x, pos.y, 10*SCALE, 10*SCALE);
-        p.strokeWeight(1);
-        p.line(pos.x, pos.y, universe.grid.gridAnimation.get(universe.grid.currentGridAnimated).center.x, universe.grid.gridAnimation.get(universe.grid.currentGridAnimated).center.y);
-        p.noStroke();
+        if(showConnectionBetweenAgentAndBuilding){
+          p.stroke(myColor,100);
+          p.strokeWeight(1);
+          p.line(pos.x, pos.y, universe.grid.gridAnimation.get(universe.grid.currentGridAnimated).center.x, universe.grid.gridAnimation.get(universe.grid.currentGridAnimated).center.y);
+          p.noStroke();
+        } 
       }
-    }
-    else{  
+    } else {  
       if (pos == null || path == null) {  // in zombie land.
         return;
       }
@@ -219,42 +223,42 @@ public class Agent {
         p.noStroke();
         p.ellipse(pos.x, pos.y, 10*SCALE, 10*SCALE);
       }
-      
-      if(showZombie & isZombie){
-              p.fill(#CC0000);
-              p.ellipse(pos.x, pos.y, 10*SCALE, 10*SCALE);
-       }
-      
-       if(showCollisionPotential) {
-         if(worldId==2){
-           for (Agent a: universe.world2.agents){
-             float dist = pos.dist(a.pos);
-             if (dist<40) {
+
+      if (showZombie & isZombie) {
+        p.fill(#CC0000);
+        p.ellipse(pos.x, pos.y, 10*SCALE, 10*SCALE);
+      }
+
+      if (showCollisionPotential) {
+        if (worldId==2) {
+          for (Agent a : universe.world2.agents) {
+            float dist = pos.dist(a.pos);
+            if (dist<40) {
               p.stroke(lerpColor(universe.colorMapGood.get(mobilityType), universe.colorMapGood.get(a.mobilityType), 0.5));
               p.strokeWeight(1);
               p.line(pos.x, pos.y, a.pos.x, a.pos.y);
               p.noStroke();
             }
           }
-         }
-       }
+        }
+      }
     }
   }
-  
-    // DRAW AGENT PATH TO DESTINATION --->
+
+  // DRAW AGENT PATH TO DESTINATION --->
   public void drawPath(PGraphics p, color c) {
     if (path != null) {
       for (int i=1; i<path.size(); i++) {
-        PVector iNodePos = new PVector(path.get(i).x,path.get(i).y),
-        iPrevNodePos = new PVector(path.get(i-1).x,path.get(i-1).y),
-        toNodePos = new PVector(toNode.x,toNode.y);
+        PVector iNodePos = new PVector(path.get(i).x, path.get(i).y), 
+          iPrevNodePos = new PVector(path.get(i-1).x, path.get(i-1).y), 
+          toNodePos = new PVector(toNode.x, toNode.y);
         //int weight = i <= path.indexOf(toNode) ? 3 : 1;  // Already traveled route is thiner than remaining route --->
         p.stroke(c); 
         p.strokeWeight(1); 
         p.noFill();
         p.line( iNodePos.x, iNodePos.y, iPrevNodePos.x, iPrevNodePos.y );
         //p.strokeWeight(3);  // Route from pos to next node is always thicker --->
-      //  p.line( pos.x, pos.y, toNodePos.x, toNodePos.y );
+        //  p.line( pos.x, pos.y, toNodePos.x, toNodePos.y );
       }
     }
   }
@@ -263,7 +267,7 @@ public class Agent {
     /* Agent makes a choice about which mobility
      * mode type to use for route.
      * This is based on activityBased model.
-    */
+     */
     // TODO(aberke): Use decision tree code from activityBased model.
     // Decision will be based on a agent path + attributes from simPop.csv.
     // Currently randomly selects between car/bike/ped based on dummy
@@ -290,7 +294,7 @@ public class Agent {
         mobilityChoiceProbabilities = new float[] {0.1, 0.5, 0.4};
       }
     }
-    
+
     // Transform the probability distribution into an array to randomly sample from.
     String[] mobilityChoiceDistribution = new String[100];
     int m = 0;
@@ -311,21 +315,21 @@ public class Agent {
     glyph = glyphsMap.get(mobilityType);
 
     switch(mobilityType) {
-      case "car" :
-        speed = SCALE*1.4+ random(-SCALE*0.6,SCALE*0.6);
+    case "car" :
+      speed = SCALE*1.4+ random(-SCALE*0.6, SCALE*0.6);
       break;
-      case "bike" :
-        speed = SCALE*0.6+ random(-0.3*SCALE,0.3*SCALE);
+    case "bike" :
+      speed = SCALE*0.6+ random(-0.3*SCALE, 0.3*SCALE);
       break;
-      case "ped" :
-        speed = SCALE*0.4 + random(-0.1*SCALE,0.1*SCALE);
+    case "ped" :
+      speed = SCALE*0.4 + random(-0.1*SCALE, 0.1*SCALE);
       break;
-      default:
+    default:
       break;
-    }     
+    }
   }
 
-  
+
   public void update() {
     // Check if the agent's destination block has been moved
     PVector currDestBlockLocation = universe.grid.getBuildingLocationById(destBlockId);
@@ -343,7 +347,7 @@ public class Agent {
     PVector toNodePos = new PVector(toNode.x, toNode.y);
     PVector destNodePos = new PVector(destNode.x, destNode.y);
     dir = PVector.sub(toNodePos, pos);  // unnormalized direction to go
-    
+
     if (dir.mag() <= dir.normalize().mult(speed).mag()) {
       // Arrived to node
       if (path.indexOf(toNode) == 0) {  
