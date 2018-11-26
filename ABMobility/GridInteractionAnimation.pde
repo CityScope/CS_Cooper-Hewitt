@@ -107,7 +107,7 @@ public class GridInteractionAnimation {
     if(isPut == false){
       inAnimationMode = true;
       dynamicSquare(p,pow(t,t),#FFFFFF);
-      runParticleSystem(p);     
+      //runParticleSystem(p);     
       minimalLine(p,t);
     }
     
