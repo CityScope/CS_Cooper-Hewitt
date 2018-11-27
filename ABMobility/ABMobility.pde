@@ -27,7 +27,9 @@ boolean showAgent = true;
 boolean showZombie = false;
 boolean dynamicSlider = true;
 boolean showCollisionPotential = false;
+boolean showCongestion = true;
 boolean showConnectionBetweenAgentAndBuilding = false;
+boolean showCongestion = true;
 boolean showRemaninginAgentAndBuilding = false;
 boolean animatedGlyph = false;
 boolean devMode = true;
@@ -72,6 +74,9 @@ void keyPressed() {
     break;
   case 'c':
     showCollisionPotential=!showCollisionPotential;
+    break;
+  case 'x':
+    showCongestion = !showCongestion;
     break;
   case 'b':
     showBuilding= !showBuilding;

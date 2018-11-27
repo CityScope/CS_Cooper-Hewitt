@@ -28,7 +28,7 @@ class NetworkEdge {
       // float density = agentsNum / length;
       float red = min(map(agentsNum, 1, 4, 40, 255), 255);
       p.strokeWeight(10);
-      p.stroke(red, 20, 20);
+      p.stroke(red, 20, 20, 120);
       p.strokeCap(p.SQUARE);
       p.line(start.x, start.y, end.x, end.y);
     }

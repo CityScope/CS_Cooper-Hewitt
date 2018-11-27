@@ -304,9 +304,11 @@ public class World {
       pg.image(background, 0, 0, pg.width, pg.height);
     }
 
-    if(id == 1){
-      RoadNetwork carNetwork = networks.get("car");
-      carNetwork.drawCongestion(pg);
+    if(showCongestion) {
+      if(id == 1){
+        RoadNetwork carNetwork = networks.get("car");
+        carNetwork.drawCongestion(pg);
+      }
     }
 
     for (ABM m : models) {
