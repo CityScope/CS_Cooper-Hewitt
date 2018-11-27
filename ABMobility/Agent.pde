@@ -44,7 +44,8 @@ public class Agent {
   private PImage[] glyph;
   private PVector pos;
   private Node srcNode, destNode, toNode;  // toNode is like next node
-  private ArrayList<Node> path;
+  private ArrayList<Node> path;  // Path is a list of nodes from destNode to toNode.  e.g. [destNode, node, node, ..., toNode]
+  private int pathIndex; // Keeps track of index that agent has traveled in path.  Moves from back of path to front.  i.e. destNode -> toNode
   private PVector dir;
   private float speed;
   private boolean isZombie;
@@ -155,13 +156,15 @@ public class Agent {
     if (srcNode == destNode) {
       // Agent already in destination
       toNode = destNode;
+      pathIndex = 0;
       return;
     }
     // Next node is available
     ArrayList<Node> newPath = map.graph.aStar(srcNode, destNode);
     if ( newPath != null ) {
       path = newPath;
-      toNode = path.get(path.size() - 2); // what happens if there are only two nodes?
+      pathIndex = path.size() - 2; // what happens if there are only two nodes?
+      toNode = path.get(pathIndex);
     }
   }
 
@@ -368,15 +371,16 @@ public class Agent {
     dir = PVector.sub(toNodePos, pos);  // unnormalized direction to go
 
     if (dir.mag() <= dir.normalize().mult(speed).mag()) {
-      // Arrived to node
-      if (path.indexOf(toNode) == 0) {  
+      // Arrived to toNode
+      if (pathIndex == 0) {  
         // Arrived to destination
         pos = destNodePos;
         this.setupNextTrip();
       } else {
         // Not destination. Look for next node.
         srcNode = toNode;
-        toNode = path.get(path.indexOf(toNode) - 1);
+        pathIndex -= 1;
+        toNode = path.get(pathIndex);
       }
     } else {
       // Not arrived to node
