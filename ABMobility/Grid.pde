@@ -163,7 +163,7 @@ public class Grid {
         // building with buildingId is on the table
         if (building.loc == zombieLandLocation) {
           // building was previously not on table - it has just been put on table.
-          gridAnimation.get(i).put();
+          gridAnimation.get(i).put(buildingId);
           currentBlockAnimated = buildingId;
           currentGridAnimated= i;
         }

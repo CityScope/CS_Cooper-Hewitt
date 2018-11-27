@@ -11,6 +11,7 @@ public class GridInteractionAnimation {
   float start; // start millis of animation
   boolean isActive;
   boolean isPut;
+  int blockId=-1;
   ParticleSystem ps;
 
   public GridInteractionAnimation(PVector _loc) {
@@ -31,6 +32,33 @@ public class GridInteractionAnimation {
     }
 
     ps.run(p);
+  }
+  
+  void spawnAgent(){
+    if(blockId == 20 || blockId == 21){
+      println("Create Agent from Pyramid or Empire");
+      int residentialBlockId = blockId;
+      int officeBlockId = blockId;
+      int amenityBlockId = blockId;
+
+      String mobilityMotif = "ROR";
+      int householdIncome = 0;
+      int occupationType = 0;
+      int age = 0;
+
+      for (int i=0; i<=100; i++) {
+        //Agent a = new Agent(universe.world1.networks, universe.world1.glyphsMap, 1, residentialBlockId, officeBlockId, amenityBlockId, mobilityMotif, householdIncome, occupationType, age);
+        //a.initAgent();
+        //universe.world1.agents.add(a);
+      }
+    }else{
+      println("Create Agent from Building " + blockId);
+      if(universe.grid.isBuildingInCurrentGrid(20) || universe.grid.isBuildingInCurrentGrid(21)){
+        println("to empire or pyramid");
+      }else{
+        println("to zombie land");
+      }
+    } 
   }
 
   void dynamicSquare(PGraphics p, float t, color c) {
@@ -94,9 +122,10 @@ public class GridInteractionAnimation {
   }
 
 
-  void put() {
+  void put(int _blockId) {
     isPut = false;
     activate();
+    blockId=_blockId;
   }
 
   void take() {
@@ -112,6 +141,10 @@ public class GridInteractionAnimation {
       showRemaninginAgentAndBuilding = true;
       if(t<0.2){
         dynamicSquare(p, pow(t, t), #FFFFFF);
+        if(blockId !=-1){
+          //spawnAgent();
+        }
+      }else{
       }
       if(t>0.4){
         showConnectionBetweenAgentAndBuilding = false;
