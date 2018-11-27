@@ -202,6 +202,12 @@ public class World {
       int householdIncome = row.getInt("hh_income");
       int occupationType = row.getInt("occupation_type");
       int age = row.getInt("age");
+      if(residentialBlockId == 1 || residentialBlockId == 5 || residentialBlockId == 15 || residentialBlockId == 19){
+        for (int i = 0; i<=3; i++){
+          Agent a = new Agent(networks, glyphsMap, id, residentialBlockId, officeBlockId, amenityBlockId, mobilityMotif, householdIncome, occupationType, age);
+          agents.add(a);
+        }
+      }
       Agent a = new Agent(networks, glyphsMap, id, residentialBlockId, officeBlockId, amenityBlockId, mobilityMotif, householdIncome, occupationType, age);
       agents.add(a);
 

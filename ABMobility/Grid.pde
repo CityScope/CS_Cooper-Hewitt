@@ -83,7 +83,8 @@ public class Grid {
       int capacityR = row.getInt("R");
       int capacityO = row.getInt("O");
       int capacityA = row.getInt("A");
-      Building b = new Building(gridMap.get(loc), id, capacityR, capacityO, capacityA);
+      String type = row.getString("type");
+      Building b = new Building(gridMap.get(loc), id, capacityR, capacityO, capacityA, type);
       buildings.add(b);
     }
 
