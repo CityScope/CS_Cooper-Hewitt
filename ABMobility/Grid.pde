@@ -205,6 +205,17 @@ public class Grid {
     }
     return false;
   }
+  
+  
+   public Building getRandomBuildingInCurrentGrid() {
+    ArrayList<Building> tmp = new ArrayList<Building>();
+    for (Building b : buildings) {
+      if (b.loc != zombieLandLocation){
+        tmp.add(b);
+      }
+    }
+    return tmp.get(int(random(tmp.size())));
+  }
 
   public PVector getBuildingCenterPosistionPerId(int id) {
     PVector buildingLoc = getBuildingLocationById(id);

@@ -35,22 +35,11 @@ public class GridInteractionAnimation {
   }
   
   void spawnAgent(){
+    println("create random agents");
+    //FIXME: not working concurrent modification here just to test the addition of an agent while the simulation is running
+    universe.world1.createRandomAgent(true);
     if(blockId == 20 || blockId == 21){
       println("Create Agent from Pyramid or Empire");
-      int residentialBlockId = blockId;
-      int officeBlockId = blockId;
-      int amenityBlockId = blockId;
-
-      String mobilityMotif = "ROR";
-      int householdIncome = 0;
-      int occupationType = 0;
-      int age = 0;
-
-      for (int i=0; i<=100; i++) {
-        //Agent a = new Agent(universe.world1.networks, universe.world1.glyphsMap, 1, residentialBlockId, officeBlockId, amenityBlockId, mobilityMotif, householdIncome, occupationType, age);
-        //a.initAgent();
-        //universe.world1.agents.add(a);
-      }
     }else{
       println("Create Agent from Building " + blockId);
       if(universe.grid.isBuildingInCurrentGrid(20) || universe.grid.isBuildingInCurrentGrid(21)){
