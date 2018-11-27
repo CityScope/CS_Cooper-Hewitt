@@ -23,7 +23,7 @@ public class Building {
   public void draw (PGraphics p) {
     p.fill(universe.grid.gridQRcolorMap.get(loc));    
     p.stroke(#000000);
-    p.rect (loc.x*GRID_CELL_SIZE+size/2, loc.y*GRID_CELL_SIZE+size/2, size*0.9, size*0.9);
+    p.rect (loc.x*GRID_CELL_SIZE+size/2, loc.y*GRID_CELL_SIZE+size/2, size*0.8, size*0.8);
     if (devMode) {
       p.textAlign(CENTER);
       p.textSize(20*SCALE);
