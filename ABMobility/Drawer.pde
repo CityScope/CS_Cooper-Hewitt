@@ -39,7 +39,6 @@ public class Drawer {
       subSurface.beginDraw();
       subSurface.clear();
       subSurface.image(offscreenSurface, -(playGroundWidth/nbProjector)*i, 0);
-
       subSurface.endDraw();
       surface[i].render(subSurface);
     }
