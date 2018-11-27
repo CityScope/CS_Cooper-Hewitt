@@ -304,7 +304,7 @@ public class World {
       pg.image(background, 0, 0, pg.width, pg.height);
     }
 
-    if(showCongestion) {
+    if(showCongestionVis) {
       if(id == 1){
         RoadNetwork carNetwork = networks.get("car");
         carNetwork.drawCongestion(pg);

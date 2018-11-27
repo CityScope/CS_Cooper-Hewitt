@@ -10,6 +10,7 @@ class NetworkEdge {
   public boolean isVisible;
 
   public ArrayList<Agent> agents; 
+  public float density; // length / agentNum;
 
   NetworkEdge(int _id, Node _start, Node _end, boolean _isBidirectional){
     id = _id;
@@ -20,6 +21,13 @@ class NetworkEdge {
     connections = new ArrayList<NetworkEdge>();
     isVisible = false;
     agents = new ArrayList<Agent>();
+    density = 10000.0; // some big number
+  }
+
+  public void updateDensity() {
+    if(agents.size() > 0) { 
+      density = length / agents.size();
+    }
   }
 
   void draw(PGraphics p){
@@ -73,12 +81,16 @@ class NetworkEdgeManager {
       idsToEdge.put(ids, e);
     }
   }
-  
+
   public NetworkEdge updateEdge(Agent agent, NetworkEdge oldEdge, Node newSrc, Node newDest){
     // 1. remove agent from old edge
     if(oldEdge != null){
       oldEdge.agents.remove(agent);
-      if(oldEdge.agents.size() == 0) oldEdge.isVisible = false;
+      if(oldEdge.agents.size() == 0) {
+        oldEdge.isVisible = false;
+      } else {
+        oldEdge.updateDensity();
+      }
     }
 
     // 2. assignAgent to new Edge, return this edge
@@ -86,6 +98,7 @@ class NetworkEdgeManager {
     // TODO(Yasushi Sakai): what if null??
     newEdge.agents.add(agent);
     newEdge.isVisible = true;
+    newEdge.updateDensity();
     return newEdge;
   }
 
@@ -101,4 +114,5 @@ class NetworkEdgeManager {
       e.draw(p);
     }  
   }
+
 }
