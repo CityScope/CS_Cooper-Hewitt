@@ -37,7 +37,7 @@ public class GridInteractionAnimation {
   void spawnAgent(){
     println("create random agents");
     //FIXME: not working concurrent modification here just to test the addition of an agent while the simulation is running
-    //universe.world1.createRandomAgent(true);
+    universe.world1.createRandomAgent(true);
     if(blockId == 20 || blockId == 21){
       println("Create Agent from Pyramid or Empire");
     }else{
