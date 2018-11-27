@@ -26,7 +26,7 @@ class NetworkEdge {
     if(isVisible){
       int agentsNum = agents.size();
       // float density = agentsNum / length;
-      float red = min(map(agentsNum, 1, 3, 20, 255), 255);
+      float red = min(map(agentsNum, 1, 4, 40, 255), 255);
       p.strokeWeight(10);
       p.stroke(red, 20, 20);
       p.strokeCap(p.SQUARE);

@@ -4,6 +4,7 @@ public class RoadNetwork {
   private PVector size;
   private PVector[] bounds;  // [0] Left-Top  [1] Right-Bottom
   private Pathfinder graph;
+  private NetworkEdgeManager edgeManager;
   private String type;
   private int worldId;
 
@@ -12,11 +13,11 @@ public class RoadNetwork {
   // perimeter of the grid/world via zombie land nodes.
   private ArrayList<Node> zombieLandNodes;
 
-
   /* <--- CONSTRUCTOR ---> */
   RoadNetwork(String GeoJSONfile, String _type, int _worldId) {
 
     ArrayList<Node> nodes = new ArrayList<Node>();
+    edgeManager = new NetworkEdgeManager();
 
     // Load file -->
     JSONObject JSON = loadJSONObject(GeoJSONfile);
@@ -46,6 +47,7 @@ public class RoadNetwork {
 
         if (existingNode != null) {
           if (j > 0) {
+            edgeManager.add(prevNode, existingNode, !oneWay);
             prevNode.connect(existingNode);
             if (!oneWay) {
               existingNode.connect(prevNode);
@@ -54,7 +56,9 @@ public class RoadNetwork {
           prevNode = existingNode;
         } else {
           Node newNode = new Node(pos.x, pos.y);
+          edgeManager.mapNode(newNode);
           if (j > 0) {
+            edgeManager.add(prevNode, newNode, !oneWay);
             if (!oneWay) {
               prevNode.connectBoth(newNode);
             } else {
@@ -112,6 +116,12 @@ public class RoadNetwork {
         zombieLandNodes.add(node);
       }
     }
+  }
+
+  public void drawCongestion(PGraphics p){
+    p.pushStyle();  
+    edgeManager.draw(p);
+    p.popStyle();
   }
 
   public void draw(PGraphics p) {    
