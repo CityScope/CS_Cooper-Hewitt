@@ -198,7 +198,7 @@ public class Agent {
           p.fill(#FFFFFF);
           p.stroke(#FFFFFF);
         }
-        PImage img = glyph[0];
+        PImage img = animatedGlyph ? glyph[frameCount % glyph.length] : glyph[0];
         if (img != null) {
           p.pushMatrix();
           p.translate(pos.x, pos.y);
@@ -220,7 +220,7 @@ public class Agent {
         return;
       }
       if (glyphs && (glyph.length > 0)) {
-        PImage img = glyph[0];
+        PImage img = animatedGlyph ? glyph[frameCount % glyph.length] : glyph[0];
         if (img != null) {
           p.pushMatrix();
           p.translate(pos.x, pos.y);
