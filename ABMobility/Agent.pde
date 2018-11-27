@@ -313,6 +313,11 @@ public class Agent {
     mobilityType = chooseMobilityType();
     map = networks.get(mobilityType);
     glyph = glyphsMap.get(mobilityType);
+    if(mobilityType.equals("car")){
+      if (worldId == 2){
+        glyph= glyphsMap.get("pev");
+      }
+    }
 
     switch(mobilityType) {
     case "car" :

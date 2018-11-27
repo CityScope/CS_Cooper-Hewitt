@@ -45,10 +45,14 @@ public class Universe {
     pedGlyph[0] = loadImage("image/glyphs/human-0.gif");
     pedGlyph[1] = loadImage("image/glyphs/human-1.gif");
     pedGlyph[2] = loadImage("image/glyphs/human-2.gif");
+    PImage[] pevGlyph = new PImage[3];
+    pevGlyph[0] = loadImage("image/glyphs/pev-1.gif");
+    pevGlyph[1] = loadImage("image/glyphs/pev-2.gif");
     glyphsMap = new HashMap<String, PImage[]>();
     glyphsMap.put("car", carGlyph);
     glyphsMap.put("bike", bikeGlyph);
     glyphsMap.put("ped", pedGlyph);
+    glyphsMap.put("pev", pevGlyph);
 
     grid = new Grid();
     world1 = new World(1, "image/background/background_01.png", glyphsMap);
