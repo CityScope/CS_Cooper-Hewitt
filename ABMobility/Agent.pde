@@ -227,7 +227,7 @@ public class Agent {
           p.rotate(dir.heading() + PI * 0.5);
           p.translate(-1, 0);
           if (showRemaninginAgentAndBuilding){
-             p.tint(255,60);
+             p.tint(255,80);
              p.image(img, 0, 0, img.width * SCALE, img.height * SCALE);
              p.tint(255,255);
           }else{
