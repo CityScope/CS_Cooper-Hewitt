@@ -30,7 +30,7 @@ boolean showCollisionPotential = false;
 boolean showConnectionBetweenAgentAndBuilding = false;
 boolean showRemaninginAgentAndBuilding = false;
 boolean animatedGlyph = false;
-boolean devMode = false;
+boolean devMode = true;
 UDPReceiver udpR;
 
 void settings() {

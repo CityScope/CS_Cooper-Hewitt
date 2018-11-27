@@ -4,6 +4,7 @@ public class RoadNetwork {
   private PVector size;
   private PVector[] bounds;  // [0] Left-Top  [1] Right-Bottom
   private Pathfinder graph;
+  private NetworkEdgeManager edgeManager;
   private String type;
   private int worldId;
 
@@ -12,11 +13,11 @@ public class RoadNetwork {
   // perimeter of the grid/world via zombie land nodes.
   private ArrayList<Node> zombieLandNodes;
 
-
   /* <--- CONSTRUCTOR ---> */
   RoadNetwork(String GeoJSONfile, String _type, int _worldId) {
 
     ArrayList<Node> nodes = new ArrayList<Node>();
+    edgeManager = new NetworkEdgeManager();
 
     // Load file -->
     JSONObject JSON = loadJSONObject(GeoJSONfile);
@@ -46,6 +47,7 @@ public class RoadNetwork {
 
         if (existingNode != null) {
           if (j > 0) {
+            edgeManager.add(prevNode, existingNode, !oneWay);
             prevNode.connect(existingNode);
             if (!oneWay) {
               existingNode.connect(prevNode);
@@ -54,7 +56,9 @@ public class RoadNetwork {
           prevNode = existingNode;
         } else {
           Node newNode = new Node(pos.x, pos.y);
+          edgeManager.mapNode(newNode);
           if (j > 0) {
+            edgeManager.add(prevNode, newNode, !oneWay);
             if (!oneWay) {
               prevNode.connectBoth(newNode);
             } else {
@@ -114,6 +118,12 @@ public class RoadNetwork {
     }
   }
 
+  public void drawCongestion(PGraphics p){
+    p.pushStyle();  
+    edgeManager.draw(p);
+    p.popStyle();
+  }
+
   public void draw(PGraphics p) {    
     for (int i = 0; i < graph.nodes.size(); i++) {
       Node tempN = (Node)graph.nodes.get(i);
@@ -166,39 +176,3 @@ public class RoadNetwork {
   }
 } 
 
-
-class NetworkEdge {
-
-  private Pathfinder graph;
-  private Node start; // Node start
-  private int cid; // Connector index of that Start Node
-
-  private float distance;
-  private int agentCount;
-  private float cost;
-
-  NetworkEdge(Pathfinder graph, Node start, int cid, float distance) {
-    this.graph = graph;
-    this.start = start;
-    this.cid = cid;
-    this.distance = distance;
-    this.agentCount = 0;
-    this.cost = distance;
-  }
-
-  Connector getConnector() {
-    Connector c = (Connector)this.start.links.get(this.cid);
-    return c;
-  }
-
-  void incrAgentCount() {
-    this.agentCount++;
-  }
-
-  void decrAgentCount() {
-    this.agentCount--;
-  }
-
-  void updateCost() {
-  }
-}

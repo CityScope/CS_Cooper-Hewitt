@@ -13,8 +13,8 @@ public class Agent {
   private HashMap<String, RoadNetwork> networks;
   private HashMap<String, PImage[]> glyphsMap;
   private RoadNetwork map;  // Curent network used for mobility type.
+  private NetworkEdge edge; // Current edge that it's sitting on
   private int worldId;  // 1=Bad world; 2=Good world
-
 
   private int residentialBlockId;
   private int officeBlockId;
@@ -165,6 +165,10 @@ public class Agent {
       path = newPath;
       pathIndex = path.size() - 2; // what happens if there are only two nodes?
       toNode = path.get(pathIndex);
+      // only update when we are in car and bad
+      if (mobilityType.equals("car") && worldId==1){
+        edge = map.edgeManager.updateEdge(this, edge, srcNode, toNode);
+      }
     }
   }
 
@@ -381,6 +385,9 @@ public class Agent {
         srcNode = toNode;
         pathIndex -= 1;
         toNode = path.get(pathIndex);
+        if(mobilityType.equals("car") && worldId==1){
+          edge = map.edgeManager.updateEdge(this, edge, srcNode, toNode);
+        }
       }
     } else {
       // Not arrived to node

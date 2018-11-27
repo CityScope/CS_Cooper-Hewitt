@@ -10,14 +10,16 @@ public class Building {
   int capacityR;
   int capacityO;
   int capacityA;
+  String type;
   boolean isActive;
 
-  Building(PVector _loc, int _id, int _capacityR, int _capacityO, int _capacityA) {
+  Building(PVector _loc, int _id, int _capacityR, int _capacityO, int _capacityA, String _type) {
     loc = _loc;
     id = _id;
     capacityR = _capacityR;
     capacityO = _capacityO;
     capacityA = _capacityA;
+    type = _type;
   }
 
   public void draw (PGraphics p) {
