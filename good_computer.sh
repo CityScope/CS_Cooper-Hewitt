@@ -40,4 +40,7 @@ echo -ne "scanner started                                                       
 
 clear
 
-echo "bye have a nice day"
+echo "good computer setup done bye have a nice day"
+
+tmux attach -s scanner
+
