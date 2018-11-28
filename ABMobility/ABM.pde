@@ -70,8 +70,9 @@ public class Universe {
     pedGlyph[1] = loadImage("image/glyphs/human-1.gif");
     pedGlyph[2] = loadImage("image/glyphs/human-2.gif");
     PImage[] pevGlyph = new PImage[3];
-    pevGlyph[0] = loadImage("image/glyphs/pev-1.gif");
-    pevGlyph[1] = loadImage("image/glyphs/pev-2.gif");
+    pevGlyph[0] = loadImage("image/glyphs/pev-0.png");
+    pevGlyph[1] = loadImage("image/glyphs/pev-1.png");
+    pevGlyph[2] = loadImage("image/glyphs/pev-2.png");
     glyphsMap = new HashMap<String, PImage[]>();
     glyphsMap.put("car", carGlyph);
     glyphsMap.put("bike", bikeGlyph);
