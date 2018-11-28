@@ -42,5 +42,5 @@ clear
 
 echo "good computer setup done bye have a nice day"
 
-tmux attach -s scanner
+tmux attach -t scanner
 
