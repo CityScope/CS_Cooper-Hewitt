@@ -31,7 +31,7 @@ boolean showCongestionVis = true;
 boolean showConnectionBetweenAgentAndBuilding = false;
 boolean showRemaninginAgentAndBuilding = false;
 boolean animatedGlyph = false;
-boolean devMode = true;
+boolean devMode = false;
 UDPReceiver udpR;
 
 void settings() {

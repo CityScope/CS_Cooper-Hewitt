@@ -174,7 +174,7 @@ public class World {
     // In the 'bad' world (1) there are additional agents created as 'zombie agents'.
     // They are assigned a residence or office permenantly in zombie land
     int numNormalAgents = NUM_AGENTS_PER_WORLD;
-    int numZombieAgents = 0;
+    int numZombieAgents = 1000;
     if (id == 1) {
       numZombieAgents = int((0.5)*NUM_AGENTS_PER_WORLD);  // Additional 50% -- This number should be tweaked.
     }
@@ -202,12 +202,12 @@ public class World {
       int householdIncome = row.getInt("hh_income");
       int occupationType = row.getInt("occupation_type");
       int age = row.getInt("age");
-     /* if(residentialBlockId == 1 || residentialBlockId == 5 || residentialBlockId == 15 || residentialBlockId == 19){
-        for (int i = 0; i<=0; i++){
+     //if(residentialBlockId == 1 || residentialBlockId == 5 || residentialBlockId == 15 || residentialBlockId == 19){
+       for (int i = 0; i<=1; i++){
           Agent a = new Agent(networks, glyphsMap, id, residentialBlockId, officeBlockId, amenityBlockId, mobilityMotif, householdIncome, occupationType, age);
           agents.add(a);
         }
-      }*/
+      //}
       Agent a = new Agent(networks, glyphsMap, id, residentialBlockId, officeBlockId, amenityBlockId, mobilityMotif, householdIncome, occupationType, age);
       agents.add(a);
 
