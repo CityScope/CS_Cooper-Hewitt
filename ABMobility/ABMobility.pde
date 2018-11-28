@@ -105,23 +105,17 @@ void keyPressed() {
   case 'b':
     showBuilding= !showBuilding;
     break;
-  case 't':
-    universe.grid.resetAnimation(); 
-    break;
-  case ' ':
-    showBackground=!showBackground;
-    break;
   case 'g':
     showGlyphs = !showGlyphs;
     break;
   case 'n':
     showNetwork = !showNetwork;
     break;
-  case 'd':
-    dynamicSlider = !dynamicSlider;
-    break;
   case 'z':
     showZombie=!showZombie;
+    break;
+  case ' ':
+    showBackground=!showBackground;
     break;
   }
 

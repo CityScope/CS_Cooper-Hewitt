@@ -44,7 +44,7 @@ public class UDPReceiver {
     udp = new UDP( this, PORT ); //from Termite desktop
     udp.listen( true );
     if (devMode) {
-      println("I listen to" + PORT);
+      println("Listening to" + PORT);
     }
   }
   void receive( byte[] data, String ip, int port ) {  // <-- extended handler

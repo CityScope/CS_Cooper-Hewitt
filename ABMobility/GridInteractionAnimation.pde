@@ -37,7 +37,6 @@ public class GridInteractionAnimation {
   boolean isActive;
   boolean isPut;
   int blockId=-1;
-  ParticleSystem ps;
 
   public GridInteractionAnimation(PVector _loc) {
     center = new PVector(
@@ -48,35 +47,9 @@ public class GridInteractionAnimation {
     start = 0.0;
     isActive = true;
     isPut = false;
-    ps = new ParticleSystem(center, #FFFFFF);
-  }
-
-  void runParticleSystem(PGraphics p) {
-    for (int i=0; i<=20; i++) {
-      ps.addParticle();
-    }
-
-    ps.run(p);
   }
   
-  void spawnAgent(){
-    println("create random agents");
-    //FIXME: not working concurrent modification here just to test the addition of an agent while the simulation is running
-    universe.world1.createRandomAgent(true);
-    if(blockId == 20 || blockId == 21){
-      println("Create Agent from Pyramid or Empire");
-    }else{
-      println("Create Agent from Building " + blockId);
-      if(universe.grid.isBuildingInCurrentGrid(20) || universe.grid.isBuildingInCurrentGrid(21)){
-        println("to empire or pyramid");
-      }else{
-        println("to zombie land");
-      }
-    } 
-  }
-
   void dynamicSquare(PGraphics p, float t, color c) {
-    //p.noFill();
     p.fill(c,20);
     p.stroke(c,100);
     p.rect(center.x, center.y, BUILDING_SIZE+t*100, BUILDING_SIZE+t*100);
@@ -155,9 +128,6 @@ public class GridInteractionAnimation {
       showRemaninginAgentAndBuilding = true;
       if(t<0.2){
         dynamicSquare(p, pow(t, t), #FFFFFF);
-        if(blockId !=-1){
-          //spawnAgent();
-        }
       }else{
       }
       if(t>0.4){
@@ -185,93 +155,4 @@ float sigmoidEase(float t) {
 float cubicEase(float t) {
   float y = curvePoint(800, 100, 0, 5, t);
   return map(y, 100.0, 0.0, 0, 1.0);
-}
-
-class Particle {
-  PVector location;
-  PVector velocity;
-  PVector acceleration;
-  float lifespan;
-  color c;
-
-  Particle(PVector l, color _c) {
-    acceleration = new PVector(random(-0.1, 0.1), random(-0.1, 0.1));
-    velocity = new PVector(random(-5, 5), random(-5, 5));
-    location = l.get();
-    lifespan = 255.0;
-    c= _c;
-  }
-
-  void run(PGraphics p) {
-    update();
-    display(p);
-  }
-
-  // Method to update location
-  void update() {
-    velocity.add(acceleration);
-    location.add(velocity);
-    acceleration.mult(0);
-    lifespan -= 5;
-  }
-
-  // Method to display
-  void display(PGraphics p) {
-    if (universe.grid.gridAnimation.get(universe.grid.currentGridAnimated).center.x < state.slider * SIMULATION_WIDTH) {
-      c= #FF0000;
-    } else {
-      c= #FFFFFF;
-    }
-    p.stroke(c, lifespan);
-    p.fill(c, lifespan);
-    p.ellipse(location.x, location.y, 10*SCALE, 10*SCALE);
-  }
-
-  void applyForce(PVector force) {
-    acceleration.add(force);
-  }
-
-  // Is the particle still useful?
-  boolean isDead() {
-    if (lifespan < 0.0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-}
-
-// A class to describe a group of Particles
-// An ArrayList is used to manage the list of Particles 
-
-class ParticleSystem {
-  ArrayList<Particle> particles;
-  PVector origin;
-  color c;
-
-  ParticleSystem(PVector _location, color _c) {
-    origin = _location;
-    particles = new ArrayList<Particle>();
-    c = _c;
-  }
-
-  void addParticle() {
-    particles.add(new Particle(origin, c));
-  }
-
-  void applyForce(PVector force) {
-    for (Particle p : particles) {
-      p.applyForce(force);
-    }
-  } 
-
-  void run(PGraphics _p) {
-    for (int i = particles.size()-1; i >= 0; i--) {
-      Particle p = particles.get(i);
-      p.run(_p);
-      if (p.isDead()) {
-        particles.remove(i);
-      }
-    }
-  }
 }
