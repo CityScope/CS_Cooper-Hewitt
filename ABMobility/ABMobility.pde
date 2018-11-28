@@ -114,9 +114,6 @@ void keyPressed() {
   case 'g':
     showGlyphs = !showGlyphs;
     break;
-  case 'a':
-    animatedGlyph = !animatedGlyph;
-    break;
   case 'n':
     showNetwork = !showNetwork;
     break;
