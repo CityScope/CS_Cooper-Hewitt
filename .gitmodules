@@ -17,3 +17,6 @@
 [submodule "network_checker"]
 	path = network_checker
 	url = https://github.com/yasushisakai/network_checker
+[submodule "Scanner"]
+	path = Scanner
+	url = https://github.com/RELNO/CityScope_Scanner_Python
