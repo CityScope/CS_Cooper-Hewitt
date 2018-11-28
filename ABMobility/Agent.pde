@@ -5,7 +5,6 @@ public final String RESIDENTIAL = "R";
 public final String OFFICE = "O";
 public final String AMENITY = "A";
 
-
 public class Agent {
 
   // Networks is a mapping from network name to RoadNetwork.
@@ -48,6 +47,7 @@ public class Agent {
   private int pathIndex; // Keeps track of index that agent has traveled in path.  Moves from back of path to front.  i.e. destNode -> toNode
   private PVector dir;
   private float speed;
+  private float maxSpeed;
   private boolean isZombie;
   private color myColor;
 
@@ -342,13 +342,13 @@ public class Agent {
 
     switch(mobilityType) {
     case "car" :
-      speed = SCALE*1.4+ random(-SCALE*0.6, SCALE*0.6);
+      maxSpeed = SCALE*1.4+ random(-SCALE*0.6, SCALE*0.6);
       break;
     case "bike" :
-      speed = SCALE*0.6+ random(-0.3*SCALE, 0.3*SCALE);
+      maxSpeed = SCALE*0.6+ random(-0.3*SCALE, 0.3*SCALE);
       break;
     case "ped" :
-      speed = SCALE*0.4 + random(-0.1*SCALE, 0.1*SCALE);
+      maxSpeed = SCALE*0.4 + random(-0.1*SCALE, 0.1*SCALE);
       break;
     default:
       break;
@@ -373,7 +373,7 @@ public class Agent {
     PVector toNodePos = new PVector(toNode.x, toNode.y);
     PVector destNodePos = new PVector(destNode.x, destNode.y);
     dir = PVector.sub(toNodePos, pos);  // unnormalized direction to go
-
+    updateSpeed();
     if (dir.mag() <= dir.normalize().mult(speed).mag()) {
       // Arrived to toNode
       if (pathIndex == 0) {  
@@ -394,4 +394,22 @@ public class Agent {
       pos.add(dir);
     }
   }
+
+  void updateSpeed() {
+    // from observation, e.density ranges from 0.14831 to 517.9554;
+    if(edge != null) {
+      float coef = map(edge.density, 0.14, 10, 0.1, 1.0);
+      // do we liner? sigmoid? 
+      float adjustedSpeed = cubicEase(coef) * maxSpeed;
+      // float adjustedSpeed = coef * maxSpeed;
+      if(edge.agents.size() > 4){
+        adjustedSpeed = adjustedSpeed * 0.4 + (adjustedSpeed * 0.6 / edge.agents.size());
+      }
+      adjustedSpeed = min(max(adjustedSpeed, maxSpeed * 0.2), maxSpeed);
+      speed = adjustedSpeed;
+    } else {
+      speed = maxSpeed;      
+    }
+  }
+
 }
