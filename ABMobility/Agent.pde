@@ -254,7 +254,7 @@ public class Agent {
           p.pushMatrix();
           p.translate(pos.x, pos.y);
           p.rotate(dir.heading() + PI * 0.5);
-          p.translate(-1, 0);
+          p.translate(-5, 0);
           if (showRemaninginAgentAndBuilding){
              p.tint(255,80);
              p.image(img, 0, 0, img.width * SCALE, img.height * SCALE);

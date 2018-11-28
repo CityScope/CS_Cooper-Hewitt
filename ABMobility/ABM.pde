@@ -205,7 +205,7 @@ public class World {
 
     if (INIT_AGENTS_FROM_DATAFILE) {
       createRandomAgents(numZombieAgents, true);
-      createAgentsFromDatafile(numNormalAgents,1);
+      createAgentsFromDatafile(numNormalAgents,3);
     } else {
       createRandomAgents(numZombieAgents, true);
       createRandomAgents(numNormalAgents, false);
