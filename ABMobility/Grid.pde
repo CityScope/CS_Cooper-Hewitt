@@ -149,6 +149,9 @@ public class Grid {
      */
     for (int i=0; i<BUILDING_LOCATIONS; i++) {
       PVector loc = gridMap.get(i);
+      p.stroke(#000000);
+      p.fill(#000000);
+      p.rect(loc.x*GRID_CELL_SIZE+BUILDING_SIZE/2, loc.y*GRID_CELL_SIZE+BUILDING_SIZE/2, BUILDING_SIZE, BUILDING_SIZE);
       p.fill(universe.grid.gridQRcolorMap.get(loc)); 
       p.stroke(universe.grid.gridQRcolorMap.get(loc));
       p.rect(loc.x*GRID_CELL_SIZE+BUILDING_SIZE/2, loc.y*GRID_CELL_SIZE+BUILDING_SIZE/2, BUILDING_SIZE*0.8, BUILDING_SIZE*0.8);
