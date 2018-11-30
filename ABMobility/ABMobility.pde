@@ -39,7 +39,7 @@ public int playGroundWidth = DISPLAY_WIDTH;
 public int playGroundHeight = DISPLAY_HEIGHT;
 
 public boolean INIT_AGENTS_FROM_DATAFILE = true;
-public final String SIMULATED_POPULATION_DATA_FILEPATH = "data/simPop.csv";
+public final String SIMULATED_POPULATION_DATA_FILEPATH = "data/simPopAmplified.csv";
 public final int NUM_AGENTS_PER_WORLD = 1000;
 
 
