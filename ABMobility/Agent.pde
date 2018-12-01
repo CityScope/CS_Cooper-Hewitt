@@ -67,10 +67,11 @@ public class Agent {
   private String mobilityType;
   private PImage[] glyph;
   private PVector pos;
-  private Node srcNode, destNode, toNode;  // toNode is like next node
+  private Node srcNode, destNode, toNode, afterNode;  // toNode is like next node, afterNode is the node after toNode.
   private ArrayList<Node> path;  // Path is a list of nodes from destNode to toNode.  e.g. [destNode, node, node, ..., toNode]
   private int pathIndex; // Keeps track of index that agent has traveled in path.  Moves from back of path to front.  i.e. destNode -> toNode
   private PVector dir;
+  private float turn;
   private float speed;
   private float maxSpeed;
   private boolean isZombie;
@@ -180,6 +181,7 @@ public class Agent {
 
     if (srcNode == destNode) {
       // Agent already in destination
+      afterNode = destNode;
       toNode = destNode;
       pathIndex = 0;
       return;
@@ -189,7 +191,11 @@ public class Agent {
     if ( newPath != null ) {
       path = newPath;
       pathIndex = path.size() - 2; // what happens if there are only two nodes?
+      if (pathIndex > 1){
+       afterNode = path.get(pathIndex - 1);
+      }
       toNode = path.get(pathIndex);
+      afterNode = pathIndex > 1 ? path.get(pathIndex - 1) : toNode;
       // only update when we are in car and bad
       if (mobilityType.equals("car") && worldId==1){
         edge = map.edgeManager.updateEdge(this, edge, srcNode, toNode);
@@ -231,7 +237,8 @@ public class Agent {
         if (img != null) {
           p.pushMatrix();
           p.translate(pos.x, pos.y);
-          p.rotate(dir.heading() + PI * 0.5);
+          // p.rotate(dir.heading() + PI * 0.5);
+          p.rotate(turn + PI * 0.5);
           p.translate(-1, 0);
           p.image(img, 0, 0, img.width * SCALE, img.height * SCALE);
           p.popMatrix();
@@ -253,7 +260,8 @@ public class Agent {
         if (img != null) {
           p.pushMatrix();
           p.translate(pos.x, pos.y);
-          p.rotate(dir.heading() + PI * 0.5);
+          // p.rotate(dir.heading() + PI * 0.5);
+          p.rotate(turn + PI * 0.5);
           p.translate(-5, 0);
           if (showRemaninginAgentAndBuilding){
              p.tint(255,80);
@@ -378,7 +386,9 @@ public class Agent {
     }
 
     PVector toNodePos = new PVector(toNode.x, toNode.y);
+    PVector afterNodePos = new PVector(afterNode.x, afterNode.y);
     PVector destNodePos = new PVector(destNode.x, destNode.y);
+    turn = PVector.sub(afterNodePos, pos).heading();
     dir = PVector.sub(toNodePos, pos);  // unnormalized direction to go
     updateSpeed();
     if (dir.mag() <= dir.normalize().mult(speed).mag()) {
@@ -392,6 +402,8 @@ public class Agent {
         srcNode = toNode;
         pathIndex -= 1;
         toNode = path.get(pathIndex);
+        afterNode = pathIndex > 1 ? path.get(pathIndex - 1) : toNode;
+
         if(mobilityType.equals("car") && worldId==1){
           edge = map.edgeManager.updateEdge(this, edge, srcNode, toNode);
         }
