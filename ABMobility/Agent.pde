@@ -181,8 +181,8 @@ public class Agent {
 
     if (srcNode == destNode) {
       // Agent already in destination
-      afterNode = destNode;
       toNode = destNode;
+      afterNode = destNode;
       pathIndex = 0;
       return;
     }
@@ -191,9 +191,6 @@ public class Agent {
     if ( newPath != null ) {
       path = newPath;
       pathIndex = path.size() - 2; // what happens if there are only two nodes?
-      if (pathIndex > 1){
-       afterNode = path.get(pathIndex - 1);
-      }
       toNode = path.get(pathIndex);
       afterNode = pathIndex > 1 ? path.get(pathIndex - 1) : toNode;
       // only update when we are in car and bad
@@ -237,7 +234,6 @@ public class Agent {
         if (img != null) {
           p.pushMatrix();
           p.translate(pos.x, pos.y);
-          // p.rotate(dir.heading() + PI * 0.5);
           p.rotate(turn + PI * 0.5);
           p.translate(-1, 0);
           p.image(img, 0, 0, img.width * SCALE, img.height * SCALE);
@@ -260,7 +256,6 @@ public class Agent {
         if (img != null) {
           p.pushMatrix();
           p.translate(pos.x, pos.y);
-          // p.rotate(dir.heading() + PI * 0.5);
           p.rotate(turn + PI * 0.5);
           p.translate(-5, 0);
           if (showRemaninginAgentAndBuilding){
