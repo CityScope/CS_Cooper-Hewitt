@@ -1,4 +1,4 @@
-#CS_Cooper-Hewitt
+# CS_Cooper-Hewitt
 
 ![](./CityScope_CooperHewitt.png)
       
