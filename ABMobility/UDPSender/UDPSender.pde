@@ -1,8 +1,10 @@
 import hypermedia.net.*;
 import controlP5.*;
 
-int PORT = 5005;
-String HOST_IP = "localhost"; 
+int SIMULATION_PORT = 5005; 
+int UNITY_PORT = 7777; 
+String LOCALHOST = "localhost"; 
+String BAD_COMPUTER_IP = "192.168.1.102";
 //IP Address of the PC in which this App is running
 
 UDP udp;
@@ -24,14 +26,14 @@ PFont font;
 
 void setup(){
   size(600, 700);
-  udp= new UDP(this);  
+  udp = new UDP(this);  
   
   gui = new ControlP5(this);
 
   gui.addSlider("slider")
     .setPosition(50, 50)
     .setSize(500, 15)
-    .setRange(0.0, 1.0)
+    .setRange(1.0, 0.0)
     .setValue(0.5);
 
   RadioButton r = gui.addRadioButton("selectedBId")
@@ -119,7 +121,9 @@ void randomize() {
 void draw() {
   if((millis() - lastSend) > sendInterval && send){
     JSONObject compiled = compileJson();
-    udp.send(compiled.toString(), HOST_IP, PORT);
+    println(compiled.toString());
+    udp.send(compiled.toString(), LOCALHOST, SIMULATION_PORT);
+    udp.send(compiled.toString(), BAD_COMPUTER_IP, UNITY_PORT);
     lastSend = millis();
     background(0, 0, 255);
   } else {
@@ -131,7 +135,6 @@ void draw() {
   translate(50, 75);
   noFill();
   stroke(0);
-  // rect(0, 0, 500, 350);
   // tableRect.draw();
   for(Plot p: plots){
     p.draw();
@@ -141,7 +144,6 @@ void draw() {
 }
 
 void mousePressed() {
-  // udp.send(s,HOST_IP,PORT);
   int x = mouseX - 50;
   int y = mouseY - 150;
   if(tableRect.isInside(x, y)){
