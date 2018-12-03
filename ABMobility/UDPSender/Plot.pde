@@ -3,7 +3,7 @@ final int PLOT_SIZE = 50;
 
 class Plot {
 
-  int id;
+  private int id;
   int buildingId;
   int rotation;
   Rectangle r;
@@ -32,6 +32,15 @@ class Plot {
     isSelected = false;
   }
 
+  public void reset(){
+    buildingId = -1;
+    rotation = 0;
+  }
+
+  public void sameAsId(){
+    buildingId = id;
+  }
+
   public void setSelected(boolean select){
     isSelected = select;
   }
@@ -53,11 +62,15 @@ class Plot {
     r.draw();
 
     PVector c = r.center();
-
-    text(buildingId, c.x, c.y);
+    pushMatrix();
+    translate(c.x, c.y);
+    rotate(TWO_PI - rotation * PI * 0.5); 
+    text(id, -10, 0);
+    text(buildingId, 10, 0);
+    popMatrix();
   }
-
 }
+
 class Rectangle {
   PVector start;
   PVector end;

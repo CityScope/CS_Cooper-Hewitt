@@ -25,30 +25,40 @@ PFont font;
 void setup(){
   size(600, 700);
   udp= new UDP(this);  
-  // udp.log(true);
-  // udp.listen(true);
   
   gui = new ControlP5(this);
 
   gui.addSlider("slider")
     .setPosition(50, 50)
-    .setSize(500, 50)
+    .setSize(500, 15)
     .setRange(0.0, 1.0)
     .setValue(0.5);
 
   RadioButton r = gui.addRadioButton("selectedBId")
     .setPosition(50, 525)
     .setSize(15, 15)
-    .setItemsPerRow(10)
-    .setSpacingColumn(15);
-  
+    .setItemsPerRow(9)
+    .setSpacingColumn(17);
+
+  gui.addButton("randomize")
+    .setPosition(350, 525)
+    .setSize(50, 50);
+
+  gui.addButton("preset")
+    .setPosition(425, 525)
+    .setSize(50, 50);
+
+  gui.addButton("resetPlots")
+    .setPosition(500, 525)
+    .setSize(50, 50);
+
   for(int i = -1;i < 24; i++){
     r.addItem(i + "", i);
   }
 
   gui.addSlider("sendInterval")
     .setPosition(50, 600)
-    .setSize(380, 50)
+    .setSize(380, 15)
     .setRange(50, 3000)
     .setValue(1000);
 
@@ -78,13 +88,38 @@ void selectedBId(int bId){
   p.buildingId = bId;
 }
 
-void draw() {
+void resetPlots(){
+  for(Plot p: plots){
+    p.reset();
+  }
+}
 
+void preset(){
+  for(Plot p: plots){
+    p.reset();
+    p.sameAsId();
+  }
+}
+
+// you will need to first "resetPlots"
+// wait for sendInterval and then push.
+void randomize() {
+  IntList buildingIds = new IntList();
+  for(int i=0;i < 25;i++){
+    buildingIds.append(i);
+  }
+  buildingIds.shuffle();
+  for(int i=0; i< 18; i++){
+    Plot p = plots.get(i);
+    p.buildingId = buildingIds.get(i);
+    p.rotation = int(random(0,4));
+  }
+}
+
+void draw() {
   if((millis() - lastSend) > sendInterval && send){
     JSONObject compiled = compileJson();
-    // println(compiled.toString());
     udp.send(compiled.toString(), HOST_IP, PORT);
-    println("sent."); 
     lastSend = millis();
     background(0, 0, 255);
   } else {
@@ -93,11 +128,11 @@ void draw() {
   }
 
   pushMatrix();
-  translate(50, 150);
+  translate(50, 75);
   noFill();
   stroke(0);
-  //  rect(0, 0, 500, 350);
-  tableRect.draw();
+  // rect(0, 0, 500, 350);
+  // tableRect.draw();
   for(Plot p: plots){
     p.draw();
   }
@@ -129,12 +164,11 @@ JSONObject compileJson () {
     Plot p = plots.get(i);
     JSONArray cell = new JSONArray();
     cell.setInt(0, p.buildingId);
-    cell.setInt(1, 0);
+    cell.setInt(1, p.rotation);
     grid.setJSONArray(i, cell); 
   }
 
   // slider is a array
-  
   JSONArray sliderArray = new JSONArray();
   sliderArray.setFloat(0, slider);
 
