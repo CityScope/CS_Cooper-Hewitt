@@ -107,17 +107,10 @@ class NetworkEdgeManager {
     }
   }
 
-  public NetworkEdge updateEdge(Agent agent, NetworkEdge oldEdge, Node newSrc, Node newDest){
+  public NetworkEdge updateEdge(Agent agent, Node newSrc, Node newDest){
     // 1. remove agent from old edge
-    if(oldEdge != null){
-      oldEdge.agents.remove(agent);
-      if(oldEdge.agents.size() == 0) {
-        oldEdge.isVisible = false;
-      } else {
-        oldEdge.updateDensity();
-      }
-    }
-
+    removeEdge(agent);
+    
     // 2. assignAgent to new Edge, return this edge
     NetworkEdge newEdge = idsToEdge.get(nodesToIds(newSrc, newDest));
     // TODO(Yasushi Sakai): what if null??
@@ -125,6 +118,18 @@ class NetworkEdgeManager {
     newEdge.isVisible = true;
     newEdge.updateDensity();
     return newEdge;
+  }
+
+  public void removeEdge(Agent agent){
+    NetworkEdge e = agent.edge;
+    if(e != null){
+      e.agents.remove(agent);
+      if(e.agents.size() == 0){
+        e.isVisible = false;
+      } else {
+        e.updateDensity();
+      }
+    }
   }
 
   // helper function to make "aid-bid" string

@@ -195,7 +195,7 @@ public class Agent {
       afterNode = pathIndex > 1 ? path.get(pathIndex - 1) : toNode;
       // only update when we are in car and bad
       if (mobilityType.equals("car") && worldId==1){
-        edge = map.edgeManager.updateEdge(this, edge, srcNode, toNode);
+        edge = map.edgeManager.updateEdge(this, srcNode, toNode);
       }
     }
   }
@@ -391,7 +391,9 @@ public class Agent {
       if (pathIndex == 0) {  
         // Arrived to destination
         pos = destNodePos;
-        this.setupNextTrip();
+        map.edgeManager.removeEdge(this);
+        edge = null;
+        setupNextTrip();
       } else {
         // Not destination. Look for next node.
         srcNode = toNode;
@@ -400,7 +402,7 @@ public class Agent {
         afterNode = pathIndex > 1 ? path.get(pathIndex - 1) : toNode;
 
         if(mobilityType.equals("car") && worldId==1){
-          edge = map.edgeManager.updateEdge(this, edge, srcNode, toNode);
+          edge = map.edgeManager.updateEdge(this, srcNode, toNode);
         }
       }
     } else {
